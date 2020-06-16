@@ -10,7 +10,6 @@ namespace NGettext.Loaders
 	/// </summary>
 	public class MoAstPluralLoader : MoLoader
 	{
-#if !NETSTANDARD1_0
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MoAstPluralLoader"/> class which will try to load a MO file
 		/// that will be located in the localeDir using the domain name and catalog's culture info.
@@ -35,7 +34,6 @@ namespace NGettext.Loaders
 			: base(filePath, new AstPluralRuleGenerator(), parser)
 		{
 		}
-#endif
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MoLoader"/> class which will try to load a MO file
@@ -49,7 +47,6 @@ namespace NGettext.Loaders
 		{
 		}
 
-#if !NETSTANDARD1_0
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MoLoader"/> class which will try to load a MO file
 		/// that will be located in the localeDir using the domain name and catalog's culture info.
@@ -72,7 +69,6 @@ namespace NGettext.Loaders
 			: base(filePath, new AstPluralRuleGenerator())
 		{
 		}
-#endif
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MoLoader"/> class which will try to load a MO file

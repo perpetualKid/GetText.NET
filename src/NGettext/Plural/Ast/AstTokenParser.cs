@@ -1,298 +1,305 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace NGettext.Plural.Ast
 {
-	/// <summary>
-	/// Plural rule formula parser.
-	/// Ported from the I18n component from Zend Framework (https://github.com/zendframework/zf2).
-	/// </summary>
-	public class AstTokenParser
+    /// <summary>
+    /// Plural rule formula parser.
+    /// Ported from the I18n component from Zend Framework (https://github.com/zendframework/zf2).
+    /// </summary>
+    public sealed class AstTokenParser
     {
-		protected readonly Dictionary<TokenType, TokenDefinition> TokenDefinitions = new Dictionary<TokenType, TokenDefinition>();
+        private readonly Dictionary<TokenType, TokenDefinition> tokenDefinitions = new Dictionary<TokenType, TokenDefinition>();
 
-		protected string Input;
+        private string input;
 
-		protected int Position;
+        private int position;
 
-		protected Token CurrentToken;
+        private Token currentToken;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AstTokenParser"/> class with default token definitions.
-		/// </summary>
-		public AstTokenParser()
-		{
-			// Ternary operators
-			this.RegisterTokenDefinition(TokenType.TernaryIf, 20)
-				.SetLeftDenotationGetter((self, left) => {
-					self.Children[0] = left;
-					self.Children[1] = this.ParseNextExpression();
-					this.AdvancePosition(TokenType.TernaryElse);
-					self.Children[2] = this.ParseNextExpression();
-					return self;
-				});
-			this.RegisterTokenDefinition(TokenType.TernaryElse);
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AstTokenParser"/> class with default token definitions.
+        /// </summary>
+        public AstTokenParser()
+        {
+            // Ternary operators
+            this.RegisterTokenDefinition(TokenType.TernaryIf, 20)
+                .SetLeftDenotationGetter((self, left) =>
+                {
+                    self.Children[0] = left;
+                    self.Children[1] = this.ParseNextExpression();
+                    this.AdvancePosition(TokenType.TernaryElse);
+                    self.Children[2] = this.ParseNextExpression();
+                    return self;
+                });
+            this.RegisterTokenDefinition(TokenType.TernaryElse);
 
-			// Boolean operators
-			this.RegisterLeftInfixTokenDefinition(TokenType.Or, 30);
-			this.RegisterLeftInfixTokenDefinition(TokenType.And, 40);
+            // Boolean operators
+            this.RegisterLeftInfixTokenDefinition(TokenType.Or, 30);
+            this.RegisterLeftInfixTokenDefinition(TokenType.And, 40);
 
-			// Equal operators
-			this.RegisterLeftInfixTokenDefinition(TokenType.Equals, 50);
-			this.RegisterLeftInfixTokenDefinition(TokenType.NotEquals, 50);
+            // Equal operators
+            this.RegisterLeftInfixTokenDefinition(TokenType.Equals, 50);
+            this.RegisterLeftInfixTokenDefinition(TokenType.NotEquals, 50);
 
-			// Compare operators
-			this.RegisterLeftInfixTokenDefinition(TokenType.GreaterThan, 50);
-			this.RegisterLeftInfixTokenDefinition(TokenType.LessThan, 50);
-			this.RegisterLeftInfixTokenDefinition(TokenType.GreaterOrEquals, 50);
-			this.RegisterLeftInfixTokenDefinition(TokenType.LessOrEquals, 50);
+            // Compare operators
+            this.RegisterLeftInfixTokenDefinition(TokenType.GreaterThan, 50);
+            this.RegisterLeftInfixTokenDefinition(TokenType.LessThan, 50);
+            this.RegisterLeftInfixTokenDefinition(TokenType.GreaterOrEquals, 50);
+            this.RegisterLeftInfixTokenDefinition(TokenType.LessOrEquals, 50);
 
-			// Add operators
-			this.RegisterLeftInfixTokenDefinition(TokenType.Minus, 60);
-			this.RegisterLeftInfixTokenDefinition(TokenType.Plus, 60);
+            // Add operators
+            this.RegisterLeftInfixTokenDefinition(TokenType.Minus, 60);
+            this.RegisterLeftInfixTokenDefinition(TokenType.Plus, 60);
 
-			// Multiply operators
-			this.RegisterLeftInfixTokenDefinition(TokenType.Multiply, 70);
-			this.RegisterLeftInfixTokenDefinition(TokenType.Divide, 70);
-			this.RegisterLeftInfixTokenDefinition(TokenType.Modulo, 70);
+            // Multiply operators
+            this.RegisterLeftInfixTokenDefinition(TokenType.Multiply, 70);
+            this.RegisterLeftInfixTokenDefinition(TokenType.Divide, 70);
+            this.RegisterLeftInfixTokenDefinition(TokenType.Modulo, 70);
 
-			// Not operator
-			this.RegisterPrefixTokenDefinition(TokenType.Not, 80);
+            // Not operator
+            this.RegisterPrefixTokenDefinition(TokenType.Not, 80);
 
-			// Literals
-			this.RegisterTokenDefinition(TokenType.N)
-				.SetNullDenotationGetter((self) => {
-					return self;
-				});
-			this.RegisterTokenDefinition(TokenType.Number)
-				.SetNullDenotationGetter((self) => {
-					return self;
-				});
+            // Literals
+            this.RegisterTokenDefinition(TokenType.N)
+                .SetNullDenotationGetter((self) =>
+                {
+                    return self;
+                });
+            this.RegisterTokenDefinition(TokenType.Number)
+                .SetNullDenotationGetter((self) =>
+                {
+                    return self;
+                });
 
-			// Parentheses
-			this.RegisterTokenDefinition(TokenType.LeftParenthesis)
-				.SetNullDenotationGetter((self) => {
-					var expression = this.ParseNextExpression();
-					this.AdvancePosition(TokenType.RightParenthesis);
-					return expression;
-				});
-			this.RegisterTokenDefinition(TokenType.RightParenthesis);
+            // Parentheses
+            this.RegisterTokenDefinition(TokenType.LeftParenthesis)
+                .SetNullDenotationGetter((self) =>
+                {
+                    var expression = this.ParseNextExpression();
+                    this.AdvancePosition(TokenType.RightParenthesis);
+                    return expression;
+                });
+            this.RegisterTokenDefinition(TokenType.RightParenthesis);
 
-			// EOF
-			this.RegisterTokenDefinition(TokenType.EOF);
-		}
+            // EOF
+            this.RegisterTokenDefinition(TokenType.EOF);
+        }
 
-		protected TokenDefinition RegisterTokenDefinition(TokenType tokenType, int leftBindingPower = 0)
-		{
-			TokenDefinition definition;
-			if (this.TokenDefinitions.TryGetValue(tokenType, out definition))
-			{
-				definition.LeftBindingPower = Math.Max(definition.LeftBindingPower, leftBindingPower);
-			}
-			else
-			{
-				definition = new TokenDefinition(tokenType, leftBindingPower);
-				this.TokenDefinitions[tokenType] = definition;
-			}
+        private TokenDefinition RegisterTokenDefinition(TokenType tokenType, int leftBindingPower = 0)
+        {
+            if (tokenDefinitions.TryGetValue(tokenType, out TokenDefinition definition))
+            {
+                definition.LeftBindingPower = Math.Max(definition.LeftBindingPower, leftBindingPower);
+            }
+            else
+            {
+                definition = new TokenDefinition(tokenType, leftBindingPower);
+                tokenDefinitions[tokenType] = definition;
+            }
 
-			return definition;
-		}
+            return definition;
+        }
 
-		protected TokenDefinition RegisterLeftInfixTokenDefinition(TokenType tokenType, int leftBindingPower)
-		{
-			return this.RegisterTokenDefinition(tokenType, leftBindingPower)
-				.SetLeftDenotationGetter((self, left) => {
-					self.Children[0] = left;
-					self.Children[1] = this.ParseNextExpression(leftBindingPower);
-					return self;
-				});
-		}
+        private TokenDefinition RegisterLeftInfixTokenDefinition(TokenType tokenType, int leftBindingPower)
+        {
+            return this.RegisterTokenDefinition(tokenType, leftBindingPower)
+                .SetLeftDenotationGetter((self, left) =>
+                {
+                    self.Children[0] = left;
+                    self.Children[1] = this.ParseNextExpression(leftBindingPower);
+                    return self;
+                });
+        }
 
-		protected TokenDefinition RegisterRightInfixTokenDefinition(TokenType tokenType, int leftBindingPower)
-		{
-			return this.RegisterTokenDefinition(tokenType, leftBindingPower)
-				.SetLeftDenotationGetter((self, left) => {
-					self.Children[0] = left;
-					self.Children[1] = this.ParseNextExpression(leftBindingPower - 1);
-					return self;
-				});
-		}
+        private TokenDefinition RegisterRightInfixTokenDefinition(TokenType tokenType, int leftBindingPower)
+        {
+            return this.RegisterTokenDefinition(tokenType, leftBindingPower)
+                .SetLeftDenotationGetter((self, left) =>
+                {
+                    self.Children[0] = left;
+                    self.Children[1] = this.ParseNextExpression(leftBindingPower - 1);
+                    return self;
+                });
+        }
 
-		protected TokenDefinition RegisterPrefixTokenDefinition(TokenType tokenType, int leftBindingPower)
-		{
-			return this.RegisterTokenDefinition(tokenType, leftBindingPower)
-				.SetNullDenotationGetter((self) => {
-					self.Children[0] = this.ParseNextExpression(leftBindingPower);
-					self.Children[1] = null;
-					return self;
-				});
-		}
+        private TokenDefinition RegisterPrefixTokenDefinition(TokenType tokenType, int leftBindingPower)
+        {
+            return this.RegisterTokenDefinition(tokenType, leftBindingPower)
+                .SetNullDenotationGetter((self) =>
+                {
+                    self.Children[0] = this.ParseNextExpression(leftBindingPower);
+                    self.Children[1] = null;
+                    return self;
+                });
+        }
 
-		protected TokenDefinition GetDefinition(TokenType tokenType)
-		{
-			TokenDefinition tokenDefinition;
-			if (!this.TokenDefinitions.TryGetValue(tokenType, out tokenDefinition))
-			{
-				throw new ParserException(String.Format("Can not find token definition for \"\" token type.", tokenType));
-			}
-			return tokenDefinition;
-		}
+        private TokenDefinition GetDefinition(TokenType tokenType)
+        {
+            if (!tokenDefinitions.TryGetValue(tokenType, out TokenDefinition tokenDefinition))
+            {
+                throw new ParserException($"Can not find token definition for \"{tokenType}\" token type.");
+            }
+            return tokenDefinition;
+        }
 
-		/// <summary>
-		/// Parses the input string that contains a plural rule formula and generates an abstract syntax tree.
-		/// </summary>
-		/// <param name="input">Input string.</param>
-		/// <returns>Root node of the abstract syntax tree.</returns>
-		public Token Parse(string input)
-		{
-			this.Input = input + "\0";
-			this.Position = 0;
-			this.CurrentToken = this.GetNextToken();
+        /// <summary>
+        /// Parses the input string that contains a plural rule formula and generates an abstract syntax tree.
+        /// </summary>
+        /// <param name="input">Input string.</param>
+        /// <returns>Root node of the abstract syntax tree.</returns>
+        public Token Parse(string input)
+        {
+            this.input = input + "\0";
+            position = 0;
+            currentToken = this.GetNextToken();
 
-			return this.ParseNextExpression();
-		}
+            return this.ParseNextExpression();
+        }
 
-		protected Token ParseNextExpression(int rightBindingPower = 0)
-		{
-			var token = this.CurrentToken;
-			this.CurrentToken = this.GetNextToken();
-			var left = this.GetDefinition(token.Type).GetNullDenotation(token);
+        private Token ParseNextExpression(int rightBindingPower = 0)
+        {
+            Token token = currentToken;
+            currentToken = this.GetNextToken();
+            Token left = this.GetDefinition(token.Type).GetNullDenotation(token);
 
-			while (rightBindingPower < this.GetDefinition(this.CurrentToken.Type).LeftBindingPower)
-			{
-				token = this.CurrentToken;
-				this.CurrentToken = this.GetNextToken();
-				left = this.GetDefinition(token.Type).GetLeftDenotation(token, left);
-			}
+            while (rightBindingPower < this.GetDefinition(currentToken.Type).LeftBindingPower)
+            {
+                token = currentToken;
+                currentToken = this.GetNextToken();
+                left = this.GetDefinition(token.Type).GetLeftDenotation(token, left);
+            }
 
-			return left;
-		}
+            return left;
+        }
 
-		protected void AdvancePosition()
-		{
-			this.CurrentToken = this.GetNextToken();
-		}
+        private void AdvancePosition()
+        {
+            currentToken = this.GetNextToken();
+        }
 
-		protected void AdvancePosition(TokenType expectedTokenType)
-		{
-			if (this.CurrentToken.Type != expectedTokenType)
-			{
-				throw new ParserException(String.Format("Expected token \"{0}\" but received \"{1}\"", expectedTokenType, this.CurrentToken.Type));
-			}
-			this.AdvancePosition();
-		}
+        private void AdvancePosition(TokenType expectedTokenType)
+        {
+            if (currentToken.Type != expectedTokenType)
+            {
+                throw new ParserException($"Expected token \"{expectedTokenType}\" but received \"{currentToken.Type}\"");
+            }
+            this.AdvancePosition();
+        }
 
-		protected Token GetNextToken()
-		{
-			while (this.Input[this.Position] == ' ' || this.Input[this.Position] == '\t') {
-				this.Position++;
-			}
+        private Token GetNextToken()
+        {
+            while (input[position] == ' ' || input[position] == '\t')
+            {
+                position++;
+            }
 
-			var character = this.Input[this.Position++];
-			var tokenType = TokenType.None;
-			var value = 0L;
+            char character = input[position++];
+            TokenType tokenType = TokenType.None;
+            long value = 0L;
 
-			switch (character)
-			{
-				case '0':
-				case '1':
-				case '2':
-				case '3':
-				case '4':
-				case '5':
-				case '6':
-				case '7':
-				case '8':
-				case '9':
-					var sb = new StringBuilder();
-					sb.Append(character);
-					while (Char.IsNumber(this.Input[this.Position]))
-					{
-						sb.Append(this.Input[this.Position++]);
-					}
-					tokenType = TokenType.Number;
-					value = long.Parse(sb.ToString());
-					break;
+            switch (character)
+            {
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append(character);
+                    while (char.IsNumber(input[position]))
+                    {
+                        sb.Append(input[position++]);
+                    }
+                    tokenType = TokenType.Number;
+                    value = long.Parse(sb.ToString(), CultureInfo.InvariantCulture);
+                    break;
 
-				case '=':
-				case '&':
-				case '|':
-					if (this.Input[this.Position] == character)
-					{
-						this.Position++;
-						switch (character)
-						{
-							case '=': tokenType = TokenType.Equals; break;
-							case '&': tokenType = TokenType.And; break;
-							case '|': tokenType = TokenType.Or; break;
-						}
-					}
-					else
-					{
-						throw new ParserException(String.Format("Found invalid character \"{0}\" after character \"{1}\" in input stream.", this.Input[this.Position], character));
-					}
-					break;
+                case '=':
+                case '&':
+                case '|':
+                    if (input[position] == character)
+                    {
+                        position++;
+                        switch (character)
+                        {
+                            case '=': tokenType = TokenType.Equals; break;
+                            case '&': tokenType = TokenType.And; break;
+                            case '|': tokenType = TokenType.Or; break;
+                        }
+                    }
+                    else
+                    {
+                        throw new ParserException($"Found invalid character \"{input[position]}\" after character \"{character}\" in input stream.");
+                    }
+                    break;
 
-				case '!':
-					if (this.Input[this.Position] == '=')
-					{
-						this.Position++;
-						tokenType = TokenType.NotEquals;
-					}
-					else
-					{
-						tokenType = TokenType.Not;
-					}
-					break;
+                case '!':
+                    if (input[position] == '=')
+                    {
+                        position++;
+                        tokenType = TokenType.NotEquals;
+                    }
+                    else
+                    {
+                        tokenType = TokenType.Not;
+                    }
+                    break;
 
-				case '<':
-					if (this.Input[this.Position] == '=')
-					{
-						this.Position++;
-						tokenType = TokenType.LessOrEquals;
-					}
-					else
-					{
-						tokenType = TokenType.LessThan;
-					}
-					break;
+                case '<':
+                    if (input[position] == '=')
+                    {
+                        position++;
+                        tokenType = TokenType.LessOrEquals;
+                    }
+                    else
+                    {
+                        tokenType = TokenType.LessThan;
+                    }
+                    break;
 
-				case '>':
-					if (this.Input[this.Position] == '=')
-					{
-						this.Position++;
-						tokenType = TokenType.GreaterOrEquals;
-					}
-					else
-					{
-						tokenType = TokenType.GreaterThan;
-					}
-					break;
+                case '>':
+                    if (input[position] == '=')
+                    {
+                        position++;
+                        tokenType = TokenType.GreaterOrEquals;
+                    }
+                    else
+                    {
+                        tokenType = TokenType.GreaterThan;
+                    }
+                    break;
 
-				case '*': tokenType = TokenType.Multiply; break;
-				case '/': tokenType = TokenType.Divide; break;
-				case '%': tokenType = TokenType.Modulo; break;
-				case '+': tokenType = TokenType.Plus; break;
-				case '-': tokenType = TokenType.Minus; break;
-				case 'n': tokenType = TokenType.N; break;
-				case '?': tokenType = TokenType.TernaryIf; break;
-				case ':': tokenType = TokenType.TernaryElse; break;
-				case '(': tokenType = TokenType.LeftParenthesis; break;
-				case ')': tokenType = TokenType.RightParenthesis; break;
+                case '*': tokenType = TokenType.Multiply; break;
+                case '/': tokenType = TokenType.Divide; break;
+                case '%': tokenType = TokenType.Modulo; break;
+                case '+': tokenType = TokenType.Plus; break;
+                case '-': tokenType = TokenType.Minus; break;
+                case 'n': tokenType = TokenType.N; break;
+                case '?': tokenType = TokenType.TernaryIf; break;
+                case ':': tokenType = TokenType.TernaryElse; break;
+                case '(': tokenType = TokenType.LeftParenthesis; break;
+                case ')': tokenType = TokenType.RightParenthesis; break;
 
-				case ';':
-				case '\n':
-				case '\0':
-					tokenType = TokenType.EOF;
-					this.Position--;
-					break;
+                case ';':
+                case '\n':
+                case '\0':
+                    tokenType = TokenType.EOF;
+                    position--;
+                    break;
 
-				default:
-					throw new ParserException(String.Format("Found invalid character \"{0}\" in input stream at position {1}.", character, this.Position));
-			}
+                default:
+                    throw new ParserException($"Found invalid character \"{character}\" in input stream at position {position}.");
+            }
 
-			return new Token(tokenType, value);
-		}
-	}
+            return new Token(tokenType, value);
+        }
+    }
 }

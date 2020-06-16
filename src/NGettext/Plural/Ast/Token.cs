@@ -5,14 +5,14 @@ namespace NGettext.Plural.Ast
 	/// <summary>
 	/// Represents a node in the abstract syntax tree.
 	/// </summary>
-    public class Token
+    public sealed class Token
     {
-		public const int MAX_CHILDREN_COUNT = 3;
+		public const int MAXCHILDCOUNT = 3;
 
 		/// <summary>
 		/// Gets the type of the current token.
 		/// </summary>
-		public TokenType Type { get; protected set; }
+		public TokenType Type { get; private set; }
 
 		/// <summary>
 		/// Gets or sets an optional value associated with this token.
@@ -22,7 +22,7 @@ namespace NGettext.Plural.Ast
 		/// <summary>
 		/// Gets token children.
 		/// </summary>
-		public readonly Token[] Children = new Token[MAX_CHILDREN_COUNT];
+		public Token[] Children { get;  } = new Token[MAXCHILDCOUNT];
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Token"/> class with given type and (optional) value.

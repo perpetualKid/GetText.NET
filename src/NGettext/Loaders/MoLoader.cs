@@ -14,13 +14,11 @@ namespace NGettext.Loaders
 		private const string LC_MESSAGES = "LC_MESSAGES";
 		private const string MO_FILE_EXT = ".mo";
 
-		private readonly Stream _MoStream;
+		private readonly Stream moStream;
 
-#if !NETSTANDARD1_0
-		private readonly string _FilePath;
-		private readonly string _Domain;
-		private readonly string _LocaleDir;
-#endif
+		private readonly string filePath;
+		private readonly string domain;
+		private readonly string localeDir;
 
 		/// <summary>
 		/// Gets a current plural generator instance.
@@ -34,8 +32,6 @@ namespace NGettext.Loaders
 
 		#region Constructors
 
-#if !NETSTANDARD1_0
-
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MoLoader"/> class which will try to load a MO file
 		/// that will be located in the localeDir using the domain name and catalog's culture info.
@@ -46,19 +42,10 @@ namespace NGettext.Loaders
 		/// <param name="parser"></param>
 		public MoLoader(string domain, string localeDir, IPluralRuleGenerator pluralRuleGenerator, MoFileParser parser)
 		{
-			if (domain == null)
-				throw new ArgumentNullException("domain");
-			if (localeDir == null)
-				throw new ArgumentNullException("localeDir");
-			if (pluralRuleGenerator == null)
-				throw new ArgumentNullException("pluralRuleGenerator");
-			if (parser == null)
-				throw new ArgumentNullException("parser");
-
-			this._Domain = domain;
-			this._LocaleDir = localeDir;
-			this.PluralRuleGenerator = pluralRuleGenerator;
-			this.Parser = parser;
+            this.domain = domain ?? throw new ArgumentNullException(nameof(domain));
+			this.localeDir = localeDir ?? throw new ArgumentNullException(nameof(localeDir));
+			this.PluralRuleGenerator = pluralRuleGenerator ?? throw new ArgumentNullException(nameof(pluralRuleGenerator));
+			this.Parser = parser ?? throw new ArgumentNullException(nameof(parser));
 		}
 
 		/// <summary>
@@ -70,18 +57,10 @@ namespace NGettext.Loaders
 		/// <param name="parser"></param>
 		public MoLoader(string filePath, IPluralRuleGenerator pluralRuleGenerator, MoFileParser parser)
 		{
-			if (filePath == null)
-				throw new ArgumentNullException("filePath");
-			if (pluralRuleGenerator == null)
-				throw new ArgumentNullException("pluralRuleGenerator");
-			if (parser == null)
-				throw new ArgumentNullException("parser");
-
-			this._FilePath = filePath;
-			this.PluralRuleGenerator = pluralRuleGenerator;
-			this.Parser = parser;
+            this.filePath = filePath ?? throw new ArgumentNullException(nameof(filePath));
+			this.PluralRuleGenerator = pluralRuleGenerator ?? throw new ArgumentNullException(nameof(pluralRuleGenerator));
+			this.Parser = parser ?? throw new ArgumentNullException(nameof(parser));
 		}
-#endif
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MoLoader"/> class which will try to load a MO file
@@ -92,23 +71,15 @@ namespace NGettext.Loaders
 		/// <param name="parser"></param>
 		public MoLoader(Stream moStream, IPluralRuleGenerator pluralRuleGenerator, MoFileParser parser)
 		{
-			if (moStream == null)
-				throw new ArgumentNullException("moStream");
-			if (pluralRuleGenerator == null)
-				throw new ArgumentNullException("pluralRuleGenerator");
-			if (parser == null)
-				throw new ArgumentNullException("parser");
-
-			this._MoStream = moStream;
-			this.PluralRuleGenerator = pluralRuleGenerator;
-			this.Parser = parser;
+			this.moStream = moStream ?? throw new ArgumentNullException(nameof(moStream));
+			this.PluralRuleGenerator = pluralRuleGenerator ?? throw new ArgumentNullException(nameof(pluralRuleGenerator));
+			this.Parser = parser ?? throw new ArgumentNullException(nameof(parser));
 		}
 
 		#endregion
 
 		#region Constructor overloads
 
-#if !NETSTANDARD1_0
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MoLoader"/> class which will try to load a MO file
 		/// that will be located in the localeDir using the domain name and catalog's culture info.
@@ -175,7 +146,6 @@ namespace NGettext.Loaders
 			: this(filePath, new DefaultPluralRuleGenerator(), new MoFileParser())
 		{
 		}
-#endif
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MoLoader"/> class which will try to load a MO file
@@ -209,7 +179,7 @@ namespace NGettext.Loaders
 		{
 		}
 
-#endregion
+		#endregion
 
 
 		/// <summary>
@@ -218,23 +188,20 @@ namespace NGettext.Loaders
 		/// <param name="catalog">A catalog instance to load translations to.</param>
 		public void Load(Catalog catalog)
 		{
-			if (this._MoStream != null)
+			if (this.moStream != null)
 			{
-				this.Load(this._MoStream, catalog);
+				this.Load(this.moStream, catalog);
 			}
-#if !NETSTANDARD1_0
-			else if (this._FilePath != null)
+			else if (this.filePath != null)
 			{
-				this.Load(this._FilePath, catalog);
+				this.Load(this.filePath, catalog);
 			}
 			else
 			{
-				this.Load(this._Domain, this._LocaleDir, catalog);
+				this.Load(this.domain, this.localeDir, catalog);
 			}
-#endif
 		}
 
-#if !NETSTANDARD1_0
 		/// <summary>
 		/// Loads translations to the specified catalog using catalog's culture info from specified locale directory and specified domain.
 		/// </summary>
@@ -243,10 +210,13 @@ namespace NGettext.Loaders
 		/// <param name="catalog"></param>
 		protected virtual void Load(string domain, string localeDir, Catalog catalog)
 		{
-			var path = this.FindTranslationFile(catalog.CultureInfo, domain, localeDir);
+			if (catalog == null)
+				throw new ArgumentNullException(nameof(catalog));
+
+            string path = this.FindTranslationFile(catalog.CultureInfo, domain, localeDir);
 			if (path == null)
 			{
-				throw new FileNotFoundException(String.Format("Can not find MO file name in locale directory \"{0}\".", localeDir));
+				throw new FileNotFoundException($"Can not find MO file name in locale directory \"{localeDir}\".");
 			}
 
 			this.Load(path, catalog);
@@ -260,7 +230,7 @@ namespace NGettext.Loaders
 		protected virtual void Load(string filePath, Catalog catalog)
 		{
 #if DEBUG
-			Trace.WriteLine(String.Format("Loading translations from file \"{0}\"...", filePath), "NGettext");
+			Trace.WriteLine($"Loading translations from file \"{filePath}\"...", "NGettext");
 #endif
 			
 			using (var stream = File.OpenRead(filePath))
@@ -268,7 +238,6 @@ namespace NGettext.Loaders
 				this.Load(stream, catalog);
 			}
 		}
-#endif
 
 		/// <summary>
 		/// Loads translations to the specified catalog from specified MO file stream.
@@ -289,6 +258,11 @@ namespace NGettext.Loaders
 		/// <param name="catalog"></param>
 		protected virtual void Load(MoFile parsedMoFile, Catalog catalog)
 		{
+			if (parsedMoFile == null)
+				throw new ArgumentNullException(nameof(parsedMoFile));
+			if (catalog == null)
+				throw new ArgumentNullException(nameof(catalog));
+
 			foreach (var translation in parsedMoFile.Translations)
 			{
 				catalog.Translations.Add(translation.Key, translation.Value);
@@ -296,16 +270,13 @@ namespace NGettext.Loaders
 
 			if (parsedMoFile.Headers.ContainsKey("Plural-Forms"))
 			{
-				var generator = this.PluralRuleGenerator as IPluralRuleTextParser;
-				if (generator != null)
-				{
-					generator.SetPluralRuleText(parsedMoFile.Headers["Plural-Forms"]);
-				}
-			}
+                if (this.PluralRuleGenerator is IPluralRuleTextParser generator)
+                {
+                    generator.SetPluralRuleText(parsedMoFile.Headers["Plural-Forms"]);
+                }
+            }
 			catalog.PluralRule = this.PluralRuleGenerator.CreateRule(catalog.CultureInfo);
 		}
-
-#if !NETSTANDARD1_0
 
 		/// <summary>
 		/// Finds corresponding translation file using specified culture info, domain and a locale directory.
@@ -316,7 +287,10 @@ namespace NGettext.Loaders
 		/// <returns></returns>
 		protected virtual string FindTranslationFile(CultureInfo cultureInfo, string domain, string localeDir)
 		{
-			var possibleFiles = new[] {
+			if (cultureInfo == null)
+				throw new ArgumentNullException(nameof(cultureInfo));
+
+            string[] possibleFiles = new[] {
 				this.GetFileName(localeDir, domain, cultureInfo.Name.Replace('-', '_')),
 				this.GetFileName(localeDir, domain, cultureInfo.Name),
 				this.GetFileName(localeDir, domain, cultureInfo.TwoLetterISOLanguageName)
@@ -345,6 +319,5 @@ namespace NGettext.Loaders
 		{
 			return Path.Combine(localeDir, Path.Combine(locale, Path.Combine(LC_MESSAGES, domain + MO_FILE_EXT)));
 		}
-#endif
 	}
 }

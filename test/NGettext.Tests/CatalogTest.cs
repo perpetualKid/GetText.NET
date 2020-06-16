@@ -114,8 +114,8 @@ namespace NGettext.Tests
 		{
 			var t = new Catalog();
 			t.Translations.Add("key1", new[] { "value1" });
-			t.Translations.Add("context1" + Catalog.CONTEXT_GLUE + "key1", new[] { "value2" });
-			t.Translations.Add("context2" + Catalog.CONTEXT_GLUE + "key1", new[] { "value3" });
+			t.Translations.Add("context1" + Catalog.CONTEXTGLUE + "key1", new[] { "value2" });
+			t.Translations.Add("context2" + Catalog.CONTEXTGLUE + "key1", new[] { "value3" });
 
 			Assert.Equal("value1", t.GetString("key1"));
 			Assert.Equal("value2", t.GetParticularString("context1", "key1"));
@@ -150,8 +150,8 @@ namespace NGettext.Tests
 		public void TestGetParticularPluralString()
 		{
 			var t = new Catalog(new CultureInfo("en-US"));
-			t.Translations.Add("context1" + Catalog.CONTEXT_GLUE + "key1-1", new[] { "value1-1", "value1-2" });
-			t.Translations.Add("context2" + Catalog.CONTEXT_GLUE + "key1-1", new[] { "value2-1", "value2-2" });
+			t.Translations.Add("context1" + Catalog.CONTEXTGLUE + "key1-1", new[] { "value1-1", "value1-2" });
+			t.Translations.Add("context2" + Catalog.CONTEXTGLUE + "key1-1", new[] { "value2-1", "value2-2" });
 
 			Assert.Equal("value1-1", t.GetParticularPluralString("context1", "key1-1", "key1-2", 1));
 			Assert.Equal("value1-2", t.GetParticularPluralString("context1", "key1-1", "key1-2", 2));

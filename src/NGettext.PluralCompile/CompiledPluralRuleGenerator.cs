@@ -118,8 +118,8 @@ namespace NGettext.PluralCompile
 		{
 			if (this.PluralRuleText != null)
 			{
-				var numPlurals = this.ParseNumPlurals(this.PluralRuleText);
-				var plural = this.ParsePluralFormulaText(this.PluralRuleText);
+				var numPlurals = ParseNumPlurals(this.PluralRuleText);
+				var plural = ParsePluralFormulaText(this.PluralRuleText);
 				var astRoot = this.Parser.Parse(plural);
 
 				var evaulationDelegate = (PluralRuleEvaluatorDelegate)this.Compiler.CompileToDynamicMethod(astRoot, typeof(PluralRuleEvaluatorDelegate));
