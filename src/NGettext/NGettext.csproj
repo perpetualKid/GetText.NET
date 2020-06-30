@@ -4,7 +4,6 @@
     <Description>A cross-platform .NET implementation of the GNU/Gettext library.</Description>
     <AssemblyTitle>NGettext</AssemblyTitle>
     <VersionPrefix>0.6.5</VersionPrefix>
-    <Authors></Authors>
     <TargetFrameworks>net46;net48;netstandard2.0;netstandard2.1;netcoreapp3.1</TargetFrameworks>
     <NoWarn>1701;1702;CS1591;HAA0601;HAA0502;CA1303</NoWarn>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
@@ -26,17 +25,13 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <Version>0.8</Version>
+    <Authors />
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' AND Exists('$(MSBuildProjectDirectory)/../../NGettext.snk') ">
     <AssemblyOriginatorKeyFile>../../NGettext.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(APPVEYOR)' == '' AND '$(FrameworkPathOverride)' == '' ">
-    <FrameworkPathOverride Condition=" '$(TargetFramework)' == 'net20' ">$(WINDIR)\Microsoft.NET\Framework\v2.0.50727</FrameworkPathOverride>
-    <FrameworkPathOverride Condition=" '$(TargetFramework)' == 'net35' ">$(MSBuildProgramFiles32)\Reference Assemblies\Microsoft\Framework\.NETFramework\v3.5\Profile\Client</FrameworkPathOverride>
   </PropertyGroup>
 
   <ItemGroup>
@@ -53,42 +48,24 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net20' ">
-    <Reference Include="System" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net35' ">
-    <Reference Include="System" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'portable-net40+sl5+win8+wp8' ">
-    <Reference Include="mscorlib" />
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
     <Reference Include="System" />
-    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'portable-net40+sl5+win8+wpa81+wp8' ">
-    <Reference Include="mscorlib" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <PackageReference Include="System.Diagnostics.TraceSource" Version="4.3.0" />
   </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+  
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
+    <PackageReference Include="System.Diagnostics.TraceSource" Version="4.3.0" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
     <PackageReference Include="System.Diagnostics.TraceSource" Version="4.3.0" />
   </ItemGroup>
 

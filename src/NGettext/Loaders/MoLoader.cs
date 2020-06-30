@@ -11,7 +11,6 @@ namespace NGettext.Loaders
 	/// </summary>
 	public class MoLoader : ILoader
 	{
-		private const string LC_MESSAGES = "LC_MESSAGES";
 		private const string MO_FILE_EXT = ".mo";
 
 		private readonly Stream moStream;
@@ -317,7 +316,7 @@ namespace NGettext.Loaders
 		/// <returns></returns>
 		protected virtual string GetFileName(string localeDir, string domain, string locale)
 		{
-			return Path.Combine(localeDir, Path.Combine(locale, Path.Combine(LC_MESSAGES, domain + MO_FILE_EXT)));
+			return Path.Combine(localeDir, locale, domain + MO_FILE_EXT);
 		}
 	}
 }
