@@ -28,7 +28,7 @@ namespace NGettext.Tests
 		[Fact]
 		public void TestStream()
 		{
-			using (var stream = File.OpenRead(Path.Combine(this.LocalesDir, Path.Combine("ru_RU", Path.Combine("LC_MESSAGES", "Test.mo")))))
+			using (var stream = File.OpenRead(Path.Combine(this.LocalesDir, Path.Combine("ru_RU", "Test.mo"))))
 			{
 				var t = new Catalog(stream, new CultureInfo("ru-RU"));
 				this._TestLoadedTranslation(t);

@@ -37,7 +37,7 @@ namespace NGettext.Tests.Loaders
 		[Fact]
 		public void TestAstPluralRuleGenerator()
 		{
-			using (var stream = File.OpenRead(Path.Combine(LocalesDir, Path.Combine("ru_RU", Path.Combine("LC_MESSAGES", "Test.mo")))))
+			using (var stream = File.OpenRead(Path.Combine(LocalesDir, Path.Combine("ru_RU", "Test.mo"))))
 			{
 				var ignoredConflictingCulture = new CultureInfo("en-US");
 				var t = new Catalog(new MoAstPluralLoader(stream), ignoredConflictingCulture);

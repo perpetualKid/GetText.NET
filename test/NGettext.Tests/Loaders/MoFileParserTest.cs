@@ -19,7 +19,7 @@ namespace NGettext.Tests.Loaders
         [Fact]
         public void TestParsing()
         {
-            using (var stream = File.OpenRead(Path.Combine(LocalesDir, Path.Combine("ru_RU", Path.Combine("LC_MESSAGES", "Test.mo")))))
+            using (var stream = File.OpenRead(Path.Combine(LocalesDir, Path.Combine("ru_RU", "Test.mo"))))
             {
                 var parser = new MoFileParser();
                 var parsedFile = parser.Parse(stream);
@@ -30,7 +30,7 @@ namespace NGettext.Tests.Loaders
         [Fact]
         public void TestBigEndianParsing()
         {
-            using (var stream = File.OpenRead(Path.Combine(LocalesDir, Path.Combine("ru_RU", Path.Combine("LC_MESSAGES", "Test_BigEndian.mo")))))
+            using (var stream = File.OpenRead(Path.Combine(LocalesDir, Path.Combine("ru_RU", "Test_BigEndian.mo"))))
             {
                 var parser = new MoFileParser();
                 var parsedFile = parser.Parse(stream);
@@ -41,7 +41,7 @@ namespace NGettext.Tests.Loaders
         [Fact]
         public void TestAutoEncoding()
         {
-            using (var stream = File.OpenRead(Path.Combine(LocalesDir, Path.Combine("ru_RU", Path.Combine("LC_MESSAGES", "Test_KOI8-R.mo")))))
+            using (var stream = File.OpenRead(Path.Combine(LocalesDir, Path.Combine("ru_RU", "Test_KOI8-R.mo"))))
             {
                 var parser = new MoFileParser();
                 var parsedFile = parser.Parse(stream);
@@ -52,7 +52,7 @@ namespace NGettext.Tests.Loaders
         [Fact]
         public void TestManualEncoding()
         {
-            using (var stream = File.OpenRead(Path.Combine(LocalesDir, Path.Combine("ru_RU", Path.Combine("LC_MESSAGES", "Test_KOI8-R.mo")))))
+            using (var stream = File.OpenRead(Path.Combine(LocalesDir, Path.Combine("ru_RU", "Test_KOI8-R.mo"))))
             {
                 var parser = new MoFileParser(Encoding.GetEncoding("KOI8-R"), false);
                 var parsedFile = parser.Parse(stream);
