@@ -3,8 +3,8 @@
   <PropertyGroup>
     <Description>A cross-platform .NET implementation of the GNU/Gettext library.</Description>
     <AssemblyTitle>NGettext</AssemblyTitle>
-    <VersionPrefix>0.6.5</VersionPrefix>
-    <TargetFrameworks>net46;net48;netstandard2.0;netstandard2.1;netcoreapp3.1</TargetFrameworks>
+    <VersionPrefix>0.8</VersionPrefix>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <NoWarn>1701;1702;CS1591;HAA0601;HAA0502;CA1303</NoWarn>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <LangVersion>7.3</LangVersion>
@@ -28,12 +28,6 @@
     <Authors />
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' AND Exists('$(MSBuildProjectDirectory)/../../NGettext.snk') ">
-    <AssemblyOriginatorKeyFile>../../NGettext.snk</AssemblyOriginatorKeyFile>
-    <SignAssembly>true</SignAssembly>
-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-  </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>
@@ -48,25 +42,8 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net48' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="System.Diagnostics.TraceSource" Version="4.3.0" />
   </ItemGroup>
-  
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.1' ">
-    <PackageReference Include="System.Diagnostics.TraceSource" Version="4.3.0" />
-  </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1' ">
-    <PackageReference Include="System.Diagnostics.TraceSource" Version="4.3.0" />
-  </ItemGroup>
-
+ 
 </Project>

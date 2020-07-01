@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>netstandard20;net48;netcoreapp3.1</TargetFrameworks>
     <LangVersion>7.3</LangVersion>
     <AssemblyName>NGettext.PluralCompile.Tests</AssemblyName>
     <PackageId>NGettext.PluralCompile.Tests</PackageId>

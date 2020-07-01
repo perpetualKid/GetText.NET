@@ -3,9 +3,9 @@
   <PropertyGroup>
     <Description>Provides support of plural rule compilation to the IL bytecode.</Description>
     <AssemblyTitle>NGettext.PluralCompile</AssemblyTitle>
-    <VersionPrefix>0.6.5</VersionPrefix>
+    <VersionPrefix>0.8</VersionPrefix>
     <Authors></Authors>
-    <TargetFrameworks>net46;net48;netstandard2.0;netstandard2.1;netcoreapp3.1</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <NoWarn>1701;1702;CS1591;HAA0601;HAA0502;CA1303</NoWarn>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <LangVersion>7.3</LangVersion>
@@ -26,17 +26,6 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <Version>0.8</Version>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' AND Exists('$(MSBuildProjectDirectory)/../../NGettext.snk') ">
-    <AssemblyOriginatorKeyFile>../../NGettext.snk</AssemblyOriginatorKeyFile>
-    <SignAssembly>true</SignAssembly>
-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(APPVEYOR)' == '' AND '$(FrameworkPathOverride)' == '' ">
-    <FrameworkPathOverride Condition=" '$(TargetFramework)' == 'net20' ">$(WINDIR)\Microsoft.NET\Framework\v2.0.50727</FrameworkPathOverride>
-    <FrameworkPathOverride Condition=" '$(TargetFramework)' == 'net35' ">$(MSBuildProgramFiles32)\Reference Assemblies\Microsoft\Framework\.NETFramework\v3.5\Profile\Client</FrameworkPathOverride>
   </PropertyGroup>
 
   <ItemGroup>
@@ -60,7 +49,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'netstandard2.1' OR '$(TargetFramework)' == 'netcoreapp3.1' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.7.0" />
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.7.0" />
   </ItemGroup>
