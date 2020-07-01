@@ -1,79 +1,72 @@
-GetText [![Build Status](https://travis-ci.org/VitaliiTsilnyk/GetText.svg?branch=master)](https://travis-ci.org/VitaliiTsilnyk/GetText) [![Build Status](https://ci.appveyor.com/api/projects/status/oc151pvllqqy0po9?svg=true)](https://ci.appveyor.com/project/neris/ngettext) [![NuGet](https://img.shields.io/nuget/v/GetText.svg?label=nuget:%20NGettext)](https://www.nuget.org/packages/GetText/) [![NuGet](https://img.shields.io/nuget/v/GetText.svg?label=nuget:%20NGettext.PluralCompile)](https://www.nuget.org/packages/GetText.PluralCompile/)
+GetText.NET 
 ========
 
-A cross-platform .NET implementation of the GNU/Gettext library.
+[![Build Status](https://dev.azure.com/perpetualKid/GetText.NET/_apis/build/status/perpetualKid.GetText.NET?branchName=master)](https://dev.azure.com/perpetualKid/GetText.NET/_build/latest?definitionId=5&branchName=master)
 
-This fully managed library works fine on **Microsoft .NET Framework** version 2.0 or higher, **Mono** and **.NET Core** even on full-AOT runtimes.
+A cross-platform .NET implementation of the GNU/Gettext library, largely based on [NGettext](https://github.com/VitaliiTsilnyk/NGettext). 
+
+GetText.NET has simplified usage (such as removed the need for LC_MESSAGES subfolder to place translation files), and focusing on more recent .NET implementations such as .NET framework 4.8 and .NET Core 3.1. To allow publishing, it has been renamed to GetTExt.NET and repackaged for Nuget.
+
+This fully managed library targets **Microsoft .NET Standard 2.0** to support a wide range of .NET implementations including **.NET Framework** 4.6.1, **.NET Core** 2.0, **Mono** and [more](https://github.com/dotnet/standard/blob/master/docs/versions/netstandard2.0.md).
 It is fully **COM** and **CLS** compatible.
 
-This implementation loads translations directly from gettext *.mo files (no need to compile a satellite assembly) and can handle multiple translation domains and multiple locales in one application instance.
-GetText supports both little-endian and big-endian MO files, automatic (header-based) encoding detection and (optional) plural form rules parsing.
+This implementation loads translations directly from gettext *.mo files and can handle multiple translation domains and multiple locales in one application instance. There is no need to compile satellite assemblies. GetText.NET supports both little-endian and big-endian MO files, automatic (header-based) encoding detection and (optional) plural form rules parsing.
 
-By default, GetText uses pre-compiled plural form rules for most known locales.
+By default, GetText.NET uses pre-compiled plural form rules for most known locales.
 You can enable plural form rule parsing from *.mo file headers (see `MoCompilingPluralLoader` description below) 
 or use a custom plural rules passed to your Catalog instance through API.
 
 
 
-Why GetText?
+Why GetText.NET?
 ---------------
 
-There are other GNU/Gettext implementations for C#, but they all have some huge disadvantages.
+While there are other GNU/Gettext implementations for C#, each has its own scope, i.e.
 
-**Why not Mono.Unix.Catalog?**
-Mono's Catalog is just a bindings to three native functions (bindtextdomain, gettext, and ngettext). It does not support multiple domains/locales and contexts. It is not cross-patform, it have problems with Windows OS.
+[**Mono.Unix.Catalog**](http://docs.go-mono.com/?link=T%3aMono.Unix.Catalog)
+Mono's Catalog is merely a binding to three native functions (bindtextdomain, gettext, and ngettext). It does not support multiple domains/locales and contexts. It is not cross-patform, and may have issues under Windows OS.
 
+[**GNU.Gettext**](https://www.gnu.org/software/gettext/manual/html_node/C_0023.html)
+Gettext uses satellite assemblies for translation files and does not support multiple locales in one application instance.
+It's hard to build and maintain translation files and change locale inside your application. A .NET based implementation can be found [here](https://github.com/arbinada-com/gettext-dotnet), but there seems no active development.
 
-**Why not GNU.Gettext?**
-It uses satellite assemblies as a translation files and does not support multiple locales in one application instance.
-It's hard to build and maintain translation files and change locale inside your application.
+[**NGettext**](https://github.com/VitaliiTsilnyk/NGettext)
+GetText.NET is largely a clone of NGettext and has the same ICatalog interface. It uses a simplified file structure (no need for LC_MESSAGES subfolder in each translation) and provides default constructor for standard use cases.
 
-**So why GetText?**
-* GetText is fully cross-platform as it doesn't use any native or managed 3rd-party libraries.
-* GetText supports multiple domains. You can separate translation files for each of your application's module or plugin.
-* GetText supports multiple locales in one application instance and gives really simple API to choose locale of your application.
-  You don't even need to care about locales of your application's threads.
-* GetText loads translations from *.mo files. You can even load translations from specified file or stream.
-* GetText supports message contexts.
-* GetText provides nice and simple API, compatible with any type of application (console, GUI, web...).
-
-
-
-Build status
-------------
-
-|OS |Target frameworks (build)|Target frameworks (test)|Status|
-|:--|:--|:--|:--|
-|Windows|net20 net35 net40 net45 net46<br/>netstandard1.0 netstandard1.3 netstandard2.0<br/>.NETPortable,Version=v4.0,Profile=Profile136<br/>.NETPortable,Version=v4.0,Profile=Profile328|netcoreapp1.0<br/>netcoreapp2.0|[![Build Status](https://ci.appveyor.com/api/projects/status/oc151pvllqqy0po9?svg=true)](https://ci.appveyor.com/project/neris/ngettext)|
-|Linux|net20 net40 net45<br/>netstandard1.0 netstandard1.3 netstandard2.0<br/>.NETPortable,Version=v4.0,Profile=Profile136<br/>.NETPortable,Version=v4.0,Profile=Profile328|netcoreapp1.0<br/>netcoreapp2.0|[![Build Status](https://travis-ci.org/VitaliiTsilnyk/GetText.svg?branch=master)](https://travis-ci.org/VitaliiTsilnyk/GetText)|
-|Mac OS X|net20 net40 net45<br/>netstandard1.0 netstandard1.3 netstandard2.0<br/>.NETPortable,Version=v4.0,Profile=Profile136<br/>.NETPortable,Version=v4.0,Profile=Profile328|netcoreapp2.0|[![Build Status](https://travis-ci.org/VitaliiTsilnyk/GetText.svg?branch=master)](https://travis-ci.org/VitaliiTsilnyk/GetText)|
-
+**GetText.NET**
+* GetText.NET is fully cross-platform, no need for other native or managed 3rd-party libraries
+* GetText.NET supports multiple localization domains. Translation files can be separated for each of an application's module or plugin
+* GetText.NET supports multiple locales in one application instance and has a really simple API to choose the locale of an application
+* GetText.NET loads translations directly from *.mo files in standard .NET localization folder structure. Furthermore, translations can be loaded from other specified file or stream
+* GetText.NET supports message contexts
+* GetText.NET uses a nice and simple API, compatible with any type of application (console, GUI, web...)
+* GetText.NET.WindowsForms (separate package) allows localization of Windows Forms standard properties
 
 
 Installation and usage
 ----------------------
 
-All you need to do is just install a [NuGet package](https://www.nuget.org/packages/GetText/)
+All you need to do is just install a [NuGet package](https://www.nuget.org/packages/GetText.NET/)
 from the package manager console:
 ```
-PM> Install-Package GetText
+PM> Install-Package GetText.NET
 ```
 or through .NET CLI utility:
 ```
-$ dotnet add package GetText
+$ dotnet add package GetText.NET
 ```
 
-Now you can use GetText in your code:
+Now you can use GetText.NET in your code:
 ```csharp
 	using GetText;
 ```
 ```csharp
-	// This will load translations from "./locale/<CurrentUICulture>/LC_MESSAGES/Example.mo"
+	// This will load translations from "./locale/<CurrentUICulture>/Example.mo"
 	ICatalog catalog = new Catalog("Example", "./locale");
 	
 	// or
 	
-	// This will load translations from "./locale/ru_RU/LC_MESSAGES/Example.mo"
+	// This will load translations from "./locale/ru_RU/Example.mo"
 	ICatalog catalog = new Catalog("Example", "./locale", new CultureInfo("ru-RU"));
 ```
 ```csharp
@@ -90,7 +83,6 @@ If you using this library under CoreCLR and you want to use encodings different 
 	#endif
 ```
 
-
 ### Culture-specific message formatting
 
 ```csharp
@@ -102,8 +94,6 @@ If you using this library under CoreCLR and you want to use encodings different 
 	// Will return "Here's a number: 1.23!" for en_US locale
 	// But something like this will be returned for ru_RU locale with Russian translation: "А вот и номер: 1,23!"
 ```
-
-
 
 ### Plural forms
 
@@ -124,8 +114,6 @@ If you using this library under CoreCLR and you want to use encodings different 
 	// Internal String.Format will be used in context of catalog's locale and formats objects respectively
 ```
 
-
-
 ### Contexts
 
 ```csharp
@@ -134,21 +122,18 @@ If you using this library under CoreCLR and you want to use encodings different 
 ```
 
 
-
 ### Multiple locales and domains in one application instance
 
 ```csharp
-	// "./locale/en_US/LC_MESSAGES/Example.mo"
+	// "./locale/en_US/Example.mo"
 	ICatalog example_en = new Catalog("Example", "./locale", new CultureInfo("en-US"));
 
 	// "./locale/fr/LC_MESSAGES/Example.mo"
 	ICatalog example_fr = new Catalog("Example", "./locale", new CultureInfo("fr"));
 
-	// "./locale/<CurrentUICulture>/LC_MESSAGES/AnotherDomainName.mo"
+	// "./locale/<CurrentUICulture>/AnotherDomainName.mo"
 	ICatalog anotherDomain = new Catalog("AnotherDomainName", "./locale");
 ```
-
-
 
 ### Direct MO file loading
 
@@ -157,18 +142,16 @@ If you using this library under CoreCLR and you want to use encodings different 
 	ICatalog catalog = new Catalog(moFileStream, new CultureInfo("en-US"));
 ```
 
-
-
 ### Parsing plural rules from the *.mo file header
 
-GetText can parse plural rules directly from the *.mo file header and compile it to a dynamic method in runtime.
-To enable this option you can just create a catalog using the `MoCompilingPluralLoader` from the [GetText.PluralCompile](https://www.nuget.org/packages/GetText.PluralCompile) package:
+GetText.NET can parse plural rules directly from the *.mo file header and compile it to a dynamic method in runtime.
+To enable this option you can just create a catalog using the `MoCompilingPluralLoader` from the [GetText.NET.PluralCompile](https://www.nuget.org/packages/GetText.NET.PluralCompile) package:
 ```csharp
 	ICatalog catalog = new Catalog(new MoCompilingPluralLoader("Example", "./locale"));
 ```
 This loader will parse plural formula from the *.mo file header and compile it to plural rule for 
 your Catalog instance at runtime, just when your *.mo file loads.
-Your Catalog's *PluralString methods performance will be the same as if you were using GetText's default precompiled plural rules, 
+Your Catalog's *PluralString methods performance will be the same as if you were using GetText.NET default precompiled plural rules, 
 only *.mo file loading will be slightly slower.
 
 This feature requires enabled JIT compiler in your runtime. You can not use MoCompilingPluralLoader in an full-AOT environment.
@@ -178,8 +161,6 @@ For hosts without enabled JIT you can use `MoAstPluralLoader` which will only pa
 and interpret it every time you call a *PluralString method from your catalog, without compiling.
 Please note that this solution is slightly slower than MoCompilingPluralLoader even it's pretty well optimized.
 
-
-
 ### Custom plural formulas
 
 ```csharp
@@ -188,14 +169,12 @@ Please note that this solution is slightly slower than MoCompilingPluralLoader e
 Also you can create custom plural rule generator by implementing IPluralRuleGenerator interface, which will create
 a PluralRule for any culture.
 
-
-
 Debugging
 ---------
 
-Debug version of the GetText binary outputs debug messages to System.Diagnostics.Trace.
-You can register trace listeners to see GetText debug messages.
-Please note that Release version of the GetText binary does not produse any trace messages.
+Debug version of the GetText.NET binary outputs debug messages to System.Diagnostics.Trace.
+You can register trace listeners to see GetText.NET debug messages.
+Please note that Release version of the GetText.NET binary does not produse any trace messages.
 
 ```csharp
 	Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
@@ -206,7 +185,7 @@ Please note that Release version of the GetText binary does not produse any trac
 Shorter syntax
 --------------
 
-In `doc/examples/T.cs` you can see an example of shorter syntax creation for GetText:
+In `doc/examples/T.cs` you can see an example of shorter syntax creation for GetText.NET:
 ```csharp
 	T._("Hello, World!"); // GetString
 	T._n("You have {0} apple.", "You have {0} apples.", count, count); // GetPluralString
