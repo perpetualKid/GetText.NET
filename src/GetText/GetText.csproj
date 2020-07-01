@@ -1,0 +1,49 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>A cross-platform .NET implementation of the GNU/Gettext library.</Description>
+    <AssemblyTitle>NGettext</AssemblyTitle>
+    <VersionPrefix>0.8</VersionPrefix>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <NoWarn>1701;1702;CS1591;HAA0601;HAA0502;CA1303</NoWarn>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <LangVersion>7.3</LangVersion>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AssemblyName>GetText</AssemblyName>
+    <PackageId>GetText.NET</PackageId>
+    <PackageTags>gettext.net;gettext;internationalization;localization;i18n;l10n;translate</PackageTags>
+    <PackageProjectUrl>https://github.com/perpetualKid/GetText.NET</PackageProjectUrl>
+    <PackageLicense>https://raw.githubusercontent.com/neris/NGettext/master/LICENSE</PackageLicense>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>git://github.com/perpetualKid/GetText.NET</RepositoryUrl>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <Version>0.8</Version>
+    <Authors />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="..\..\LICENSE">
+      <PackagePath></PackagePath>
+      <Pack>true</Pack>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <PackageReference Include="System.Diagnostics.TraceSource" Version="4.3.0" />
+  </ItemGroup>
+ 
+</Project>
