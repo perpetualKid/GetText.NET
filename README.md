@@ -5,18 +5,14 @@ GetText.NET
 
 A cross-platform .NET implementation of the GNU/Gettext library, largely based on [NGettext](https://github.com/VitaliiTsilnyk/NGettext). 
 
-GetText.NET has simplified usage (such as removed the need for LC_MESSAGES subfolder to place translation files), and focusing on more recent .NET implementations such as .NET framework 4.8 and .NET Core 3.1. To allow publishing, it has been renamed to GetTExt.NET and repackaged for Nuget.
+GetText.NET has simplified usage (i.e. removed the need for LC_MESSAGES subfolder to place translation files), and focuses on more recent .NET implementations such as .NET framework 4.8 and .NET Core 3.1. To allow independent nuget publishing, it has been renamed to GetText.NET and repackaged.
 
 This fully managed library targets **Microsoft .NET Standard 2.0** to support a wide range of .NET implementations including **.NET Framework** 4.6.1, **.NET Core** 2.0, **Mono** and [more](https://github.com/dotnet/standard/blob/master/docs/versions/netstandard2.0.md).
 It is fully **COM** and **CLS** compatible.
 
 This implementation loads translations directly from gettext *.mo files and can handle multiple translation domains and multiple locales in one application instance. There is no need to compile satellite assemblies. GetText.NET supports both little-endian and big-endian MO files, automatic (header-based) encoding detection and (optional) plural form rules parsing.
 
-By default, GetText.NET uses pre-compiled plural form rules for most known locales.
-You can enable plural form rule parsing from *.mo file headers (see `MoCompilingPluralLoader` description below) 
-or use a custom plural rules passed to your Catalog instance through API.
-
-
+By default, GetText.NET uses pre-compiled plural form rules for most known locales. Additionally, plural form rules can be parsed from *.mo file headers (see `MoCompilingPluralLoader` description below) or custom plural rules can be passed to the Catalog instance through API.
 
 Why GetText.NET?
 ---------------
@@ -28,7 +24,7 @@ Mono's Catalog is merely a binding to three native functions (bindtextdomain, ge
 
 [**GNU.Gettext**](https://www.gnu.org/software/gettext/manual/html_node/C_0023.html)
 Gettext uses satellite assemblies for translation files and does not support multiple locales in one application instance.
-It's hard to build and maintain translation files and change locale inside your application. A .NET based implementation can be found [here](https://github.com/arbinada-com/gettext-dotnet), but there seems no active development.
+It's hard to build and maintain translation files and change locale inside an application. A .NET based implementation can be found [here](https://github.com/arbinada-com/gettext-dotnet), but there seems no active development.
 
 [**NGettext**](https://github.com/VitaliiTsilnyk/NGettext)
 GetText.NET is largely a clone of NGettext and has the same ICatalog interface. It uses a simplified file structure (no need for LC_MESSAGES subfolder in each translation) and provides default constructor for standard use cases.
@@ -46,7 +42,7 @@ GetText.NET is largely a clone of NGettext and has the same ICatalog interface. 
 Installation and usage
 ----------------------
 
-All you need to do is just install a [NuGet package](https://www.nuget.org/packages/GetText.NET/)
+Install as [NuGet package](https://www.nuget.org/packages/GetText.NET/)
 from the package manager console:
 ```
 PM> Install-Package GetText.NET
@@ -56,7 +52,7 @@ or through .NET CLI utility:
 $ dotnet add package GetText.NET
 ```
 
-Now you can use GetText.NET in your code:
+Using GetText.NET:
 ```csharp
 	using GetText;
 ```
@@ -76,7 +72,7 @@ Now you can use GetText.NET in your code:
 
 ### .NET CoreCLR
 
-If you using this library under CoreCLR and you want to use encodings different from UTF-8 for your *.mo files, you need to include [System.Text.Encoding.CodePages](https://www.nuget.org/packages/System.Text.Encoding.CodePages/) package into your application and initialize it like this:
+To use this library under CoreCLR for encodings different from UTF-8 in *.mo files, [System.Text.Encoding.CodePages](https://www.nuget.org/packages/System.Text.Encoding.CodePages/) package needs to be included into the application and initialized like this:
 ```csharp
 	#if NETCOREAPP1_0
 		Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
@@ -145,20 +141,18 @@ If you using this library under CoreCLR and you want to use encodings different 
 ### Parsing plural rules from the *.mo file header
 
 GetText.NET can parse plural rules directly from the *.mo file header and compile it to a dynamic method in runtime.
-To enable this option you can just create a catalog using the `MoCompilingPluralLoader` from the [GetText.NET.PluralCompile](https://www.nuget.org/packages/GetText.NET.PluralCompile) package:
+To enable this option pass the `MoCompilingPluralLoader` from the [GetText.NET.PluralCompile](https://www.nuget.org/packages/GetText.NET.PluralCompile) package to the Catalog constructor:
 ```csharp
 	ICatalog catalog = new Catalog(new MoCompilingPluralLoader("Example", "./locale"));
 ```
-This loader will parse plural formula from the *.mo file header and compile it to plural rule for 
-your Catalog instance at runtime, just when your *.mo file loads.
-Your Catalog's *PluralString methods performance will be the same as if you were using GetText.NET default precompiled plural rules, 
-only *.mo file loading will be slightly slower.
+This loader will parse plural formula from the *.mo file header and compile it to plural rule for the Catalog instance at runtime, just when the *.mo file loads.
+The Catalog's *PluralString methods performance will be the same as if using GetText.NET default precompiled plural rules, only *.mo file loading will be slightly slower.
 
-This feature requires enabled JIT compiler in your runtime. You can not use MoCompilingPluralLoader in an full-AOT environment.
+This feature requires enabled JIT compiler in the runtime. MoCompilingPluralLoader can not be used in an full-AOT environment.
 This is why MoCompilingPluralLoader moved to a separate library.
 
-For hosts without enabled JIT you can use `MoAstPluralLoader` which will only parse plural formulas to an abstract syntax tree
-and interpret it every time you call a *PluralString method from your catalog, without compiling.
+For hosts without enabled JIT, use `MoAstPluralLoader` which will only parse plural formulas to an abstract syntax tree
+and interpret it every time a call to *PluralString method is made from the catalog, without compiling.
 Please note that this solution is slightly slower than MoCompilingPluralLoader even it's pretty well optimized.
 
 ### Custom plural formulas
@@ -166,14 +160,13 @@ Please note that this solution is slightly slower than MoCompilingPluralLoader e
 ```csharp
 	catalog.PluralRule = new PluralRule(numPlurals, n => ( n == 1 ? 0 : 1 ));
 ```
-Also you can create custom plural rule generator by implementing IPluralRuleGenerator interface, which will create
-a PluralRule for any culture.
+Custom plural rule generator can be created by implementing IPluralRuleGenerator interface, which will create a PluralRule for any culture.
 
 Debugging
 ---------
 
 Debug version of the GetText.NET binary outputs debug messages to System.Diagnostics.Trace.
-You can register trace listeners to see GetText.NET debug messages.
+Register trace listeners to see GetText.NET debug messages.
 Please note that Release version of the GetText.NET binary does not produse any trace messages.
 
 ```csharp
@@ -185,7 +178,7 @@ Please note that Release version of the GetText.NET binary does not produse any 
 Shorter syntax
 --------------
 
-In `doc/examples/T.cs` you can see an example of shorter syntax creation for GetText.NET:
+In `doc/examples/T.cs` an example of shorter syntax creation for GetText.NET is shown:
 ```csharp
 	T._("Hello, World!"); // GetString
 	T._n("You have {0} apple.", "You have {0} apples.", count, count); // GetPluralString
@@ -198,7 +191,7 @@ In `doc/examples/T.cs` you can see an example of shorter syntax creation for Get
 Poedit compatibility
 --------------------
 
-For [Poedit](http://www.poedit.net/) compatibility, you need to specify plural form in your *.pot file header, even for english language:
+For [Poedit](http://www.poedit.net/) compatibility, the plural form needs to be specified in the *.pot file header, also for english language:
 ```
 	"Plural-Forms: nplurals=2; plural=n != 1;\n"
 ```

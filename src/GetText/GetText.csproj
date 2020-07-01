@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>A cross-platform .NET implementation of the GNU/Gettext library.</Description>
-    <AssemblyTitle>NGettext</AssemblyTitle>
+    <Description>A .NET Standard implementation of the GNU Gettext library.</Description>
+    <AssemblyTitle>GetText.NET</AssemblyTitle>
     <VersionPrefix>0.8</VersionPrefix>
     <TargetFramework>netstandard2.0</TargetFramework>
     <NoWarn>1701;1702;CS1591;HAA0601;HAA0502;CA1303</NoWarn>
@@ -13,9 +13,10 @@
     <PackageId>GetText.NET</PackageId>
     <PackageTags>gettext.net;gettext;internationalization;localization;i18n;l10n;translate</PackageTags>
     <PackageProjectUrl>https://github.com/perpetualKid/GetText.NET</PackageProjectUrl>
-    <PackageLicense>https://raw.githubusercontent.com/neris/NGettext/master/LICENSE</PackageLicense>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/perpetualKid/GetText.NET/master/LICENSE</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>git://github.com/perpetualKid/GetText.NET</RepositoryUrl>
+    <RepositoryUrl>https://github.com/perpetualKid/GetText.NET</RepositoryUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
@@ -25,7 +26,9 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <Version>0.8</Version>
-    <Authors />
+    <Authors>perpetualKid</Authors>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,6 +36,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
@@ -45,5 +52,10 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="System.Diagnostics.TraceSource" Version="4.3.0" />
   </ItemGroup>
- 
+
+  <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+
 </Project>

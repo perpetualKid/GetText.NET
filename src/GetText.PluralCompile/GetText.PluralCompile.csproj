@@ -1,10 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Description>Provides support of plural rule compilation to the IL bytecode.</Description>
-    <AssemblyTitle>NGettext.PluralCompile</AssemblyTitle>
+    <AssemblyTitle>GetText.NET.PluralCompile</AssemblyTitle>
     <VersionPrefix>0.8</VersionPrefix>
-    <Authors></Authors>
+    <Authors>perpetualKid</Authors>
     <TargetFramework>netstandard2.0</TargetFramework>
     <NoWarn>1701;1702;CS1591;HAA0601;HAA0502;CA1303</NoWarn>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
@@ -14,9 +14,10 @@
     <PackageId>GetText.NET.PluralCompile</PackageId>
     <PackageTags>gettext.net;gettext;internationalization;localization;i18n;l10n;translate</PackageTags>
     <PackageProjectUrl>https://github.com/perpetualKid/GetText.NET</PackageProjectUrl>
-    <PackageLicense>https://raw.githubusercontent.com/neris/NGettext/master/LICENSE</PackageLicense>
+    <PackageLicense>https://raw.githubusercontent.com/perpetualKid/GetText.NET/master/LICENSE</PackageLicense>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>git://github.com/perpetualKid/GetText.NET</RepositoryUrl>
+    <RepositoryUrl>https://github.com/perpetualKid/GetText.NET</RepositoryUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
@@ -26,6 +27,9 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <Version>0.8</Version>
+    <Authors>perpetualKid</Authors>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,6 +37,10 @@
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.7.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\GetText\GetText.csproj" />
   </ItemGroup>
@@ -54,4 +62,8 @@
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.7.0" />
   </ItemGroup>
 
+  <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
 </Project>
