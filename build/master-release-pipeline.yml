@@ -21,7 +21,7 @@ steps:
       $currentDate = $(Get-Date)
       $interval = NEW-TIMESPAN –Start $baseDate –End $currentDate
       $days = $interval.Days
-      $minutes = $interval.Minutes
+      $minutes = $currentDate.TimeOfDay.TotalMinutes
       Write-Host "##vso[task.setvariable variable=versionNumber]0.8.$days.$minutes"
 
 - task: NuGetToolInstaller@1
