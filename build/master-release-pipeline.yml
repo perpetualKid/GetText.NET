@@ -41,7 +41,7 @@ steps:
   inputs:
     command: 'build'
     projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration)'
+    arguments: '--configuration $(buildConfiguration) /p:Version=$(versionNumber)'
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet test'
