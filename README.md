@@ -2,6 +2,7 @@ GetText.NET
 ========
 
 [![Build Status](https://dev.azure.com/perpetualKid/GetText.NET/_apis/build/status/perpetualKid.GetText.NET?branchName=master)](https://dev.azure.com/perpetualKid/GetText.NET/_build/latest?definitionId=5&branchName=master)
+[![NuGet version](https://badge.fury.io/nu/gettext.net.png)](https://badge.fury.io/nu/gettext.net)
 
 A cross-platform .NET implementation of the GNU/Gettext library, largely based on [NGettext](https://github.com/VitaliiTsilnyk/NGettext). 
 
