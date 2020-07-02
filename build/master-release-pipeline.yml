@@ -54,7 +54,7 @@ steps:
   displayName: 'dotnet push'
   inputs:
     command: 'push'
-    packagesToPush: '**/*.nupkg;**/*.snupkg;'
+    packagesToPush: '**/*.nupkg;**/*.snupkg'
     nuGetFeedType: 'internal'
     publishVstsFeed: '71589b5a-c83e-44cc-9f4b-6df1b1fd504f/b46b6124-d691-47ce-b673-64341bee5601'
     publishPackageMetadata: true # Optional
