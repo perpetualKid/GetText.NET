@@ -27,6 +27,6 @@ steps:
 - task: NuGetCommand@2
   inputs:
     command: 'push'
-    packagesToPush: '**/*.nupkg;**/*.snupkg'
+    packagesToPush: '**/GetText.NET.0.8.0.nupkg;**/GetText.NET.0.8.0.snupkg'
     nuGetFeedType: 'external'
     publishFeedCredentials: 'GetText.NET Nuget Feed'
