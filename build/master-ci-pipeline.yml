@@ -1,7 +1,12 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 trigger:
-- master
+  branches:
+    include:
+    - master
+  paths:
+    exclude: # file paths which will not trigger a build
+    - build/*
 
 pool:
   vmImage: 'windows-latest'
