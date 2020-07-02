@@ -1,17 +1,5 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
-- task: PowerShell@2
-  inputs:
-    targetType: 'inline'
-    script: |
-      Write-Host "Generating Build Number"
-      $baseDate = [datetime]"01/01/2020"
-      $currentDate = $(Get-Date)
-      $interval = NEW-TIMESPAN –Start $baseDate –End $currentDate
-      $days = $interval.Days
-      $minutes = $interval.Minutes      
-      Write-Host "##vso[task.setvariable variable=versionNumber]0.8.$days.$minutes"
-
 trigger: 
     none
 
@@ -24,6 +12,18 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      Write-Host "Generating Build Number"
+      $baseDate = [datetime]"01/01/2020"
+      $currentDate = $(Get-Date)
+      $interval = NEW-TIMESPAN –Start $baseDate –End $currentDate
+      $days = $interval.Days
+      $minutes = $interval.Minutes
+      Write-Host "##vso[task.setvariable variable=versionNumber]0.8.$days.$minutes"
+
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
