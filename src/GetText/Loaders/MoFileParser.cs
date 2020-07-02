@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text;
+#if DEBUG
 using System.Diagnostics;
+#endif
 using System.IO;
 
 namespace GetText.Loaders

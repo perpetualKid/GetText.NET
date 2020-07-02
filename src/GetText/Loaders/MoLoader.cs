@@ -1,5 +1,7 @@
 ﻿using System;
+#if DEBUG
 using System.Diagnostics;
+#endif
 using System.Globalization;
 using System.IO;
 using GetText.Plural;
@@ -29,7 +31,7 @@ namespace GetText.Loaders
 		/// </summary>
 		public MoFileParser Parser { get; private set; }
 
-		#region Constructors
+#region Constructors
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MoLoader"/> class which will try to load a MO file
@@ -75,9 +77,9 @@ namespace GetText.Loaders
 			this.Parser = parser ?? throw new ArgumentNullException(nameof(parser));
 		}
 
-		#endregion
+#endregion
 
-		#region Constructor overloads
+#region Constructor overloads
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MoLoader"/> class which will try to load a MO file
@@ -178,7 +180,7 @@ namespace GetText.Loaders
 		{
 		}
 
-		#endregion
+#endregion
 
 
 		/// <summary>

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+#if DEBUG
 using System.Diagnostics;
+#endif
 using System.Globalization;
 using System.IO;
 
@@ -44,7 +46,7 @@ namespace GetText
 			}
 		}
 
-		#region Constructors
+#region Constructors
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Catalog"/> class that has no translations
@@ -144,7 +146,7 @@ namespace GetText
 			: this(new MoLoader(domain, localeDir), cultureInfo)
 		{
 		}
-		#endregion
+#endregion
 
 		/// <summary>
 		/// Loads data to the current catalog using specified loader instance.
