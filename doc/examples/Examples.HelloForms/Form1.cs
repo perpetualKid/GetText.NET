@@ -15,7 +15,7 @@ namespace Examples.HelloForms
 		public Form1()
         {
             InitializeComponent();
-			rbEnUs.PerformClick();
+			OnLocaleChanged(this, new EventArgs());
 		}
 
 		private void SetTexts()
@@ -28,8 +28,9 @@ namespace Examples.HelloForms
 			// Common use case doesn't required it: Localizer.Localize(this, catalog);
 
 			// Manually formatted strings
-			label2.Text = catalog.GetString("This program is running as process number \"{0}\".",
-											   System.Diagnostics.Process.GetCurrentProcess().Id);
+			//label2.Text = catalog.GetString("This program is running as process number \"{0}\".",
+			//								   System.Diagnostics.Process.GetCurrentProcess().Id);
+			label2.Text = catalog.GetString($"This program is running as process number \"{System.Diagnostics.Process.GetCurrentProcess().Id.ToString()}\".");
 			label3.Text = string.Format(
 				catalog.GetPluralString("found {0} similar word", "found {0} similar words", 1),
 				1);

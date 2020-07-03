@@ -9,14 +9,14 @@ GetText.NET
 |GetText.NET.PluralCompile|[![NuGet version](https://badge.fury.io/nu/gettext.net.svg)](https://badge.fury.io/nu/gettext.net)|
 
 
-A cross-platform .NET implementation of the GNU/Gettext library, largely based on [NGettext](https://github.com/VitaliiTsilnyk/NGettext). 
+A cross-platform .NET implementation of the GNU Gettext library, largely based on [NGettext](https://github.com/VitaliiTsilnyk/NGettext). GetText.NET supports [**string interpolation**](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated) and [**FormattableString**](https://docs.microsoft.com/en-us/dotnet/api/system.formattablestring?redirectedfrom=MSDN&view=netcore-3.1)
 
 GetText.NET has simplified usage (i.e. removed the need for LC_MESSAGES subfolder to place translation files), and focuses on more recent .NET implementations such as .NET framework 4.8 and .NET Core 3.1. To allow independent nuget publishing, it has been renamed to GetText.NET and repackaged.
 
-This fully managed library targets **Microsoft .NET Standard 2.0** to support a wide range of .NET implementations including **.NET Framework** 4.6.1, **.NET Core** 2.0, **Mono** and [more](https://github.com/dotnet/standard/blob/master/docs/versions/netstandard2.0.md).
+This fully managed library targets **Microsoft .NET Standard 2.0** to support a wide range of .NET implementations including **.NET Framework** >=4.6.1, **.NET Core** >=2.0, **Mono** and [more](https://github.com/dotnet/standard/blob/master/docs/versions/netstandard2.0.md).
 It is fully **COM** and **CLS** compatible.
 
-This implementation loads translations directly from gettext *.mo files and can handle multiple translation domains and multiple locales in one application instance. There is no need to compile satellite assemblies. GetText.NET supports both little-endian and big-endian MO files, automatic (header-based) encoding detection and (optional) plural form rules parsing.
+Translations are loaded directly from gettext *.mo files. Multiple translation domains and multiple locales can be loaded in one application instance. There is no need to compile satellite assemblies. GetText.NET supports both little-endian and big-endian MO files, automatic (header-based) encoding detection and (optional) plural form rules parsing.
 
 By default, GetText.NET uses pre-compiled plural form rules for most known locales. Additionally, plural form rules can be parsed from *.mo file headers (see `MoCompilingPluralLoader` description below) or custom plural rules can be passed to the Catalog instance through API.
 
@@ -26,14 +26,14 @@ Why GetText.NET?
 While there are other GNU/Gettext implementations for C#, each has its own scope, i.e.
 
 [**Mono.Unix.Catalog**](http://docs.go-mono.com/?link=T%3aMono.Unix.Catalog)
-Mono's Catalog is merely a binding to three native functions (bindtextdomain, gettext, and ngettext). It does not support multiple domains/locales and contexts. It is not cross-patform, and may have issues under Windows OS.
+Mono's Catalog is merely a binding to three native functions (bindtextdomain, gettext, and ngettext). It does not support multiple domains/locales and contexts. It is not cross-patform, and may be challenging to use under Windows OS.
 
 [**GNU.Gettext**](https://www.gnu.org/software/gettext/manual/html_node/C_0023.html)
 Gettext uses satellite assemblies for translation files and does not support multiple locales in one application instance.
-It's hard to build and maintain translation files and change locale inside an application. A .NET based implementation can be found [here](https://github.com/arbinada-com/gettext-dotnet), but there seems no active development.
+It's hard to build and maintain translation files and change locale inside an application. A .NET based implementation can be found [here](https://github.com/arbinada-com/gettext-dotnet), but there is no active development.
 
 [**NGettext**](https://github.com/VitaliiTsilnyk/NGettext)
-GetText.NET is largely a clone of NGettext and has the same ICatalog interface. It uses a simplified file structure (no need for LC_MESSAGES subfolder in each translation) and provides default constructor for standard use cases.
+GetText.NET is originally forked from NGettext. NGettext uses an extensive folder structure to lookup translation files including LC_MESSAGES subfolder for each translation. Also NGettext does not support C# string interpolation.
 
 **GetText.NET**
 * GetText.NET is fully cross-platform, no need for other native or managed 3rd-party libraries
@@ -43,6 +43,7 @@ GetText.NET is largely a clone of NGettext and has the same ICatalog interface. 
 * GetText.NET supports message contexts
 * GetText.NET uses a nice and simple API, compatible with any type of application (console, GUI, web...)
 * GetText.NET.WindowsForms (separate package) allows localization of Windows Forms standard properties
+* GetText.NET supports [string interpolation](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated) and [FormattableString](https://docs.microsoft.com/en-us/dotnet/api/system.formattablestring?redirectedfrom=MSDN&view=netcore-3.1)
 
 
 Installation and usage
@@ -179,8 +180,6 @@ Please note that Release version of the GetText.NET binary does not produse any 
 	Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
 ```
 
-
-
 Shorter syntax
 --------------
 
@@ -191,8 +190,6 @@ In `doc/examples/T.cs` an example of shorter syntax creation for GetText.NET is 
 	T._p("Context", "Hello, World!"); // GetParticularString
 	T._pn("Context", "You have {0} apple.", "You have {0} apples.", count, count); // GetParticularPluralString
 ```
-
-
 
 Poedit compatibility
 --------------------

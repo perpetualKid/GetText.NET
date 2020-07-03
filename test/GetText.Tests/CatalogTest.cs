@@ -25,6 +25,20 @@ namespace GetText.Tests
 		}
 
 		[Fact]
+		public void TestGetFormattableString()
+		{
+			var t = new Catalog();
+			t.Translations.Add("key1", new[] { "value1" });
+			t.Translations.Add("key{0}", new[] { "value{0}" });
+			t.Translations.Add("key3", new[] { "value3plural1", "value3plural2" });
+			t.Translations.Add("", new[] { "emptyIdValue" });
+
+			Assert.Equal("value1", t.GetString($"key1"));
+			Assert.Equal("value2", t.GetString($"key{2}"));
+			Assert.Equal("", t.GetString(""));
+		}
+
+		[Fact]
 		public void TestGetStringFormat()
 		{
 			var t = new Catalog();
@@ -35,6 +49,16 @@ namespace GetText.Tests
 		}
 
 		[Fact]
+		public void TestGetFormattableStringFormat()
+		{
+			var t = new Catalog();
+
+			Assert.Equal("Foo bar", t.GetString($"Foo {"bar"}"));
+			Assert.Equal("Foo bar baz", t.GetString($"Foo {"bar"} {"baz"}"));
+			Assert.Equal("Foo 1 2", t.GetString($"Foo {1} {2}"));
+		}
+
+		[Fact]
 		public void TestGetStringFormatCulture()
 		{
 			var catalogEn = new Catalog(new CultureInfo("en-US"));
@@ -42,6 +66,16 @@ namespace GetText.Tests
 
 			Assert.Equal("Foo 1.23", catalogEn.GetString("Foo {0}", 1.23));
 			Assert.Equal("Foo 1,23", catalogRu.GetString("Foo {0}", 1.23));
+		}
+
+		[Fact]
+		public void TestGetFormattableStringFormatCulture()
+		{
+			var catalogEn = new Catalog(new CultureInfo("en-US"));
+			var catalogRu = new Catalog(new CultureInfo("ru-RU"));
+
+			Assert.Equal("Foo 1.23", catalogEn.GetString($"Foo {1.23}"));
+			Assert.Equal("Foo 1,23", catalogRu.GetString($"Foo {1.23}"));
 		}
 
 		#endregion

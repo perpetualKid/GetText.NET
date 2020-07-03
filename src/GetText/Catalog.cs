@@ -168,9 +168,9 @@ namespace GetText
 		/// </summary>
 		/// <param name="text">Text to translate.</param>
 		/// <returns>Translated text.</returns>
-		public virtual string GetString(string text)
+		public virtual string GetString(FormattableStringAdapter text)
 		{
-			return this.GetStringDefault(text, text);
+			return this.GetStringDefault(text?.String, text?.String);
 		}
 
 		/// <summary>
@@ -178,11 +178,22 @@ namespace GetText
 		/// Similar to <c>gettext</c> function.
 		/// </summary>
 		/// <param name="text">Text to translate.</param>
-		/// <param name="args">Optional arguments for <see cref="System.String.Format(string, object[])"/> method.</param>
 		/// <returns>Translated text.</returns>
-		public virtual string GetString(string text, params object[] args)
+		public virtual string GetString(FormattableString text)
 		{
-			return string.Format(this.CultureInfo, this.GetStringDefault(text, text), args);
+			return string.Format(this.CultureInfo, this.GetStringDefault(text?.Format, text?.Format), text.GetArguments());
+		}
+
+        /// <summary>
+        /// Returns <paramref name="text"/> translated into the selected language.
+        /// Similar to <c>gettext</c> function.
+        /// </summary>
+        /// <param name="text">Text to translate.</param>
+        /// <param name="args">Optional arguments for <see cref="string.Format(string, object[])"/> method.</param>
+        /// <returns>Translated text.</returns>
+        public virtual string GetString(FormattableStringAdapter text, params object[] args)
+		{
+			return string.Format(this.CultureInfo, this.GetStringDefault(text?.String, text?.String), args);
 		}
 
 		/// <summary>

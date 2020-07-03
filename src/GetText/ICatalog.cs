@@ -1,4 +1,6 @@
-﻿namespace GetText
+﻿using System;
+
+namespace GetText
 {
     /// <summary>
     /// Represents a Gettext catalog instance.
@@ -11,7 +13,15 @@
         /// </summary>
         /// <param name="text">Text to translate.</param>
         /// <returns>Translated text.</returns>
-        string GetString(string text);
+        string GetString(FormattableStringAdapter text);
+
+        /// <summary>
+        /// Returns <paramref name="text"/> translated into the selected language.
+        /// Similar to <c>gettext</c> function.
+        /// </summary>
+        /// <param name="text">Text to translate.</param>
+        /// <returns>Translated text.</returns>
+        string GetString(FormattableString text);
 
         /// <summary>
         /// Returns <paramref name="text"/> translated into the selected language.
@@ -20,7 +30,7 @@
         /// <param name="text">Text to translate.</param>
         /// <param name="args">Optional arguments for <see cref="System.String.Format(string, object[])"/> method.</param>
         /// <returns>Translated text.</returns>
-        string GetString(string text, params object[] args);
+        string GetString(FormattableStringAdapter text, params object[] args);
 
         /// <summary>
         /// Returns the plural form for <paramref name="n"/> of the translation of <paramref name="text"/>.
