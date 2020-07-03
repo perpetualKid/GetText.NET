@@ -215,10 +215,10 @@ namespace GetText.Tests
 			t.Translations.Add("key2", new[] { "value2" });
 			t.Translations.Add("key3", new[] { "value3plural1", "value3plural2" });
 
-			Assert.Equal(new[] { "value1" }, t.GetTranslations("key1"));
-			Assert.Equal(new[] { "value2" }, t.GetTranslations("key2"));
-			Assert.Equal(new[] { "value3plural1", "value3plural2" }, t.GetTranslations("key3"));
-			Assert.Null(t.GetTranslations("key4"));
+			Assert.Equal(new[] { "value1" }, t.TryGetTranslations("key1"));
+			Assert.Equal(new[] { "value2" }, t.TryGetTranslations("key2"));
+			Assert.Equal(new[] { "value3plural1", "value3plural2" }, t.TryGetTranslations("key3"));
+			Assert.Null(t.TryGetTranslations("key4"));
 		}
 
 		#endregion

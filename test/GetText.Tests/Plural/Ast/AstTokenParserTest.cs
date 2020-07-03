@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+
 using GetText.Plural;
 using GetText.Plural.Ast;
 using Xunit;
@@ -109,7 +111,7 @@ namespace GetText.Tests.Plural.Ast
 
 				for (int i = 0; i < 200; i++)
 				{
-					var expected = int.Parse(expectedSeq[i].ToString());
+					var expected = int.Parse(expectedSeq[i].ToString(), NumberStyles.None, CultureInfo.InvariantCulture);
 					Assert.Equal(expected, rule.Evaluate(i));
 				}
 			}

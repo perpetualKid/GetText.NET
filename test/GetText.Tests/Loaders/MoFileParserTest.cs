@@ -8,59 +8,59 @@ namespace GetText.Tests.Loaders
 {
     public class MoFileParserTest
     {
-        public string LocalesDir;
+        private string localesDir;
 
         public MoFileParserTest()
         {
-            this.LocalesDir = Path.Combine(Directory.GetCurrentDirectory(), Path.Combine("TestResources", "locales"));
+            this.localesDir = Path.Combine(Directory.GetCurrentDirectory(), Path.Combine("TestResources", "locales"));
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         }
 
         [Fact]
         public void TestParsing()
         {
-            using (var stream = File.OpenRead(Path.Combine(LocalesDir, Path.Combine("ru_RU", "Test.mo"))))
+            using (var stream = File.OpenRead(Path.Combine(localesDir, Path.Combine("ru_RU", "Test.mo"))))
             {
                 var parser = new MoFileParser();
                 var parsedFile = parser.Parse(stream);
-                this._TestLoadedTranslation(parsedFile.Translations);
+                TestLoadedTranslation(parsedFile.Translations);
             }
         }
 
         [Fact]
         public void TestBigEndianParsing()
         {
-            using (var stream = File.OpenRead(Path.Combine(LocalesDir, Path.Combine("ru_RU", "Test_BigEndian.mo"))))
+            using (var stream = File.OpenRead(Path.Combine(localesDir, Path.Combine("ru_RU", "Test_BigEndian.mo"))))
             {
                 var parser = new MoFileParser();
                 var parsedFile = parser.Parse(stream);
-                this._TestLoadedTranslation(parsedFile.Translations);
+                TestLoadedTranslation(parsedFile.Translations);
             }
         }
 
         [Fact]
         public void TestAutoEncoding()
         {
-            using (var stream = File.OpenRead(Path.Combine(LocalesDir, Path.Combine("ru_RU", "Test_KOI8-R.mo"))))
+            using (var stream = File.OpenRead(Path.Combine(localesDir, Path.Combine("ru_RU", "Test_KOI8-R.mo"))))
             {
                 var parser = new MoFileParser();
                 var parsedFile = parser.Parse(stream);
-                this._TestLoadedTranslation(parsedFile.Translations);
+                TestLoadedTranslation(parsedFile.Translations);
             }
         }
 
         [Fact]
         public void TestManualEncoding()
         {
-            using (var stream = File.OpenRead(Path.Combine(LocalesDir, Path.Combine("ru_RU", "Test_KOI8-R.mo"))))
+            using (var stream = File.OpenRead(Path.Combine(localesDir, Path.Combine("ru_RU", "Test_KOI8-R.mo"))))
             {
                 var parser = new MoFileParser(Encoding.GetEncoding("KOI8-R"), false);
                 var parsedFile = parser.Parse(stream);
-                this._TestLoadedTranslation(parsedFile.Translations);
+                TestLoadedTranslation(parsedFile.Translations);
             }
         }
 
-        private void _TestLoadedTranslation(IDictionary<string, string[]> dict)
+        private static void TestLoadedTranslation(IDictionary<string, string[]> dict)
         {
             Assert.Equal(new[] { "тест" }, dict["test"]);
             Assert.Equal(new[] { "тест2" }, dict["test2"]);

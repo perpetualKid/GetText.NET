@@ -8,11 +8,11 @@ namespace GetText.Tests.Loaders
 {
     public class MoAstPluralLoaderTest
 	{
-		public string LocalesDir;
+		private string localesDir;
 
 		public MoAstPluralLoaderTest()
 		{
-			this.LocalesDir = Path.Combine(Directory.GetCurrentDirectory(), Path.Combine("TestResources", "locales"));
+			this.localesDir = Path.Combine(Directory.GetCurrentDirectory(), Path.Combine("TestResources", "locales"));
 		}
 
 		public static IEnumerable<object[]> GetTestAstPluralRuleGeneratorData()
@@ -37,7 +37,7 @@ namespace GetText.Tests.Loaders
 		[Fact]
 		public void TestAstPluralRuleGenerator()
 		{
-			using (var stream = File.OpenRead(Path.Combine(LocalesDir, Path.Combine("ru_RU", "Test.mo"))))
+			using (var stream = File.OpenRead(Path.Combine(localesDir, Path.Combine("ru_RU", "Test.mo"))))
 			{
 				var ignoredConflictingCulture = new CultureInfo("en-US");
 				var t = new Catalog(new MoAstPluralLoader(stream), ignoredConflictingCulture);

@@ -197,15 +197,13 @@ namespace GetText.Loaders
                 throw new ArgumentOutOfRangeException(nameof(numBytes));
             }
             int bytesRead = 0;
-            int n = 0;
-
             var stream = this.BaseStream;
             if (stream == null)
                 throw new ObjectDisposedException("Base stream closed.");
 
             do
             {
-                n = stream.Read(this.buffer, bytesRead, numBytes - bytesRead);
+                int n = stream.Read(this.buffer, bytesRead, numBytes - bytesRead);
                 if (n == 0)
                 {
                     throw new EndOfStreamException("Unexpected End Of File.");

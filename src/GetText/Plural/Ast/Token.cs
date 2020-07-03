@@ -19,17 +19,19 @@ namespace GetText.Plural.Ast
 		/// </summary>
 		public long Value { get; set; }
 
-		/// <summary>
-		/// Gets token children.
-		/// </summary>
-		public Token[] Children { get;  } = new Token[MAXCHILDCOUNT];
+        /// <summary>
+        /// Gets token children.
+        /// </summary>
+#pragma warning disable CA1819 // Properties should not return arrays
+        public Token[] Children { get;  } = new Token[MAXCHILDCOUNT];
+#pragma warning restore CA1819 // Properties should not return arrays
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="Token"/> class with given type and (optional) value.
-		/// </summary>
-		/// <param name="type"></param>
-		/// <param name="value"></param>
-		public Token(TokenType type, long value = 0)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Token"/> class with given type and (optional) value.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="value"></param>
+        public Token(TokenType type, long value = 0)
 		{
 			this.Type = type;
 			this.Value = value;

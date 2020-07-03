@@ -3,50 +3,17 @@
   <PropertyGroup>
     <Description>A .NET Standard implementation of the GNU Gettext library.</Description>
     <AssemblyTitle>GetText.NET</AssemblyTitle>
-    <VersionPrefix>0.8</VersionPrefix>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <NoWarn>1701;1702;CS1591;HAA0601;HAA0502;CA1303</NoWarn>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <LangVersion>7.3</LangVersion>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>GetText</AssemblyName>
     <PackageId>GetText.NET</PackageId>
     <PackageTags>gettext.net;gettext;internationalization;localization;i18n;l10n;translate</PackageTags>
-    <PackageProjectUrl>https://github.com/perpetualKid/GetText.NET</PackageProjectUrl>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/perpetualKid/GetText.NET/master/LICENSE</PackageLicenseUrl>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/perpetualKid/GetText.NET</RepositoryUrl>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
-    <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
-    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
-    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
-    <Version>0.8</Version>
-    <Authors>perpetualKid</Authors>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <Deterministic>true</Deterministic>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="..\..\LICENSE">
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
       <PackagePath></PackagePath>
-      <Pack>true</Pack>
     </None>
   </ItemGroup>
 

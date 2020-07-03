@@ -6,11 +6,11 @@ namespace GetText.Tests
 {
 	public class CatalogFileLoadingTest
 	{
-		public string LocalesDir;
+		private string localesDir;
 
 		public CatalogFileLoadingTest()
 		{
-			this.LocalesDir = Path.Combine(Directory.GetCurrentDirectory(), Path.Combine("TestResources", "locales"));
+			this.localesDir = Path.Combine(Directory.GetCurrentDirectory(), Path.Combine("TestResources", "locales"));
 		}
 
 		[Fact]
@@ -28,21 +28,21 @@ namespace GetText.Tests
 		[Fact]
 		public void TestStream()
 		{
-			using (var stream = File.OpenRead(Path.Combine(this.LocalesDir, Path.Combine("ru_RU", "Test.mo"))))
+			using (var stream = File.OpenRead(Path.Combine(this.localesDir, Path.Combine("ru_RU", "Test.mo"))))
 			{
 				var t = new Catalog(stream, new CultureInfo("ru-RU"));
-				this._TestLoadedTranslation(t);
+				TestLoadedTranslation(t);
 			}
 		}
 
 		[Fact]
 		public void TestLocaleDir()
 		{
-			var t = new Catalog("Test", this.LocalesDir, new CultureInfo("ru-RU"));
-			this._TestLoadedTranslation(t);
+			var t = new Catalog("Test", this.localesDir, new CultureInfo("ru-RU"));
+			TestLoadedTranslation(t);
 		}
 
-		private void _TestLoadedTranslation(ICatalog t)
+        private static void TestLoadedTranslation(ICatalog t)
 		{
 			Assert.Equal("тест", t.GetString("test"));
 			Assert.Equal("тест2", t.GetString("test2"));

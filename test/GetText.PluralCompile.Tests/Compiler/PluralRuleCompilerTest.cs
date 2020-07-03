@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+
 using GetText.Plural;
 using GetText.Plural.Ast;
 using GetText.PluralCompile.Compiler;
@@ -113,7 +115,7 @@ namespace GetText.PluralCompile.Tests.Compiler
 
 				for (int i = 0; i < 200; i++)
 				{
-					var expected = int.Parse(expectedSeq[i].ToString());
+					var expected = int.Parse(expectedSeq[i].ToString(), NumberStyles.None, CultureInfo.InvariantCulture);
 					Assert.Equal(expected, dynamicMethod(i));
 				}
 			}

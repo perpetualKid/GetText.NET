@@ -11,8 +11,8 @@ namespace GetText.PluralCompile.Compiler
 	/// </summary>
 	public class PluralRuleCompiler
     {
-		public const string DYNAMIC_METHOD_NAME = "CompiledPluralRuleDynamicMethod";
-		public const string INVOKE_METHOD_NAME = "Invoke";
+		public const string DynamicMethodName = "CompiledPluralRuleDynamicMethod";
+		public const string InvokeMethodName = "Invoke";
 
 		/// <summary>
 		/// Compiles a plural rule abstract syntax tree into managed dynamic method delegate using an IL code generator.
@@ -39,7 +39,7 @@ namespace GetText.PluralCompile.Compiler
 		/// <returns></returns>
 		protected virtual DynamicMethod CreateDynamicMethod(Type outputDelegateType)
 		{
-			var methodInfo = outputDelegateType.GetMethod(INVOKE_METHOD_NAME);
+			var methodInfo = outputDelegateType?.GetMethod(InvokeMethodName);
 
 			var parameters = methodInfo.GetParameters();
 			var parameterTypes = new Type[parameters.Length];
@@ -48,7 +48,7 @@ namespace GetText.PluralCompile.Compiler
 				parameterTypes[i] = parameters[i].ParameterType;
 			}
 
-			return new DynamicMethod(DYNAMIC_METHOD_NAME, methodInfo.ReturnType, parameterTypes);
+			return new DynamicMethod(DynamicMethodName, methodInfo.ReturnType, parameterTypes);
 		}
 
 		/// <summary>
@@ -65,6 +65,8 @@ namespace GetText.PluralCompile.Compiler
 		/// <param name="il">IL generator instance.</param>
 		protected virtual void CompileFinish(ILGenerator il)
 		{
+			if (il == null)
+				throw new ArgumentNullException(nameof(il));
 			il.Emit(OpCodes.Conv_I4); // Convert our Int64 value on the stack to Int32
 			il.Emit(OpCodes.Ret); // Return value from the stack
 		}
@@ -76,6 +78,11 @@ namespace GetText.PluralCompile.Compiler
 		/// <param name="node">AST node.</param>
 		protected virtual void CompileNode(ILGenerator il, Token node)
 		{
+			if (il == null)
+				throw new ArgumentNullException(nameof(il));
+			if (node == null)
+				throw new ArgumentNullException(nameof(node));
+
 			switch (node.Type)
 			{
 				case TokenType.Number:
@@ -185,6 +192,9 @@ namespace GetText.PluralCompile.Compiler
 		/// <param name="falseNode">AST node that will be executed when condition returns negative result.</param>
 		protected virtual void EmitConditionalBranch(ILGenerator il, OpCode conditionOpCode, Token trueNode, Token falseNode)
 		{
+			if (il == null)
+				throw new ArgumentNullException(nameof(il));
+
 			var trueLabel = il.DefineLabel();
 			var endLabel = il.DefineLabel();
 
@@ -211,6 +221,8 @@ namespace GetText.PluralCompile.Compiler
 		/// <param name="falseValue">A value that will be put on stack when condition returns negative result.</param>
 		protected virtual void EmitConditionalValue(ILGenerator il, OpCode conditionOpCode, long trueValue = 1, long falseValue = 0)
 		{
+			if (il == null)
+				throw new ArgumentNullException(nameof(il));
 			var trueLabel = il.DefineLabel();
 			var endLabel = il.DefineLabel();
 

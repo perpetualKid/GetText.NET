@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
+[assembly: Guid("5f72c253-5b58-441a-a8a0-12d5f6cccd9f")]
 
-[assembly: Guid("9ef9b9d7-7df8-4c3a-ac8c-58bea65f0526")]
 [assembly: ComVisible(true)]
 [assembly: CLSCompliant(true)]
 

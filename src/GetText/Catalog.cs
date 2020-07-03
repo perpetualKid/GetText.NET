@@ -276,7 +276,7 @@ namespace GetText
 		/// <returns>Translated string</returns>
 		public virtual string GetStringDefault(string messageId, string defaultMessage)
 		{
-            string[] translations = this.GetTranslations(messageId);
+			string[] translations = this.TryGetTranslations(messageId);
 
 			if (translations == null || translations.Length == 0)
 			{
@@ -300,7 +300,7 @@ namespace GetText
 		/// <returns>Translated string</returns>
 		public virtual string GetPluralStringDefault(string messageId, string defaultMessage, string defaultPluralMessage, long n)
 		{
-            string[] translations = this.GetTranslations(messageId);
+            string[] translations = this.TryGetTranslations(messageId);
             int pluralIndex = this.PluralRule.Evaluate(n);
 			if (pluralIndex < 0 || pluralIndex >= this.PluralRule.NumPlurals)
 			{
@@ -323,7 +323,7 @@ namespace GetText
 		/// </summary>
 		/// <param name="messageId"></param>
 		/// <returns>Returns all translations for given <paramref name="messageId"/> or null if not found.</returns>
-		public virtual string[] GetTranslations(string messageId)
+		public virtual string[] TryGetTranslations(string messageId)
 		{
 			if (!this.TranslationExists(messageId)) 
 				return null;
