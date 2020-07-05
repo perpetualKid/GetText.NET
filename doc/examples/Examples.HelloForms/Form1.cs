@@ -30,7 +30,7 @@ namespace Examples.HelloForms
 			// Manually formatted strings
 			//label2.Text = catalog.GetString("This program is running as process number \"{0}\".",
 			//								   System.Diagnostics.Process.GetCurrentProcess().Id);
-			label2.Text = catalog.GetString($"This program is running as process number \"{System.Diagnostics.Process.GetCurrentProcess().Id.ToString()}\".");
+			label2.Text = catalog.GetString($"This program is running as process number \"{System.Diagnostics.Process.GetCurrentProcess().Id}\".");
 			label3.Text = string.Format(
 				catalog.GetPluralString("found {0} similar word", "found {0} similar words", 1),
 				1);

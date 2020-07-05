@@ -66,7 +66,7 @@ namespace GetText
 		{
 			this.CultureInfo = cultureInfo;
 			this.Translations = new Dictionary<string, string[]>();
-			this.PluralRule = (new DefaultPluralRuleGenerator()).CreateRule(cultureInfo);
+			this.PluralRule = new DefaultPluralRuleGenerator().CreateRule(cultureInfo);
 		}
 			
 		/// <summary>
@@ -198,29 +198,42 @@ namespace GetText
 
 		/// <summary>
 		/// Returns the plural form for <paramref name="n"/> of the translation of <paramref name="text"/>.
-		/// Similar to <c>ngettext</c> function.
+		/// Similar to <c>gettext</c> function.
 		/// </summary>
 		/// <param name="text">Singular form of message to translate.</param>
 		/// <param name="pluralText">Plural form of message to translate.</param>
 		/// <param name="n">Value that determines the plural form.</param>
 		/// <returns>Translated text.</returns>
-		public virtual string GetPluralString(string text, string pluralText, long n)
+		public virtual string GetPluralString(FormattableStringAdapter text, FormattableStringAdapter pluralText, long n)
 		{
-			return this.GetPluralStringDefault(text, text, pluralText, n);
+			return this.GetPluralStringDefault(text?.String, text?.String, pluralText?.String, n);
 		}
 
 		/// <summary>
 		/// Returns the plural form for <paramref name="n"/> of the translation of <paramref name="text"/>.
-		/// Similar to <c>ngettext</c> function.
+		/// Similar to <c>gettext</c> function.
 		/// </summary>
 		/// <param name="text">Singular form of message to translate.</param>
 		/// <param name="pluralText">Plural form of message to translate.</param>
 		/// <param name="n">Value that determines the plural form.</param>
-		/// <param name="args">Optional arguments for <see cref="System.String.Format(string, object[])"/> method.</param>
 		/// <returns>Translated text.</returns>
-		public virtual string GetPluralString(string text, string pluralText, long n, params object[] args)
+		public virtual string GetPluralString(FormattableString text, FormattableString pluralText, long n)
 		{
-			return string.Format(this.CultureInfo, this.GetPluralStringDefault(text, text, pluralText, n), args);
+			return string.Format(this.CultureInfo, this.GetPluralStringDefault(text?.Format, text?.Format, pluralText?.Format, n), n == 1 ? text.GetArguments() : pluralText.GetArguments());
+		}
+
+		/// <summary>
+		/// Returns the plural form for <paramref name="n"/> of the translation of <paramref name="text"/>.
+		/// Similar to <c>gettext</c> function.
+		/// </summary>
+		/// <param name="text">Singular form of message to translate.</param>
+		/// <param name="pluralText">Plural form of message to translate.</param>
+		/// <param name="n">Value that determines the plural form.</param>
+		/// <param name="args">Optional arguments for <see cref="string.Format(string, object[])"/> method.</param>
+		/// <returns>Translated text.</returns>
+		public virtual string GetPluralString(FormattableStringAdapter text, FormattableStringAdapter pluralText, long n, params object[] args)
+		{
+			return string.Format(this.CultureInfo, this.GetPluralStringDefault(text?.String, text?.String, pluralText?.String, n), args);
 		}
 
 		/// <summary>
@@ -230,9 +243,9 @@ namespace GetText
 		/// <param name="context">Context.</param>
 		/// <param name="text">Text to translate.</param>
 		/// <returns>Translated text.</returns>
-		public virtual string GetParticularString(string context, string text)
+		public virtual string GetParticularString(string context, FormattableStringAdapter text)
 		{
-			return this.GetStringDefault(context + CONTEXTGLUE + text, text);
+			return this.GetStringDefault(context + CONTEXTGLUE + text?.String, text?.String);
 		}
 
 		/// <summary>
@@ -241,11 +254,23 @@ namespace GetText
 		/// </summary>
 		/// <param name="context">Context.</param>
 		/// <param name="text">Text to translate.</param>
-		/// <param name="args">Optional arguments for <see cref="System.String.Format(string, object[])"/> method.</param>
 		/// <returns>Translated text.</returns>
-		public virtual string GetParticularString(string context, string text, params object[] args)
+		public virtual string GetParticularString(string context, FormattableString text)
 		{
-			return string.Format(this.CultureInfo, this.GetStringDefault(context + CONTEXTGLUE + text, text), args);
+			return string.Format(this.CultureInfo, this.GetStringDefault(context + CONTEXTGLUE + text?.Format, text?.Format), text.GetArguments());
+		}
+
+		/// <summary>
+		/// Returns <paramref name="text"/> translated into the selected language using given <paramref name="context"/>.
+		/// Similar to <c>pgettext</c> function.
+		/// </summary>
+		/// <param name="context">Context.</param>
+		/// <param name="text">Text to translate.</param>
+		/// <param name="args">Optional arguments for <see cref="string.Format(string, object[])"/> method.</param>
+		/// <returns>Translated text.</returns>
+		public virtual string GetParticularString(string context, FormattableStringAdapter text, params object[] args)
+		{
+			return string.Format(this.CultureInfo, this.GetStringDefault(context + CONTEXTGLUE + text?.String, text?.String), args);
 		}
 
 		/// <summary>
@@ -257,9 +282,23 @@ namespace GetText
 		/// <param name="pluralText">Plural form of message to translate.</param>
 		/// <param name="n">Value that determines the plural form.</param>
 		/// <returns>Translated text.</returns>
-		public virtual string GetParticularPluralString(string context, string text, string pluralText, long n)
+		public virtual string GetParticularPluralString(string context, FormattableStringAdapter text, FormattableStringAdapter pluralText, long n)
 		{
-			return this.GetPluralStringDefault(context + CONTEXTGLUE + text, text, pluralText, n);
+			return this.GetPluralStringDefault(context + CONTEXTGLUE + text?.String, text?.String, pluralText?.String, n);
+		}
+
+		/// <summary>
+		/// Returns the plural form for <paramref name="n"/> of the translation of <paramref name="text"/> using given <paramref name="context"/>.
+		/// Similar to <c>npgettext</c> function.
+		/// </summary>
+		/// <param name="context">Context.</param>
+		/// <param name="text">Singular form of message to translate.</param>
+		/// <param name="pluralText">Plural form of message to translate.</param>
+		/// <param name="n">Value that determines the plural form.</param>
+		/// <returns>Translated text.</returns>
+		public virtual string GetParticularPluralString(string context, FormattableString text, FormattableString pluralText, long n)
+		{
+			return string.Format(this.CultureInfo, this.GetPluralStringDefault(context + CONTEXTGLUE + text?.Format, text?.Format, pluralText?.Format, n), n == 1 ? text.GetArguments() : pluralText.GetArguments());
 		}
 
 		/// <summary>
@@ -272,9 +311,9 @@ namespace GetText
 		/// <param name="n">Value that determines the plural form.</param>
 		/// <param name="args">Optional arguments for <see cref="string.Format(string, object[])"/> method.</param>
 		/// <returns>Translated text.</returns>
-		public virtual string GetParticularPluralString(string context, string text, string pluralText, long n, params object[] args)
+		public virtual string GetParticularPluralString(string context, FormattableStringAdapter text, FormattableStringAdapter pluralText, long n, params object[] args)
 		{
-			return string.Format(this.CultureInfo, this.GetPluralStringDefault(context + CONTEXTGLUE + text, text, pluralText, n), args);
+			return string.Format(this.CultureInfo, this.GetPluralStringDefault(context + CONTEXTGLUE + text?.String, text?.String, pluralText?.String, n), args);
 		}
 
 #endregion

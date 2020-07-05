@@ -28,30 +28,40 @@ namespace GetText
         /// Similar to <c>gettext</c> function.
         /// </summary>
         /// <param name="text">Text to translate.</param>
-        /// <param name="args">Optional arguments for <see cref="System.String.Format(string, object[])"/> method.</param>
+        /// <param name="args">Optional arguments for <see cref="string.Format(string, object[])"/> method.</param>
         /// <returns>Translated text.</returns>
         string GetString(FormattableStringAdapter text, params object[] args);
 
         /// <summary>
         /// Returns the plural form for <paramref name="n"/> of the translation of <paramref name="text"/>.
-        /// Similar to <c>ngettext</c> function.
+        /// Similar to <c>gettext</c> function.
         /// </summary>
         /// <param name="text">Singular form of message to translate.</param>
         /// <param name="pluralText">Plural form of message to translate.</param>
         /// <param name="n">Value that determines the plural form.</param>
         /// <returns>Translated text.</returns>
-        string GetPluralString(string text, string pluralText, long n);
+        string GetPluralString(FormattableStringAdapter text, FormattableStringAdapter pluralText, long n);
 
         /// <summary>
         /// Returns the plural form for <paramref name="n"/> of the translation of <paramref name="text"/>.
-        /// Similar to <c>ngettext</c> function.
+        /// Similar to <c>gettext</c> function.
         /// </summary>
         /// <param name="text">Singular form of message to translate.</param>
         /// <param name="pluralText">Plural form of message to translate.</param>
         /// <param name="n">Value that determines the plural form.</param>
-        /// <param name="args">Optional arguments for <see cref="System.String.Format(string, object[])"/> method.</param>
         /// <returns>Translated text.</returns>
-        string GetPluralString(string text, string pluralText, long n, params object[] args);
+        string GetPluralString(FormattableString text, FormattableString pluralText, long n);
+
+        /// <summary>
+        /// Returns the plural form for <paramref name="n"/> of the translation of <paramref name="text"/>.
+        /// Similar to <c>gettext</c> function.
+        /// </summary>
+        /// <param name="text">Singular form of message to translate.</param>
+        /// <param name="pluralText">Plural form of message to translate.</param>
+        /// <param name="n">Value that determines the plural form.</param>
+        /// <param name="args">Optional arguments for <see cref="string.Format(string, object[])"/> method.</param>
+        /// <returns>Translated text.</returns>
+        string GetPluralString(FormattableStringAdapter text, FormattableStringAdapter pluralText, long n, params object[] args);
 
         /// <summary>
         /// Returns <paramref name="text"/> translated into the selected language using given <paramref name="context"/>.
@@ -60,7 +70,7 @@ namespace GetText
         /// <param name="context">Context.</param>
         /// <param name="text">Text to translate.</param>
         /// <returns>Translated text.</returns>
-        string GetParticularString(string context, string text);
+        string GetParticularString(string context, FormattableStringAdapter text);
 
         /// <summary>
         /// Returns <paramref name="text"/> translated into the selected language using given <paramref name="context"/>.
@@ -68,9 +78,18 @@ namespace GetText
         /// </summary>
         /// <param name="context">Context.</param>
         /// <param name="text">Text to translate.</param>
-        /// <param name="args">Optional arguments for <see cref="System.String.Format(string, object[])"/> method.</param>
         /// <returns>Translated text.</returns>
-        string GetParticularString(string context, string text, params object[] args);
+        string GetParticularString(string context, FormattableString text);
+
+        /// <summary>
+        /// Returns <paramref name="text"/> translated into the selected language using given <paramref name="context"/>.
+        /// Similar to <c>pgettext</c> function.
+        /// </summary>
+        /// <param name="context">Context.</param>
+        /// <param name="text">Text to translate.</param>
+        /// <param name="args">Optional arguments for <see cref="string.Format(string, object[])"/> method.</param>
+        /// <returns>Translated text.</returns>
+        string GetParticularString(string context, FormattableStringAdapter text, params object[] args);
 
         /// <summary>
         /// Returns the plural form for <paramref name="n"/> of the translation of <paramref name="text"/> using given <paramref name="context"/>.
@@ -81,7 +100,7 @@ namespace GetText
         /// <param name="pluralText">Plural form of message to translate.</param>
         /// <param name="n">Value that determines the plural form.</param>
         /// <returns>Translated text.</returns>
-        string GetParticularPluralString(string context, string text, string pluralText, long n);
+        string GetParticularPluralString(string context, FormattableStringAdapter text, FormattableStringAdapter pluralText, long n);
 
         /// <summary>
         /// Returns the plural form for <paramref name="n"/> of the translation of <paramref name="text"/> using given <paramref name="context"/>.
@@ -91,8 +110,19 @@ namespace GetText
         /// <param name="text">Singular form of message to translate.</param>
         /// <param name="pluralText">Plural form of message to translate.</param>
         /// <param name="n">Value that determines the plural form.</param>
-        /// <param name="args">Optional arguments for <see cref="System.String.Format(string, object[])"/> method.</param>
         /// <returns>Translated text.</returns>
-        string GetParticularPluralString(string context, string text, string pluralText, long n, params object[] args);
+        string GetParticularPluralString(string context, FormattableString text, FormattableString pluralText, long n);
+
+        /// <summary>
+        /// Returns the plural form for <paramref name="n"/> of the translation of <paramref name="text"/> using given <paramref name="context"/>.
+        /// Similar to <c>npgettext</c> function.
+        /// </summary>
+        /// <param name="context">Context.</param>
+        /// <param name="text">Singular form of message to translate.</param>
+        /// <param name="pluralText">Plural form of message to translate.</param>
+        /// <param name="n">Value that determines the plural form.</param>
+        /// <param name="args">Optional arguments for <see cref="string.Format(string, object[])"/> method.</param>
+        /// <returns>Translated text.</returns>
+        string GetParticularPluralString(string context, FormattableStringAdapter text, FormattableStringAdapter pluralText, long n, params object[] args);
     }
 }

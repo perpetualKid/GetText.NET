@@ -153,7 +153,23 @@ namespace GetText.Tests
 
 			Assert.Equal("value1", t.GetString("key1"));
 			Assert.Equal("value2", t.GetParticularString("context1", "key1"));
-			Assert.Equal("value3", t.GetParticularString("context2", "key1"));
+			Assert.Equal("value3", t.GetParticularString($"context{2}", "key1"));
+			Assert.Equal("key1", t.GetParticularString("context3", "key1"));
+		}
+
+		[Fact]
+		public void TestGetParticularFormattableString()
+		{
+			var t = new Catalog();
+			t.Translations.Add("key{0}", new[] { "value0_{0}" });
+			t.Translations.Add("context1" + Catalog.CONTEXTGLUE + "key{0}", new[] { "value1_{0}" });
+			t.Translations.Add("context1" + Catalog.CONTEXTGLUE + "key2", new[] { "value1_2" });
+			t.Translations.Add("context2" + Catalog.CONTEXTGLUE + "key1", new[] { "value2" });
+
+			Assert.Equal("value0_1", t.GetString($"key{1}"));
+			Assert.Equal("value1_1", t.GetParticularString("context1", $"key{1}"));
+			Assert.Equal("value1_2", t.GetParticularString($"context{1}", $"key{2}"));
+			Assert.Equal("value1_2", t.GetParticularString($"context{1}", $"key2"));
 			Assert.Equal("key1", t.GetParticularString("context3", "key1"));
 		}
 
@@ -167,6 +183,15 @@ namespace GetText.Tests
 		}
 
 		[Fact]
+		public void TestGetParticularFormattableStringFormat()
+		{
+			var t = new Catalog();
+
+			Assert.Equal("Foo bar", t.GetParticularString("context", $"Foo {"bar"}"));
+			Assert.Equal("Foo bar baz", t.GetParticularString("context", $"Foo {"bar"} {"baz"}"));
+		}
+
+		[Fact]
 		public void TestGetParticularStringFormatCulture()
 		{
 			var catalogEn = new Catalog(new CultureInfo("en-US"));
@@ -176,6 +201,15 @@ namespace GetText.Tests
 			Assert.Equal("Foo 1,23", catalogRu.GetParticularString("context", "Foo {0}", 1.23));
 		}
 
+		[Fact]
+		public void TestGetParticularFormattableStringFormatCulture()
+		{
+			var catalogEn = new Catalog(new CultureInfo("en-US"));
+			var catalogRu = new Catalog(new CultureInfo("ru-RU"));
+
+			Assert.Equal("Foo 1.23", catalogEn.GetParticularString("context", $"Foo {1.23}"));
+			Assert.Equal("Foo 1,23", catalogRu.GetParticularString("context", $"Foo {1.23}"));
+		}
 		#endregion
 
 		#region GetParticularPluralString
@@ -194,6 +228,23 @@ namespace GetText.Tests
 		}
 
 		[Fact]
+		public void TestGetParticularPluralFormattableString()
+		{
+			var t = new Catalog(new CultureInfo("en-US"));
+			t.Translations.Add("context1" + Catalog.CONTEXTGLUE + "key{0}-1", new[] { "value{0}-1", "value{0}-2" });
+			t.Translations.Add("context2" + Catalog.CONTEXTGLUE + "key{0}-1", new[] { "value2-1", "value2-2" });
+
+			Assert.Equal("value1-1", t.GetParticularPluralString("context1", $"key{1}-1", $"key{1}-2", 1));
+			Assert.Equal("value1-2", t.GetParticularPluralString("context1", $"key{1}-1", $"key{1}-2", 2));
+			Assert.Equal("value0-2", t.GetParticularPluralString("context1", $"key{1}-1", $"key{0}-2", 2));
+			Assert.Equal("value2-1", t.GetParticularPluralString("context2", $"key{1}-1", $"key{1}-2", 1));
+			Assert.Equal("value2-2", t.GetParticularPluralString("context2", $"key{1}-1", $"key{1}-2", 2));
+			Assert.Equal("key1-1", t.GetParticularPluralString("context3", $"key1-1", $"key1-2", 1));
+			Assert.Equal("key1-1", t.GetParticularPluralString("context3", $"key{1}-1", $"key1-2", 1));
+			Assert.Equal("key1-2", t.GetParticularPluralString("context3", $"key1-1", $"key{1}-2", 2));
+		}
+
+		[Fact]
 		public void TestGetParticularPluralStringFormat()
 		{
 			var t = new Catalog(new CultureInfo("en-US"));
@@ -205,6 +256,17 @@ namespace GetText.Tests
 		}
 
 		[Fact]
+		public void TestGetParticularPluralFormattableStringFormat()
+		{
+			var t = new Catalog(new CultureInfo("en-US"));
+
+			Assert.Equal("Foo bar", t.GetParticularPluralString("context", $"Foo {"bar"}", $"Bar {"bar"}", 1));
+			Assert.Equal("Bar bar", t.GetParticularPluralString("context", $"Foo {"bar"}", $"Bar {"bar"}", 2));
+			Assert.Equal("Foo bar baz", t.GetParticularPluralString("context", $"Foo {"bar"} {"baz"}", $"Bar {"bar"} {"baz"}", 1));
+			Assert.Equal("Bar bar baz", t.GetParticularPluralString("context", $"Foo {"bar"} {"baz"}", $"Bar {"bar"} {"baz"}", 2));
+		}
+
+		[Fact]
 		public void TestGetParticularPluralStringFormatCulture()
 		{
 			var catalogEn = new Catalog(new CultureInfo("en-US"));
@@ -212,6 +274,16 @@ namespace GetText.Tests
 
 			Assert.Equal("Foo 1.23", catalogEn.GetParticularPluralString("context", "Foo {0}", "Foo {0}", (long)1.23, 1.23));
 			Assert.Equal("Foo 1,23", catalogRu.GetParticularPluralString("context", "Foo {0}", "Foo {0}", (long)1.23, 1.23));
+		}
+
+		[Fact]
+		public void TestGetParticularPluralFormattableStringFormatCulture()
+		{
+			var catalogEn = new Catalog(new CultureInfo("en-US"));
+			var catalogRu = new Catalog(new CultureInfo("ru-RU"));
+
+			Assert.Equal("Bar 1.23", catalogEn.GetParticularPluralString("context", $"Bar {1.23}", $"Foo {1.23}", 1));
+			Assert.Equal("Foo 1,23", catalogRu.GetParticularPluralString("context", $"Bar {1.23}", $"Foo {1.23}", 2));
 		}
 
 		#endregion
