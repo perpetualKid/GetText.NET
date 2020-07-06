@@ -7,7 +7,7 @@ GetText.NET
 | ----------- | ----------- |
 |GetText.NET|[![NuGet version](https://badge.fury.io/nu/gettext.net.svg)](https://badge.fury.io/nu/gettext.net)|
 |GetText.NET.PluralCompile|[![NuGet version](https://badge.fury.io/nu/gettext.net.PluralCompile.svg)](https://badge.fury.io/nu/gettext.net.PluralCompile)|
-|GetText.NET.WIndowsForms|[![NuGet version](https://badge.fury.io/nu/gettext.net.windowsforms.svg)](https://badge.fury.io/nu/gettext.net.windowsforms)|
+|GetText.NET.WindowsForms|[![NuGet version](https://badge.fury.io/nu/gettext.net.windowsforms.svg)](https://badge.fury.io/nu/gettext.net.windowsforms)|
 
 A cross-platform .NET implementation of the GNU Gettext library, largely based on [NGettext](https://github.com/VitaliiTsilnyk/NGettext). GetText.NET supports [**string interpolation**](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated) and [**FormattableString**](https://docs.microsoft.com/en-us/dotnet/api/system.formattablestring?redirectedfrom=MSDN&view=netcore-3.1)
 
