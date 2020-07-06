@@ -30,15 +30,15 @@ steps:
     configuration: '$(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
-    displayName: 'dotnet test'
-    inputs:
+  displayName: 'dotnet test'
+  inputs:
     command: test
     projects: '**/*Tests/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
-    displayName: 'dotnet pack'
-    inputs:
+  displayName: 'dotnet pack'
+  inputs:
     command: 'pack'
     packagesToPack: '**/*.csproj;!**/*.Tests.csproj;!**/Examples.*.csproj'
     versioningScheme: 'byPrereleaseNumber'
