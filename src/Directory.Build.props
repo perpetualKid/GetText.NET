@@ -2,7 +2,7 @@
   <PropertyGroup>
     <NoWarn>CS1591;CA1303;HAA0101;HAA0401;HAA0601</NoWarn>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <Version>0.8.2</Version>
+    <Version>0.9</Version>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
@@ -27,5 +27,6 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <Deterministic>true</Deterministic>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageTags>gettext.net;gettext;internationalization;localization;i18n;l10n;translate</PackageTags>
   </PropertyGroup>
 </Project>
