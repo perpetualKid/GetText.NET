@@ -6,8 +6,8 @@ GetText.NET
 | Package | Status |
 | ----------- | ----------- |
 |GetText.NET|[![NuGet version](https://badge.fury.io/nu/gettext.net.svg)](https://badge.fury.io/nu/gettext.net)|
-|GetText.NET.PluralCompile|[![NuGet version](https://badge.fury.io/nu/gettext.net.svg)](https://badge.fury.io/nu/gettext.net)|
-
+|GetText.NET.PluralCompile|[![NuGet version](https://badge.fury.io/nu/gettext.net.PluralCompile.svg)](https://badge.fury.io/nu/gettext.net.PluralCompile)|
+|GetText.NET.WIndowsForms|[![NuGet version](https://badge.fury.io/nu/gettext.net.windowsforms.svg)](https://badge.fury.io/nu/gettext.net.windowsforms)|
 
 A cross-platform .NET implementation of the GNU Gettext library, largely based on [NGettext](https://github.com/VitaliiTsilnyk/NGettext). GetText.NET supports [**string interpolation**](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated) and [**FormattableString**](https://docs.microsoft.com/en-us/dotnet/api/system.formattablestring?redirectedfrom=MSDN&view=netcore-3.1)
 
@@ -42,7 +42,7 @@ GetText.NET is originally forked from NGettext. NGettext uses an extensive folde
 * GetText.NET loads translations directly from *.mo files in standard .NET localization folder structure. Furthermore, translations can be loaded from other specified file or stream
 * GetText.NET supports message contexts
 * GetText.NET uses a nice and simple API, compatible with any type of application (console, GUI, web...)
-* GetText.NET.WindowsForms (separate package) allows localization of Windows Forms standard properties
+* [GetText.NET.WindowsForms](https://www.nuget.org/packages/GetText.NET.WindowsForms/) (separate package) allows localization of Windows Forms standard properties
 * GetText.NET supports [string interpolation](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated) and [FormattableString](https://docs.microsoft.com/en-us/dotnet/api/system.formattablestring?redirectedfrom=MSDN&view=netcore-3.1)
 
 
@@ -74,7 +74,8 @@ Using GetText.NET:
 ```
 ```csharp
 	Console.WriteLine(catalog.GetString("Hello, World!")); // will translate "Hello, World!" using loaded translations
-	Console.WriteLine(catalog.GetString("Hello, {0}!", "World")); // String.Format support
+	Console.WriteLine(catalog.GetString("Hello, {0}!", "World")); // string.Format support
+	Console.WriteLine(catalog.GetString($"Hello, {"World"}!")); // string interpolation support
 ```
 
 ### .NET CoreCLR
