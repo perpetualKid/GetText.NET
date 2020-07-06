@@ -136,6 +136,16 @@ namespace GetText
 		}
 
 		/// <summary>
+		/// Initializes a new instance of the <see cref="Catalog"/> class using the current UI culture info
+		/// and loads data for specified domain using a new <see cref="MoLoader"/> instance.
+		/// </summary>
+		/// <param name="domain">Catalog domain name.</param>
+		public Catalog(string domain)
+			: this(new MoLoader(domain, "."), CultureInfo.CurrentUICulture)
+		{
+		}
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="Catalog"/> class using given culture info
 		/// and loads data for specified domain and locale directory using a new <see cref="MoLoader"/> instance.
 		/// </summary>
@@ -146,7 +156,18 @@ namespace GetText
 			: this(new MoLoader(domain, localeDir), cultureInfo)
 		{
 		}
-#endregion
+		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Catalog"/> class using given culture info
+		/// and loads data for specified domain using a new <see cref="MoLoader"/> instance.
+		/// </summary>
+		/// <param name="domain">Catalog domain name.</param>
+		/// <param name="cultureInfo">Culture info.</param>
+		public Catalog(string domain, CultureInfo cultureInfo)
+			: this(new MoLoader(domain, "."), cultureInfo)
+		{
+		}
+		#endregion
 
 		/// <summary>
 		/// Loads data to the current catalog using specified loader instance.

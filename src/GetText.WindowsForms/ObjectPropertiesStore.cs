@@ -23,6 +23,9 @@ namespace GetText.WindowsForms
 
 		public void SetState(object obj, string propertyName, object value)
 		{
+			if (obj == null)
+				throw new ArgumentNullException(nameof(obj));
+
 			if (value == null)
 			{
 				PropertyInfo pi = obj.GetType().GetProperty(propertyName);
@@ -51,6 +54,9 @@ namespace GetText.WindowsForms
 
 		public object GetState(object obj, string propertyName)
 		{
+			if (obj == null)
+				throw new ArgumentNullException(nameof(obj));
+
 			if (!store.TryGetValue(obj.GetHashCode(), out PropertiesValuesStore propStore))
 				return null;
 

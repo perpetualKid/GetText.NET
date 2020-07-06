@@ -226,6 +226,6 @@ namespace Examples.HelloForms
 
 		}
 
-		#endregion
-	}
+        #endregion
+    }
 }

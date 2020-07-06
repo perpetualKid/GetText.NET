@@ -6,6 +6,8 @@
     <UseWindowsForms>true</UseWindowsForms>
     <Authors>perpetualKid</Authors>
     <Company />
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Version>0.9</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,7 +20,15 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\GetText.WindowsForms\GetText.WindowsForms.csproj" />
   </ItemGroup>
-
+  
+  <ItemGroup>
+    <AssetsSourceFiles Include="locales/**/*.*" />
+  </ItemGroup>
+  <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
+    <Copy SourceFiles="@(AssetsSourceFiles)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+  </Target>
+  <!--  
+  -->
   <PropertyGroup Condition="'$(TargetFramework)'=='net48'">
     <DefineConstants>NET48;$(AdditionalConstants)</DefineConstants>
   </PropertyGroup>
@@ -32,12 +42,14 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <None Update="locales\fr\messages.mo">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="locales\ru-RU\messages.mo">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Remove="ru-RU\messages.mo" />
   </ItemGroup>
-
+  <ItemGroup>
+    <Content Include="fr\messages.mo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ru-RU\messages.mo">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 </Project>

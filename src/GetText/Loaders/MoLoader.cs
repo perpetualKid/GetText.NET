@@ -217,7 +217,7 @@ namespace GetText.Loaders
             string path = this.FindTranslationFile(catalog.CultureInfo, domain, localeDir);
 			if (path == null)
 			{
-				throw new FileNotFoundException($"Can not find MO file name in locale directory \"{localeDir}\".");
+				throw new FileNotFoundException($"Can not find MO file name in locale directory \"{localeDir ?? "\\."}\".");
 			}
 
 			this.Load(path, catalog);
@@ -318,7 +318,7 @@ namespace GetText.Loaders
 		/// <returns></returns>
 		protected virtual string GetFileName(string localeDir, string domain, string locale)
 		{
-			return Path.Combine(localeDir, locale, domain + MO_FILE_EXT);
+			return string.IsNullOrEmpty(localeDir) ? Path.Combine(locale, domain + MO_FILE_EXT) : Path.Combine(localeDir, locale, domain + MO_FILE_EXT);
 		}
 	}
 }

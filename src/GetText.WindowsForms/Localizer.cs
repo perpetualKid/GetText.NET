@@ -14,22 +14,17 @@ namespace GetText.WindowsForms
 
 		public ICatalog Catalog { get; set; }
 		public ObjectPropertiesStore OriginalTextStore { get; set; }
-
-		private ToolTipControls toolTips = new ToolTipControls();
-		public ToolTipControls ToolTips
-		{
-			get { return toolTips; }
-		}
-		private Control root;
+        public ToolTipControls ToolTips { get; } = new ToolTipControls();
+        private readonly Control root;
 
 		#region Constructors
 		public Localizer(Control rootControl, string resourceBaseName)
-			: this(rootControl, new Catalog(), null)    //TODO new GettextResourceManager(resourceBaseName), null)
+			: this(rootControl, new Catalog(resourceBaseName), null)
 		{
 		}
 
 		public Localizer(Control rootControl, string resourceBaseName, ObjectPropertiesStore originalTextStore)
-			: this(rootControl, new Catalog(), originalTextStore)//TODO new GettextResourceManager(resourceBaseName), originalTextStore)
+			: this(rootControl, new Catalog(resourceBaseName), originalTextStore)
 		{
 		}
 
@@ -40,9 +35,9 @@ namespace GetText.WindowsForms
 
 		public Localizer(Control rootControl, ICatalog catalog, ObjectPropertiesStore originalTextStore)
 		{
-			this.Catalog = catalog;
+            this.Catalog = catalog;
 			this.OriginalTextStore = originalTextStore;
-			this.root = rootControl;
+			this.root = rootControl ?? throw new ArgumentNullException(nameof(rootControl));
 
 			// Access to form components
 			// Try access by container
@@ -73,8 +68,8 @@ namespace GetText.WindowsForms
 			{
 				if (component is ToolTip)
 				{
-					if (!toolTips.Contains(component as ToolTip))
-						toolTips.Add(component as ToolTip);
+					if (!ToolTips.Contains(component as ToolTip))
+						ToolTips.Add(component as ToolTip);
 				}
 			}
 		}
@@ -162,7 +157,7 @@ namespace GetText.WindowsForms
 			{
 				foreach (DataGridViewColumn col in gridView.Columns)
 				{
-					IterateControlHandler(new LocalizableObjectAdapter(col, OriginalTextStore, toolTips), mode);
+					IterateControlHandler(new LocalizableObjectAdapter(col, OriginalTextStore, ToolTips), mode);
 				}
 			}
 			else if (control is ToolStrip toolStrip)
@@ -173,7 +168,7 @@ namespace GetText.WindowsForms
 				}
 			}
 
-			IterateControlHandler(new LocalizableObjectAdapter(control, OriginalTextStore, toolTips), mode);
+			IterateControlHandler(new LocalizableObjectAdapter(control, OriginalTextStore, ToolTips), mode);
 		}
 
 		private void IterateToolStripItems(ToolStripItem item, IterateMode mode)
@@ -185,7 +180,7 @@ namespace GetText.WindowsForms
 					IterateToolStripItems(subitem, mode);
 				}
 			}
-			IterateControlHandler(new LocalizableObjectAdapter(item, OriginalTextStore, toolTips), mode);
+			IterateControlHandler(new LocalizableObjectAdapter(item, OriginalTextStore, ToolTips), mode);
 		}
 	}
 }
