@@ -31,6 +31,17 @@ namespace GetText.Loaders
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="BigEndianBinaryReader"/> class based on the
+        /// supplied stream and a specific character encoding.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="encoding"></param>
+        /// <param name="leaveOpen"></param>
+        public BigEndianBinaryReader(Stream input, Encoding encoding, bool leaveOpen) : base(input, encoding, leaveOpen)
+        {
+        }
+
+        /// <summary>
         /// Reads a 2-byte signed integer from the current 
         /// stream and advances the current position of the stream by two bytes.
         /// </summary>

@@ -81,125 +81,129 @@ namespace GetText.Loaders
             }
 
             bool bigEndian = false;
-            BinaryReader reader = new BinaryReader(new ReadOnlyStream(stream));
-            try
+            using (ReadOnlyStream readOnlyStream = new ReadOnlyStream(stream))
             {
-                uint magicNumber = reader.ReadUInt32();
-                if (magicNumber != MO_FILE_MAGIC)
+
+                BinaryReader reader = new BinaryReader(readOnlyStream, Encoding.UTF8, true);
+                try
                 {
-                    // System.IO.BinaryReader does not respect machine endianness and always uses LittleEndian
-                    // So we need to detect and read BigEendian files by ourselves
-                    if (ReverseBytes(magicNumber) == MO_FILE_MAGIC)
+                    uint magicNumber = reader.ReadUInt32();
+                    if (magicNumber != MO_FILE_MAGIC)
                     {
-#if DEBUG
-                        Trace.WriteLine("BigEndian file detected. Switching readers...", "GetText");
-#endif
-                        bigEndian = true;
-                        ((IDisposable)reader).Dispose();
-                        reader = new BigEndianBinaryReader(new ReadOnlyStream(stream));
-                    }
-                    else
-                    {
-                        throw new ArgumentException("Invalid stream: can not find MO file magic number.");
-                    }
-                }
-
-                var revision = reader.ReadInt32();
-                var parsedFile = new MoFile(new Version(revision >> 16, revision & 0xffff), this.DefaultEncoding, bigEndian);
-
-#if DEBUG
-                Trace.WriteLine($"MO File Revision: {parsedFile.FormatRevision.Major}.{parsedFile.FormatRevision.Minor}.", "GetText");
-#endif
-
-                if (parsedFile.FormatRevision.Major > MAX_SUPPORTED_VERSION)
-                {
-                    throw new CatalogLoadingException($"Unsupported MO file major revision: {parsedFile.FormatRevision.Major}.");
-                }
-
-                var stringCount = reader.ReadInt32();
-                var originalTableOffset = reader.ReadInt32();
-                var translationTableOffset = reader.ReadInt32();
-
-                // We don't support hash tables and system dependent segments.
-
-#if DEBUG
-                Trace.WriteLine($"MO File contains {stringCount} strings.", "GetText");
-#endif
-
-                StringOffsetTable[] originalTable = new StringOffsetTable[stringCount];
-                StringOffsetTable[] translationTable = new StringOffsetTable[stringCount];
-
-#if DEBUG
-                Trace.WriteLine($"Trying to parse strings using encoding \"{parsedFile.Encoding}\"...", "GetText");
-#endif
-
-                reader.BaseStream.Seek(originalTableOffset, SeekOrigin.Begin);
-                for (int i = 0; i < stringCount; i++)
-                {
-                    originalTable[i].Length = reader.ReadInt32();
-                    originalTable[i].Offset = reader.ReadInt32();
-                }
-
-                reader.BaseStream.Seek(translationTableOffset, SeekOrigin.Begin);
-                for (int i = 0; i < stringCount; i++)
-                {
-                    translationTable[i].Length = reader.ReadInt32();
-                    translationTable[i].Offset = reader.ReadInt32();
-                }
-
-
-                for (int i = 0; i < stringCount; i++)
-                {
-                    string[] originalStrings = ReadStrings(reader, originalTable[i].Offset, originalTable[i].Length, parsedFile.Encoding);
-                    string[] translatedStrings = ReadStrings(reader, translationTable[i].Offset, translationTable[i].Length, parsedFile.Encoding);
-
-                    if (originalStrings.Length == 0 || translatedStrings.Length == 0) continue;
-
-                    if (originalStrings[0].Length == 0)
-                    {
-                        // MO file meta data processing
-                        foreach (string headerText in translatedStrings[0].Split(linefeed, StringSplitOptions.RemoveEmptyEntries))
+                        // System.IO.BinaryReader does not respect machine endianness and always uses LittleEndian
+                        // So we need to detect and read BigEendian files by ourselves
+                        if (ReverseBytes(magicNumber) == MO_FILE_MAGIC)
                         {
-                            int separatorIndex = headerText.IndexOf(":", StringComparison.OrdinalIgnoreCase);
-                            if (separatorIndex > 0)
-                            {
-                                string headerName = headerText.Substring(0, separatorIndex);
-                                string headerValue = headerText.Substring(separatorIndex + 1).Trim();
-                                parsedFile.Headers.Add(headerName, headerValue.Trim());
-                            }
+#if DEBUG
+                            Trace.WriteLine("BigEndian file detected. Switching readers...", "GetText");
+#endif
+                            bigEndian = true;
+                            ((IDisposable)reader).Dispose();
+                            reader = new BigEndianBinaryReader(readOnlyStream, Encoding.UTF8, true);
                         }
-
-                        if (AutoDetectEncoding && parsedFile.Headers.ContainsKey("Content-Type"))
+                        else
                         {
-                            try
-                            {
-                                ContentType contentType = new ContentType(parsedFile.Headers["Content-Type"]);
-                                if (!string.IsNullOrEmpty(contentType.CharSet))
-                                {
-                                    parsedFile.Encoding = Encoding.GetEncoding(contentType.CharSet);
+                            throw new ArgumentException("Invalid stream: can not find MO file magic number.");
+                        }
+                    }
+
+                    var revision = reader.ReadInt32();
+                    var parsedFile = new MoFile(new Version(revision >> 16, revision & 0xffff), this.DefaultEncoding, bigEndian);
+
 #if DEBUG
-                                    Trace.WriteLine($"File encoding switched to \"{parsedFile.Encoding}\" (\"{contentType.CharSet}\" requested).", "GetText");
+                    Trace.WriteLine($"MO File Revision: {parsedFile.FormatRevision.Major}.{parsedFile.FormatRevision.Minor}.", "GetText");
 #endif
+
+                    if (parsedFile.FormatRevision.Major > MAX_SUPPORTED_VERSION)
+                    {
+                        throw new CatalogLoadingException($"Unsupported MO file major revision: {parsedFile.FormatRevision.Major}.");
+                    }
+
+                    var stringCount = reader.ReadInt32();
+                    var originalTableOffset = reader.ReadInt32();
+                    var translationTableOffset = reader.ReadInt32();
+
+                    // We don't support hash tables and system dependent segments.
+
+#if DEBUG
+                    Trace.WriteLine($"MO File contains {stringCount} strings.", "GetText");
+#endif
+
+                    StringOffsetTable[] originalTable = new StringOffsetTable[stringCount];
+                    StringOffsetTable[] translationTable = new StringOffsetTable[stringCount];
+
+#if DEBUG
+                    Trace.WriteLine($"Trying to parse strings using encoding \"{parsedFile.Encoding}\"...", "GetText");
+#endif
+
+                    reader.BaseStream.Seek(originalTableOffset, SeekOrigin.Begin);
+                    for (int i = 0; i < stringCount; i++)
+                    {
+                        originalTable[i].Length = reader.ReadInt32();
+                        originalTable[i].Offset = reader.ReadInt32();
+                    }
+
+                    reader.BaseStream.Seek(translationTableOffset, SeekOrigin.Begin);
+                    for (int i = 0; i < stringCount; i++)
+                    {
+                        translationTable[i].Length = reader.ReadInt32();
+                        translationTable[i].Offset = reader.ReadInt32();
+                    }
+
+
+                    for (int i = 0; i < stringCount; i++)
+                    {
+                        string[] originalStrings = ReadStrings(reader, originalTable[i].Offset, originalTable[i].Length, parsedFile.Encoding);
+                        string[] translatedStrings = ReadStrings(reader, translationTable[i].Offset, translationTable[i].Length, parsedFile.Encoding);
+
+                        if (originalStrings.Length == 0 || translatedStrings.Length == 0) continue;
+
+                        if (originalStrings[0].Length == 0)
+                        {
+                            // MO file meta data processing
+                            foreach (string headerText in translatedStrings[0].Split(linefeed, StringSplitOptions.RemoveEmptyEntries))
+                            {
+                                int separatorIndex = headerText.IndexOf(":", StringComparison.OrdinalIgnoreCase);
+                                if (separatorIndex > 0)
+                                {
+                                    string headerName = headerText.Substring(0, separatorIndex);
+                                    string headerValue = headerText.Substring(separatorIndex + 1).Trim();
+                                    parsedFile.Headers.Add(headerName, headerValue.Trim());
                                 }
                             }
-                            catch (Exception exception)
+
+                            if (AutoDetectEncoding && parsedFile.Headers.ContainsKey("Content-Type"))
                             {
-                                throw new CatalogLoadingException($"Unable to change parser encoding using the Content-Type header: \"{exception.Message}\".", exception);
+                                try
+                                {
+                                    ContentType contentType = new ContentType(parsedFile.Headers["Content-Type"]);
+                                    if (!string.IsNullOrEmpty(contentType.CharSet))
+                                    {
+                                        parsedFile.Encoding = Encoding.GetEncoding(contentType.CharSet);
+#if DEBUG
+                                        Trace.WriteLine($"File encoding switched to \"{parsedFile.Encoding}\" (\"{contentType.CharSet}\" requested).", "GetText");
+#endif
+                                    }
+                                }
+                                catch (Exception exception)
+                                {
+                                    throw new CatalogLoadingException($"Unable to change parser encoding using the Content-Type header: \"{exception.Message}\".", exception);
+                                }
                             }
                         }
+
+                        parsedFile.Translations.Add(originalStrings[0], translatedStrings);
                     }
 
-                    parsedFile.Translations.Add(originalStrings[0], translatedStrings);
-                }
-
 #if DEBUG
-                Trace.WriteLine("String parsing completed.", "GetText");
+                    Trace.WriteLine("String parsing completed.", "GetText");
 #endif
-                return parsedFile;
-            }
-            finally
-            {
-                ((IDisposable)reader).Dispose();
+                    return parsedFile;
+                }
+                finally
+                {
+                    ((IDisposable)reader).Dispose();
+                }
             }
         }
 
