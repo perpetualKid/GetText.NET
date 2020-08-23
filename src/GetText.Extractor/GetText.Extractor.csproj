@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>net48</TargetFrameworks>
+    <Description>Extracts string from .NET solutions and project into GetText Catalog template files (.pot).</Description>
+    <AssemblyTitle>GetText.NET.Extractor</AssemblyTitle>
+    <LangVersion>7.3</LangVersion>
+    <AssemblyName>GetText.Extractor</AssemblyName>
+    <PackageId>GetText.NET.Extractor</PackageId>
+    <!--
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>Extractor</ToolCommandName>
+    -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Locator" Version="1.2.6" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="3.7.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.7.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.7.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="3.7.0" />
+    <PackageReference Include="Microsoft.Net.Compilers" Version="3.7.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.Collections.Immutable" Version="1.7.1" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20371.2" />
+  </ItemGroup>
+  <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+</Project>
