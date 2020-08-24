@@ -10,7 +10,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: MonoDevelop Gettext addin\n"
 
-
+# There should be some comment
+# which may stretch on more than one line
+#. This is a comment which would typically extracted from 
+#. the source code
 #: ../Form1.cs:97
 #: ../Form1.cs:130
 msgid "Hello, world!"
@@ -39,14 +42,14 @@ msgid "Text encoding"
 msgstr ""
 
 #: ../Form1.cs:34
-#, csharp-format
+#, fuzzy, csharp-format
 msgid "This program is running as process number \"{0}\"."
 msgstr ""
 
 #: ../Form1.cs:37
 #: ../Form1.cs:40
 #: ../Form1.cs:43
-#, csharp-format
+#, fuzzy, csharp-format
 msgid "found {0} similar word"
 msgid_plural "found {0} similar words"
 msgstr[0] ""

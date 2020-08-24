@@ -65,18 +65,18 @@ csharp_preserve_single_line_statements = true
 #Style - Code block preferences
 
 #prefer curly braces even for one line of code
-csharp_prefer_braces = true:suggestion
+csharp_prefer_braces = false:suggestion
 
 #Style - expression bodied member options
 
 #prefer block bodies for accessors
-csharp_style_expression_bodied_accessors = false:suggestion
+csharp_style_expression_bodied_accessors = true:suggestion
 #prefer block bodies for constructors
 csharp_style_expression_bodied_constructors = false:suggestion
 #prefer block bodies for methods
-csharp_style_expression_bodied_methods = false:suggestion
+csharp_style_expression_bodied_methods = true:suggestion
 #prefer block bodies for properties
-csharp_style_expression_bodied_properties = false:suggestion
+csharp_style_expression_bodied_properties = true:suggestion
 
 #Style - expression level options
 
