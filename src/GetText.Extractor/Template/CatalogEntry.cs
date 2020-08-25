@@ -9,7 +9,7 @@ namespace GetText.Extractor.Template
     /// </summary>
     public class CatalogEntry
     {
-        private Metadata metaData;
+        private CommentData metaData;
         private List<string> pluralMessages;
 
         public string Context { get; set; }
@@ -17,7 +17,7 @@ namespace GetText.Extractor.Template
         public string Message { get; set; } = string.Empty;
         public string PluralMessageId { get; set; }
         public List<string> PluralMessages => pluralMessages ?? (pluralMessages = new List<string>());
-        public Metadata MetaData => metaData ?? (metaData = new Metadata());
+        public CommentData MetaData => metaData ?? (metaData = new CommentData());
 
         internal bool HasPlural => pluralMessages?.Count > 0;
 

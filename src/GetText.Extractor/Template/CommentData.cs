@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GetText.Extractor.Template
 {
-    public class Metadata
+    public class CommentData
     {
         private List<string> autoComments;
         private List<string> references;
