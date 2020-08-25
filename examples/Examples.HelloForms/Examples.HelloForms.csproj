@@ -7,7 +7,7 @@
     <Authors>perpetualKid</Authors>
     <Company />
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Version>0.9</Version>
+    <Version>0.9.2-alpha.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,32 +18,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\GetText.WindowsForms\GetText.WindowsForms.csproj" />
+    <ProjectReference Include="..\..\src\GetText.WindowsForms\GetText.WindowsForms.csproj" />
   </ItemGroup>
   
-  <ItemGroup>
-    <AssetsSourceFiles Include="locales/**/*.*" />
-  </ItemGroup>
   <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
     <Copy SourceFiles="@(AssetsSourceFiles)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
   </Target>
-  <!--  
-  -->
-  <PropertyGroup Condition="'$(TargetFramework)'=='net48'">
-    <DefineConstants>NET48;$(AdditionalConstants)</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp3.1'">
-    <DefineConstants>NETCOREAPP3_1;$(AdditionalConstants)</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net48|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net48|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-  </PropertyGroup>
-  <ItemGroup>
-    <None Remove="ru-RU\messages.mo" />
-  </ItemGroup>
   <ItemGroup>
     <Content Include="fr\messages.mo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
