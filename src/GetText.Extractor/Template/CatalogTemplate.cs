@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GetText.Extractor.Template
 {
-    public class Catalog
+    public class CatalogTemplate
     {
         internal static string Newline = Environment.NewLine;
         internal static string[] LineEndings = new string[] { "\n\r", "\r\n", "\r", "\n", "\r" };
@@ -16,10 +16,20 @@ namespace GetText.Extractor.Template
         public string FileName { get; private set; }
         public CatalogHeader Header { get; set; }
 
-        public Catalog(string fileName)
+        public CatalogTemplate(string fileName)
         {
             FileName = fileName;
             Header = new CatalogHeader();
+        }
+
+        public CatalogEntry AddOrUpdateEntry(string context, string messageId)
+        {
+            if (!entries.TryGetValue(CatalogEntry.BuildKey(context, messageId), out CatalogEntry result))
+            {
+                result = new CatalogEntry(context, messageId, string.Empty);
+                entries.Add(result.Key, result);
+            }
+            return result;
         }
 
         public void Read()

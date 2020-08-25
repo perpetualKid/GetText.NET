@@ -21,37 +21,38 @@ namespace GetText.Extractor.Template
         public override string ToString()
         {
             StringBuilder builder = new StringBuilder();
-            builder.AppendLine($"\"Project-Id-Version: {ProjectIdVersion}\\n\"");
+            builder.Append($"\"Project-Id-Version: {ProjectIdVersion}\\n\"{CatalogTemplate.Newline}");
             if (!string.IsNullOrEmpty(ReportMsgidBugsTo))
             {
-                builder.AppendLine($"\"Report-Msgid-Bugs-To: {ReportMsgidBugsTo}\\n\"");
+                builder.Append($"\"Report-Msgid-Bugs-To: {ReportMsgidBugsTo}\\n\"");
             }
-            builder.AppendLine($"\"POT-Creation-Date: {CreationDate.ToRfc822Format()}\\n\"");
-            builder.AppendLine($"\"PO-Revision-Date: {DateTime.Now.ToRfc822Format()}\\n\"");
+            builder.Append($"\"POT-Creation-Date: {CreationDate.ToRfc822Format()}\\n\"{CatalogTemplate.Newline}");
+            builder.Append($"\"PO-Revision-Date: {DateTime.Now.ToRfc822Format()}\\n\"{CatalogTemplate.Newline}");
             if (string.IsNullOrEmpty(TranslatorEmail))
             {
-                builder.AppendLine($"\"Last-Translator: {Translator}\\n\"");
+                builder.Append($"\"Last-Translator: {Translator}\\n\"{CatalogTemplate.Newline}");
             }
             else
             {
-                builder.AppendLine($"\"Last-Translator: {Translator} <{TranslatorEmail}>\\n\"");
+                builder.Append($"\"Last-Translator: {Translator} <{TranslatorEmail}>\\n\"{CatalogTemplate.Newline}");
             }
             if (string.IsNullOrEmpty(LanguageTeamEmail))
             {
-                builder.AppendLine($"\"Language-Team: {LanguageTeam}\\n\"");
+                builder.Append($"\"Language-Team: {LanguageTeam}\\n\"{CatalogTemplate.Newline}");
             }
             else
             {
-                builder.AppendLine($"\"Language-Team: {LanguageTeam} <{LanguageTeamEmail}>\\n\"");
+                builder.Append($"\"Language-Team: {LanguageTeam} <{LanguageTeamEmail}>\\n\"{CatalogTemplate.Newline}");
             }
-            builder.AppendLine($"\"MIME-Version: {MimeVersion}\\n\"");
-            builder.AppendLine($"\"Content-Type: {ContentType}\\n\"");
-            builder.AppendLine($"\"Content-Transfer-Encoding: {TransferEncoding}\\n\"");
+            builder.Append($"\"MIME-Version: {MimeVersion}\\n\"{CatalogTemplate.Newline}");
+            builder.Append($"\"Content-Type: {ContentType}\\n\"{CatalogTemplate.Newline}");
+            builder.Append($"\"Content-Transfer-Encoding: {TransferEncoding}\\n\"{CatalogTemplate.Newline}");
             if (!string.IsNullOrEmpty(PluralForms))
             {
-                builder.AppendLine($"\"Plural-Forms: {PluralForms}\\n\"");
+                builder.Append($"\"Plural-Forms: {PluralForms}\\n\"{CatalogTemplate.Newline}");
             }
-            builder.AppendLine($"\"X-Generator: GetText.NET Extractor\\n\"");
+            builder.Append($"\"X-Generator: GetText.NET Extractor\\n\"{CatalogTemplate.Newline}");
+            builder.Append(CatalogTemplate.Newline);
             return builder.ToString();
         }
     }

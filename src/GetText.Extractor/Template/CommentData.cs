@@ -27,13 +27,13 @@ namespace GetText.Extractor.Template
                 foreach (string comment in AutoComments)
                 {
                     builder.Append($"#. {comment}");
-                    builder.Append(Catalog.Newline);
+                    builder.Append(CatalogTemplate.Newline);
                 }
             if (null != references)
                 foreach (string reference in References)
                 {
                     builder.Append($"#: {reference}");
-                    builder.Append(Catalog.Newline);
+                    builder.Append(CatalogTemplate.Newline);
                 }
             if (Flags != MessageFlags.None)
             {
@@ -42,7 +42,7 @@ namespace GetText.Extractor.Template
                     builder.Append(", fuzzy");
                 if ((Flags & MessageFlags.CSharpFormat) == MessageFlags.CSharpFormat)
                     builder.Append(", csharp-format");
-                builder.Append(Catalog.Newline);
+                builder.Append(CatalogTemplate.Newline);
             }
             return builder.ToString();
         }

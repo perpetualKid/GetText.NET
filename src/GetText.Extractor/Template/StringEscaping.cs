@@ -9,6 +9,7 @@ namespace GetText.Extractor.Template
         //with modififications, as Gettext dosn't follow all C escaping
         public static string ToGetTextFormat(string text)
         {
+            return text;
             StringBuilder sb = new StringBuilder(text.Length);
             for (int i = 0; i < text.Length; i++)
             {

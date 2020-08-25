@@ -9,7 +9,7 @@ namespace GetText.Extractor.Template
     /// </summary>
     public class CatalogEntry
     {
-        private CommentData metaData;
+        private CommentData comments;
         private List<string> pluralMessages;
 
         public string Context { get; set; }
@@ -17,7 +17,7 @@ namespace GetText.Extractor.Template
         public string Message { get; set; } = string.Empty;
         public string PluralMessageId { get; set; }
         public List<string> PluralMessages => pluralMessages ?? (pluralMessages = new List<string>());
-        public CommentData MetaData => metaData ?? (metaData = new CommentData());
+        public CommentData Comments => comments ?? (comments = new CommentData());
 
         internal bool HasPlural => pluralMessages?.Count > 0;
 
@@ -36,17 +36,26 @@ namespace GetText.Extractor.Template
             MessageId = messageId;
         }
 
-        public CatalogEntry(string messageId, string message): this(messageId)
-        { 
-            Message = message; 
+        public CatalogEntry(string messageId, string message) : this(messageId)
+        {
+            Message = message;
         }
+
+        public CatalogEntry(string context, string messageId, string message) : this(messageId, message)
+        {
+            Context = context;
+        }
+
+        public string Key => BuildKey(Context, MessageId);
+
+        public static string BuildKey(string context, string messageId) => $"{context?.Trim()}|{messageId}";
 
         public override string ToString()
         {
             StringBuilder builder = new StringBuilder();
-            if (null != metaData)
-                builder.Append(MetaData.ToString());
-            if (!string.IsNullOrEmpty(Context))
+            if (null != comments)
+                builder.Append(Comments.ToString());
+            if (null != Context)    //empty context is different from null
             {
                 FormatMessageStringAndAppend(builder, "msgctxt", Context);
             }
@@ -55,7 +64,7 @@ namespace GetText.Extractor.Template
             if (HasPlural)
             {
                 FormatMessageStringAndAppend(builder, "msgid_plural", MessageId);
-                for(int i = 0; i < PluralMessages.Count; i++)
+                for (int i = 0; i < PluralMessages.Count; i++)
                 {
                     FormatMessageStringAndAppend(builder, $"msgstr[{i}]", EnsureCorrectEndings(MessageId, PluralMessages[i]));
                 }
@@ -64,27 +73,28 @@ namespace GetText.Extractor.Template
             {
                 FormatMessageStringAndAppend(builder, "msgstr", EnsureCorrectEndings(MessageId, Message));
             }
-            builder.Append(Catalog.Newline);
+            if (!string.IsNullOrEmpty(MessageId))
+                builder.Append(CatalogTemplate.Newline);
             return builder.ToString();
         }
 
         private static void FormatMessageStringAndAppend(StringBuilder builder, string prefix, string message)
         {
             string escapedMessage = StringEscaping.ToGetTextFormat(message);
-            
+
             //format to 80 cols
             //first the simple case: does it fit one one line, with the prefix, and contain no newlines?
             if (prefix.Length + escapedMessage.Length < 77 && !escapedMessage.Contains("\\n"))
             {
                 builder.Append($"{prefix} \"{escapedMessage}\"");
-                builder.Append(Catalog.Newline);
+                builder.Append(CatalogTemplate.Newline);
                 return;
             }
             //not the simple case.
 
             // first line is typically: prefix ""
             builder.Append($"{prefix} \"\"");
-            builder.Append(Catalog.Newline);
+            builder.Append(CatalogTemplate.Newline);
 
             //followed by 80-col width break on spaces
             int possibleBreak = -1;
@@ -121,10 +131,8 @@ namespace GetText.Extractor.Template
                 }
                 if (forceBreak || (currLineLen >= 77 && possibleBreak != -1))
                 {
-                    builder.Append("\"");
-                    builder.Append(escapedMessage.Substring(lastBreakAt, possibleBreak - lastBreakAt));
-                    builder.Append("\"");
-                    builder.Append(Catalog.Newline);
+                    builder.Append($"\"{escapedMessage.Substring(lastBreakAt, possibleBreak - lastBreakAt)}\"");
+                    builder.Append(CatalogTemplate.Newline);
 
                     //reset state for new line
                     currLineLen = 0;
@@ -138,10 +146,8 @@ namespace GetText.Extractor.Template
             string remainder = escapedMessage.Substring(lastBreakAt);
             if (remainder.Length > 0)
             {
-                builder.Append("\"");
-                builder.Append(remainder);
-                builder.Append("\"");
-                builder.Append(Catalog.Newline);
+                builder.Append($"\"{remainder}\"");
+                builder.Append(CatalogTemplate.Newline);
             }
             return;
         }
@@ -150,11 +156,11 @@ namespace GetText.Extractor.Template
         private static string EnsureCorrectEndings(string reference, string text)
         {
             if (text.Length == 0)
-                return "";
+                return string.Empty;
 
             int numEndings = 0;
-            for (int i = text.Length - 1; i >= 0 && text[i] == '\n'; i--, numEndings++)
-                ;
+            for (int i = text.Length - 1; i >= 0 && text[i] == '\n'; i--)
+                numEndings++;
             StringBuilder builder = new StringBuilder(text, 0, text.Length - numEndings, text.Length + reference.Length - numEndings);
             for (int i = reference.Length - 1; i >= 0 && reference[i] == '\n'; i--)
             {
