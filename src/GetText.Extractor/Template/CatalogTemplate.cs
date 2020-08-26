@@ -43,10 +43,10 @@ namespace GetText.Extractor.Template
             if (File.Exists(backupFile))
             {
                 File.Delete(backupFile);
-                if (File.Exists(FileName))
-                {
-                    File.Move(FileName, backupFile);
-                }
+            }
+            if (File.Exists(FileName))
+            {
+                File.Move(FileName, backupFile);
             }
             await Save().ConfigureAwait(false);
         }
