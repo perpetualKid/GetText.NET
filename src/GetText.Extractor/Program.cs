@@ -89,13 +89,13 @@ namespace GetText.Extractor
                 foreach (var item in interpolationString.Contents)
                 {
                     if (item.Kind() == SyntaxKind.InterpolatedStringText)
-                        builder.Append(ToLiteral(item.ToString()));
+                        builder.Append((item as InterpolatedStringTextSyntax)?.TextToken.ValueText);
                     else if (item.Kind() == SyntaxKind.Interpolation)
                         builder.Append($"{{{i++}}}");
                     else
                         Console.WriteLine(item.Kind());
                 }
-                CatalogEntry entry = catalog.AddOrUpdateEntry(null, builder.ToString());
+                CatalogEntry entry = catalog.AddOrUpdateEntry(null, ToLiteral(builder.ToString()));
                 string pathRelative = PathExtension.GetRelativePath(catalogPath, tree.FilePath);
                 entry.Comments.References.Add($"{pathRelative}:{interpolationString.GetLocation().GetLineSpan().StartLinePosition.Line + 1}");
                 result.Add($"{builder} ({interpolationString.GetLocation().GetLineSpan().StartLinePosition.Line})");
@@ -113,9 +113,6 @@ namespace GetText.Extractor
             return result;
         }
 
-        private static string ToLiteral(string valueTextForCompiler)
-        {
-            return SymbolDisplay.FormatLiteral(valueTextForCompiler, false);
-        }
+        private static string ToLiteral(string valueTextForCompiler) => SymbolDisplay.FormatLiteral(valueTextForCompiler, false);
     }
 }
