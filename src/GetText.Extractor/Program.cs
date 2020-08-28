@@ -24,31 +24,40 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace GetText.Extractor
 {
-    public class CommandLineOptionsResult
-    {
-        public FileInfo Source { get; private set; }
-        public FileInfo Target { get; private set; }
-    }
-
     class Program
     {
         internal static CatalogTemplate catalog;
         internal static string catalogPath;
 
-        static async Task<int> Main(string[] args)
+        private static async Task<int> Main(string[] args)
         {
             RootCommand rootCommand = CommandLineOptions.RootCommand;
             rootCommand.Add(CommandLineOptions.SourceOption);
             rootCommand.Add(CommandLineOptions.OutFile);
+            rootCommand.Add(CommandLineOptions.Merge);
 
-            rootCommand.Handler = CommandHandler.Create((CommandLineOptionsResult options) =>
+            rootCommand.Handler = CommandHandler.Create(async (FileInfo source, FileInfo target, bool merge) =>
             {
-                Console.WriteLine(options.Source);
+                await Execute(source, target).ConfigureAwait(false);
             });
+
             return await rootCommand.InvokeAsync(args).ConfigureAwait(false);
 
-            string solutionDir = Path.GetFullPath(@"C:\Storage\Dev\Scratch\ConsoleApp3");
-            catalog = new CatalogTemplate(Path.Combine(solutionDir, "messages.pot"));
+        }
+
+        static async Task Execute(FileInfo source, FileInfo target)
+        {
+
+            string solutionDir;
+            if ((source.Attributes | FileAttributes.Directory) == FileAttributes.Directory)
+            {
+                solutionDir = source.FullName;
+            }
+            else
+            {
+                solutionDir = source.DirectoryName;
+            }
+            catalog = new CatalogTemplate(target.FullName);
             catalogPath = Path.GetDirectoryName(catalog.FileName);
             var allCSharpFiles = GetAllCSharpCode(solutionDir);
             PrintStrings(allCSharpFiles);
@@ -60,14 +69,6 @@ namespace GetText.Extractor
             });
 
             await catalog.WriteAsync().ConfigureAwait(false);
-
-        }
-
-        static FileInfo ParseFileInfo(ArgumentResult fileInfo)
-        {
-            fileInfo.ErrorMessage = "File not found";
-
-            return null;
 
         }
 
@@ -99,10 +100,6 @@ namespace GetText.Extractor
         private static List<string> GetStrings(string sourceCode, string path)
         {
             SyntaxTree tree = CSharpSyntaxTree.ParseText(sourceCode, null, path);
-            //CompilationUnitSyntax root = tree.GetCompilationUnitRoot();
-            //var collector = new StringsCollector();
-            //collector.Visit(root);
-            //return collector._strings;
             return GetStrings(tree);
         }
 
@@ -110,7 +107,8 @@ namespace GetText.Extractor
         {
             List<string> result = new List<string>();
             CompilationUnitSyntax root = tree.GetCompilationUnitRoot();
-            foreach (var interpolationString in root.DescendantNodes().OfType<InterpolatedStringExpressionSyntax>())
+            foreach (var interpolationString in root.DescendantNodes().OfType<InterpolatedStringExpressionSyntax>().
+                Where((item) => (((item.Ancestors().OfType<InvocationExpressionSyntax>()?.FirstOrDefault()?.Expression as MemberAccessExpressionSyntax)?.Name as IdentifierNameSyntax)?.Identifier.ValueText == "GetString")))
             {
                 StringBuilder builder = new StringBuilder();
                 int i = 0;
@@ -128,7 +126,8 @@ namespace GetText.Extractor
                 entry.Comments.References.Add($"{pathRelative}:{interpolationString.GetLocation().GetLineSpan().StartLinePosition.Line + 1}");
                 result.Add($"{builder} ({interpolationString.GetLocation().GetLineSpan().StartLinePosition.Line})");
             }
-            foreach (var literalString in root.DescendantNodes().OfType<LiteralExpressionSyntax>().Where((node) => node.IsKind(SyntaxKind.StringLiteralExpression)))
+            foreach (var literalString in root.DescendantNodes().OfType<LiteralExpressionSyntax>().Where((node) => node.IsKind(SyntaxKind.StringLiteralExpression)).
+                Where((item) => (((item.Ancestors().OfType<InvocationExpressionSyntax>()?.FirstOrDefault()?.Expression as MemberAccessExpressionSyntax)?.Name as IdentifierNameSyntax)?.Identifier.ValueText == "GetString")))
             {
                 CatalogEntry entry = catalog.AddOrUpdateEntry(null, ToLiteral(literalString.Token.Value?.ToString()));
                 string pathRelative = PathExtension.GetRelativePath(catalogPath, tree.FilePath);

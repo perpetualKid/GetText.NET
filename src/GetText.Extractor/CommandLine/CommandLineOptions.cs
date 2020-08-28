@@ -7,11 +7,19 @@ using System.Linq;
 
 namespace GetText.Extractor.CommandLine
 {
+    public class CommandLineResult
+    {
+        public FileInfo Source { get; private set; }
+        public FileInfo Target { get; private set; }
+        public bool Merge { get; private set; }
+    }
+
+
     internal static class CommandLineOptions
     {
         internal static RootCommand RootCommand => new RootCommand("Extracts strings from C# source code files to creates or updates PO template file");
 
-        internal static Option SourceOption
+        internal static Option<FileInfo> SourceOption
         {
             get
             {
@@ -19,7 +27,7 @@ namespace GetText.Extractor.CommandLine
                     Name = "solution-file or project-file or directory",
                 };
 
-                return new Option(new[] { "-s", "--source" }, "Visual Studio Solution file, Project file, or source directory") {
+                return new Option<FileInfo>(new[] { "-s", "--source" }, "Visual Studio Solution file, Project file, or source directory") {
                     Argument = argument,
                     Name = "Source",
                 };
@@ -28,9 +36,9 @@ namespace GetText.Extractor.CommandLine
 
         internal static Option<FileInfo> OutFile
         {
-            get 
+            get
             {
-                Argument<FileInfo> argument = new Argument<FileInfo>(ParseDefaultTargetFile, true) {
+                Argument<FileInfo> argument = new Argument<FileInfo>(TryParseDefaultTargetFile, true) {
                     Name = "target PO template file name (*.pot). Extension may be omitted",
                 };
 
@@ -41,7 +49,10 @@ namespace GetText.Extractor.CommandLine
             }
         }
 
-        private static FileInfo ParseDefaultTargetFile(ArgumentResult argument)
+        internal static Option<bool> Merge => new Option<bool>(new[] { "--merge", "-m" }, "Merge with existing file instead of overwrite");
+
+        #region private validation and parsing
+        private static FileInfo TryParseDefaultTargetFile(ArgumentResult argument)
         {
             string token;
             switch (argument.Tokens.Count)
@@ -132,5 +143,6 @@ namespace GetText.Extractor.CommandLine
                 return false;
             }
         }
+        #endregion
     }
 }
