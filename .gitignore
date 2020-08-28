@@ -37,3 +37,4 @@ global.json
 ###### OS generated files
 Thumbs.db
 .DS_Store*
+launchSettings.json

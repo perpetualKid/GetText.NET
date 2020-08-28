@@ -2,6 +2,10 @@
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.CommandLine;
+using System.CommandLine.Builder;
+using System.CommandLine.Invocation;
+using System.CommandLine.Parsing;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -9,6 +13,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
+using GetText.Extractor.CommandLine;
 using GetText.Extractor.Template;
 
 using Microsoft.CodeAnalysis;
@@ -19,13 +24,28 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace GetText.Extractor
 {
+    public class CommandLineOptionsResult
+    {
+        public FileInfo Source { get; private set; }
+        public FileInfo Target { get; private set; }
+    }
+
     class Program
     {
         internal static CatalogTemplate catalog;
         internal static string catalogPath;
 
-        static async Task Main(string[] args)
+        static async Task<int> Main(string[] args)
         {
+            RootCommand rootCommand = CommandLineOptions.RootCommand;
+            rootCommand.Add(CommandLineOptions.SourceOption);
+            rootCommand.Add(CommandLineOptions.OutFile);
+
+            rootCommand.Handler = CommandHandler.Create((CommandLineOptionsResult options) =>
+            {
+                Console.WriteLine(options.Source);
+            });
+            return await rootCommand.InvokeAsync(args).ConfigureAwait(false);
 
             string solutionDir = Path.GetFullPath(@"C:\Storage\Dev\Scratch\ConsoleApp3");
             catalog = new CatalogTemplate(Path.Combine(solutionDir, "messages.pot"));
@@ -40,6 +60,14 @@ namespace GetText.Extractor
             });
 
             await catalog.WriteAsync().ConfigureAwait(false);
+
+        }
+
+        static FileInfo ParseFileInfo(ArgumentResult fileInfo)
+        {
+            fileInfo.ErrorMessage = "File not found";
+
+            return null;
 
         }
 
@@ -102,8 +130,6 @@ namespace GetText.Extractor
             }
             foreach (var literalString in root.DescendantNodes().OfType<LiteralExpressionSyntax>().Where((node) => node.IsKind(SyntaxKind.StringLiteralExpression)))
             {
-                // StringLiteralToken stringLiteralToken = node.Token;
-                // Console.WriteLine(node.Token.Value);
                 CatalogEntry entry = catalog.AddOrUpdateEntry(null, ToLiteral(literalString.Token.Value?.ToString()));
                 string pathRelative = PathExtension.GetRelativePath(catalogPath, tree.FilePath);
                 entry.Comments.References.Add($"{pathRelative}:{literalString.GetLocation().GetLineSpan().StartLinePosition.Line + 1}");
