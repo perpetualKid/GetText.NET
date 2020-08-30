@@ -80,13 +80,13 @@ namespace GetText.Extractor.Template
 
         private static void FormatMessageStringAndAppend(StringBuilder builder, string prefix, string message)
         {
-            string escapedMessage = StringEscaping.ToGetTextFormat(message);
+            //            string escapedMessage = StringEscaping.ToGetTextFormat(message);
 
             //format to 80 cols
             //first the simple case: does it fit one one line, with the prefix, and contain no newlines?
-            if (prefix.Length + escapedMessage.Length < 77 && !escapedMessage.Contains("\\n"))
+            if (prefix.Length + message.Length < 77 && !message.Contains("\\n"))
             {
-                builder.Append($"{prefix} \"{escapedMessage}\"");
+                builder.Append($"{prefix} \"{message}\"");
                 builder.Append(CatalogTemplate.Newline);
                 return;
             }
@@ -103,17 +103,17 @@ namespace GetText.Extractor.Template
             bool forceBreak = false;
 
             int pos = 0;
-            while (pos < escapedMessage.Length)
+            while (pos < message.Length)
             {
-                char c = escapedMessage[pos];
+                char c = message[pos];
 
                 //handle escapes			
-                if (c == '\\' && pos + 1 < escapedMessage.Length)
+                if (c == '\\' && pos + 1 < message.Length)
                 {
                     pos++;
                     currLineLen++;
 
-                    char c2 = escapedMessage[pos];
+                    char c2 = message[pos];
                     if (c2 == 'n')
                     {
                         possibleBreak = pos + 1;
@@ -131,7 +131,7 @@ namespace GetText.Extractor.Template
                 }
                 if (forceBreak || (currLineLen >= 77 && possibleBreak != -1))
                 {
-                    builder.Append($"\"{escapedMessage.Substring(lastBreakAt, possibleBreak - lastBreakAt)}\"");
+                    builder.Append($"\"{message.Substring(lastBreakAt, possibleBreak - lastBreakAt)}\"");
                     builder.Append(CatalogTemplate.Newline);
 
                     //reset state for new line
@@ -143,7 +143,7 @@ namespace GetText.Extractor.Template
                 pos++;
                 currLineLen++;
             }
-            string remainder = escapedMessage.Substring(lastBreakAt);
+            string remainder = message.Substring(lastBreakAt);
             if (remainder.Length > 0)
             {
                 builder.Append($"\"{remainder}\"");
