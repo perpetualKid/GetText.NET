@@ -36,6 +36,20 @@ namespace GetText.Extractor.Template
             result.References.Add(reference);
         }
 
+        public void AddOrUpdateEntry(string context, string messageId, string plural, string reference)
+        {
+            if (string.IsNullOrEmpty(messageId))
+                return;     // don't care about empty message ids
+            if (!entries.TryGetValue(CatalogEntry.BuildKey(context, messageId), out CatalogEntry result))
+            {
+                result = new CatalogEntry(context, messageId, string.Empty);
+                if (!entries.TryAdd(result.Key, result))
+                    result = entries[result.Key];
+            }
+            result.PluralMessageId = plural;
+            result.References.Add(reference);
+        }
+
         public void Read()
         {
 

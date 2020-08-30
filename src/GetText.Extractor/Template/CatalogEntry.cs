@@ -12,15 +12,13 @@ namespace GetText.Extractor.Template
         private CommentData comments;
         private List<string> pluralMessages;
 
-        public string Context { get; set; }
+        public string Context { get; }
         public string MessageId { get; }
         public string Message { get; set; } = string.Empty;
         public string PluralMessageId { get; set; }
         public List<string> PluralMessages => pluralMessages ?? (pluralMessages = new List<string>());
         public CommentData Comments => comments ?? (comments = new CommentData());
         public List<string> References => Comments.References;
-
-        internal bool HasPlural => pluralMessages?.Count > 0;
 
         public static CatalogEntry Empty { get; } = new CatalogEntry();
 
@@ -62,12 +60,22 @@ namespace GetText.Extractor.Template
             }
             FormatMessageStringAndAppend(builder, "msgid", MessageId);
 
-            if (HasPlural)
+            if (!string.IsNullOrEmpty(PluralMessageId))
             {
-                FormatMessageStringAndAppend(builder, "msgid_plural", MessageId);
-                for (int i = 0; i < PluralMessages.Count; i++)
+                FormatMessageStringAndAppend(builder, "msgid_plural", PluralMessageId);
+                if (pluralMessages?.Count > 1)
                 {
-                    FormatMessageStringAndAppend(builder, $"msgstr[{i}]", EnsureCorrectEndings(MessageId, PluralMessages[i]));
+                    for (int i = 0; i < PluralMessages.Count; i++)
+                    {
+                        FormatMessageStringAndAppend(builder, $"msgstr[{i}]", EnsureCorrectEndings(MessageId, PluralMessages[i]));
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < 2; i++)
+                    {
+                        FormatMessageStringAndAppend(builder, $"msgstr[{i}]", string.Empty);
+                    }
                 }
             }
             else

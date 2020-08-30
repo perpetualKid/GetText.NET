@@ -7,7 +7,7 @@ namespace GetText.Extractor.Engine.SourceResolver
 {
     internal class DirectorySourceResolver : SourceResolverBase<string>
     {
-        private static readonly string[] excludedFolders = new string[] { "obj", "packages", "bin", "vs", ".git" };
+        private static readonly string[] excludedFolders = new string[] { "obj", "packages", "bin", ".vs", ".git" };
 
         public DirectorySourceResolver(FileInfo sourcePath) :
             base(sourcePath.Attributes.HasFlag(FileAttributes.Directory) ? sourcePath : new FileInfo(sourcePath.DirectoryName))
