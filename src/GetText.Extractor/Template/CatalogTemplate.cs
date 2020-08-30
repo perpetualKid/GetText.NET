@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace GetText.Extractor.Template
     {
         internal static string Newline = Environment.NewLine;
         internal static string[] LineEndings = new string[] { "\n\r", "\r\n", "\r", "\n", "\r" };
-        private readonly Dictionary<string, CatalogEntry> entries = new Dictionary<string, CatalogEntry>();
+        private readonly ConcurrentDictionary<string, CatalogEntry> entries = new ConcurrentDictionary<string, CatalogEntry>();
 
         public string FileName { get; private set; }
         public CatalogHeader Header { get; set; }
@@ -22,14 +23,17 @@ namespace GetText.Extractor.Template
             Header = new CatalogHeader();
         }
 
-        public CatalogEntry AddOrUpdateEntry(string context, string messageId)
+        public void AddOrUpdateEntry(string context, string messageId, string reference)
         {
+            if (string.IsNullOrEmpty(messageId))
+                return;     // don't care about empty message ids
             if (!entries.TryGetValue(CatalogEntry.BuildKey(context, messageId), out CatalogEntry result))
             {
                 result = new CatalogEntry(context, messageId, string.Empty);
-                entries.Add(result.Key, result);
+                if (!entries.TryAdd(result.Key, result))
+                    result = entries[result.Key];
             }
-            return result;
+            result.References.Add(reference);
         }
 
         public void Read()

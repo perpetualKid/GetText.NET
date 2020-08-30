@@ -18,6 +18,7 @@ namespace GetText.Extractor.Template
         public string PluralMessageId { get; set; }
         public List<string> PluralMessages => pluralMessages ?? (pluralMessages = new List<string>());
         public CommentData Comments => comments ?? (comments = new CommentData());
+        public List<string> References => Comments.References;
 
         internal bool HasPlural => pluralMessages?.Count > 0;
 

@@ -34,12 +34,12 @@ namespace GetText.Extractor.Engine
         protected void GetStrings(SyntaxTree tree)
         {
             CompilationUnitSyntax root = tree.GetCompilationUnitRoot();
-            foreach (var interpolationString in root.DescendantNodes().OfType<InterpolatedStringExpressionSyntax>().
+            foreach (InterpolatedStringExpressionSyntax interpolationString in root.DescendantNodes().OfType<InterpolatedStringExpressionSyntax>().
                 Where((item) => CatalogMethods.Contains(((item.Ancestors().OfType<InvocationExpressionSyntax>()?.FirstOrDefault()?.Expression as MemberAccessExpressionSyntax)?.Name as IdentifierNameSyntax)?.Identifier.ValueText)))
             {
                 StringBuilder builder = new StringBuilder();
                 int i = 0;
-                foreach (var item in interpolationString.Contents)
+                foreach (InterpolatedStringContentSyntax item in interpolationString.Contents)
                 {
                     if (item.Kind() == SyntaxKind.InterpolatedStringText)
                         builder.Append((item as InterpolatedStringTextSyntax)?.TextToken.ValueText);
@@ -48,16 +48,14 @@ namespace GetText.Extractor.Engine
                     else
                         Console.WriteLine(item.Kind());
                 }
-                CatalogEntry entry = catalog.AddOrUpdateEntry(null, ToLiteral(builder.ToString()));
                 string pathRelative = PathExtension.GetRelativePath(catalog.FileName, tree.FilePath);
-                entry.Comments.References.Add($"{pathRelative}:{interpolationString.GetLocation().GetLineSpan().StartLinePosition.Line + 1}");
+                catalog.AddOrUpdateEntry(null, ToLiteral(builder.ToString()), $"{pathRelative}:{interpolationString.GetLocation().GetLineSpan().StartLinePosition.Line + 1}");
             }
-            foreach (var literalString in root.DescendantNodes().OfType<LiteralExpressionSyntax>().Where((node) => node.IsKind(SyntaxKind.StringLiteralExpression)).
+            foreach (LiteralExpressionSyntax literalString in root.DescendantNodes().OfType<LiteralExpressionSyntax>().Where((node) => node.IsKind(SyntaxKind.StringLiteralExpression)).
                 Where((item) => CatalogMethods.Contains(item.Ancestors().OfType<InvocationExpressionSyntax>().FirstOrDefault()?.DescendantNodes().OfType<IdentifierNameSyntax>().LastOrDefault()?.Identifier.ValueText)))
             {
-                CatalogEntry entry = catalog.AddOrUpdateEntry(null, ToLiteral(literalString.Token.Value?.ToString()));
                 string pathRelative = PathExtension.GetRelativePath(catalog.FileName, tree.FilePath);
-                entry.Comments.References.Add($"{pathRelative}:{literalString.GetLocation().GetLineSpan().StartLinePosition.Line + 1}");
+                catalog.AddOrUpdateEntry(null, ToLiteral(literalString.Token.Value?.ToString()), $"{pathRelative}:{literalString.GetLocation().GetLineSpan().StartLinePosition.Line + 1}");
             }
         }
 

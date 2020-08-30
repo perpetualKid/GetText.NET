@@ -1,26 +1,13 @@
-﻿using System;
-using System.CodeDom;
-using System.CodeDom.Compiler;
-using System.Collections.Generic;
-using System.CommandLine;
-using System.CommandLine.Builder;
+﻿using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
 
 using GetText.Extractor.CommandLine;
 using GetText.Extractor.Engine;
-using GetText.Extractor.Engine.SourceResolver;
 using GetText.Extractor.Template;
-
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 [assembly: InternalsVisibleTo("GetText.Extractor.Tests")]
 
