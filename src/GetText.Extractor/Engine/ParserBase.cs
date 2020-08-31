@@ -25,11 +25,13 @@ namespace GetText.Extractor.Engine
         protected CatalogTemplate catalog;
         protected SourceResolverBase<T> sourceResolver;
         protected FileInfo sourceRoot;
+        protected bool verbose;
 
-        public ParserBase(CatalogTemplate catalog, FileInfo sourceRoot)
+        public ParserBase(CatalogTemplate catalog, FileInfo sourceRoot, bool verbose)
         {
             this.catalog = catalog;
             this.sourceRoot = sourceRoot;
+            this.verbose = verbose;
         }
 
         public abstract Task Parse();

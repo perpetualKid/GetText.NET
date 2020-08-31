@@ -51,6 +51,8 @@ namespace GetText.Extractor.CommandLine
 
         internal static Option<bool> Merge => new Option<bool>(new[] { "--merge", "-m" }, "Merge with existing file instead of overwrite");
 
+        internal static Option<bool> Verbose => new Option<bool>(new[] { "--verbose", "-v" }, "Verbose output");
+
         #region private validation and parsing
         private static FileInfo TryParseDefaultTargetFile(ArgumentResult argument)
         {

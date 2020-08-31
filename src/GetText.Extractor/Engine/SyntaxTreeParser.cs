@@ -16,7 +16,7 @@ namespace GetText.Extractor.Engine
 {
     internal class SyntaxTreeParser: ParserBase<string>
     {
-        public SyntaxTreeParser(CatalogTemplate catalog, FileInfo sourceFolder): base(catalog, sourceFolder)
+        public SyntaxTreeParser(CatalogTemplate catalog, FileInfo sourceFolder, bool verbose): base(catalog, sourceFolder, verbose)
         {
             sourceResolver = new DirectorySourceResolver(sourceFolder);
         }
