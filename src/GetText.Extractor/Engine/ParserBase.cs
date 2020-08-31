@@ -39,6 +39,7 @@ namespace GetText.Extractor.Engine
             string pathRelative = PathExtension.GetRelativePath(catalog.FileName, tree.FilePath);
             string messageId, context, plural;
             string methodName = null;
+            bool isFormatString;
             CompilationUnitSyntax root = tree.GetCompilationUnitRoot();
             foreach (InvocationExpressionSyntax item in root.DescendantNodes().OfType<InvocationExpressionSyntax>().
                 Where((item) => CatalogMethods.Contains(methodName = ((item.Expression as MemberAccessExpressionSyntax)?.Name as IdentifierNameSyntax)?.Identifier.ValueText)))
@@ -48,23 +49,27 @@ namespace GetText.Extractor.Engine
                 {
                     case "GetString":   //first argument is message id
                         messageId = ExtractText(arguments[0]);
-                        catalog.AddOrUpdateEntry(null, messageId, $"{pathRelative}:{arguments[0].GetLocation().GetLineSpan().StartLinePosition.Line + 1}");
+                        isFormatString = arguments.Count > 1 || arguments[0].DescendantNodes().OfType<InterpolationSyntax>().Any();
+                        catalog.AddOrUpdateEntry(null, messageId, $"{pathRelative}:{arguments[0].GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString); ;
                         break;
                     case "GetParticularString": //first argument is context, second is message id
                         context = ExtractText(arguments[0]);
                         messageId = ExtractText(arguments[1]);
-                        catalog.AddOrUpdateEntry(context, messageId, $"{pathRelative}:{arguments[1].GetLocation().GetLineSpan().StartLinePosition.Line + 1}");
+                        isFormatString = arguments.Count > 2 || arguments[1].DescendantNodes().OfType<InterpolationSyntax>().Any();
+                        catalog.AddOrUpdateEntry(context, messageId, $"{pathRelative}:{arguments[1].GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString);
                         break;
                     case "GetPluralString": //first argument is message id, second is plural message
                         messageId = ExtractText(arguments[0]);
                         plural = ExtractText(arguments[1]);
-                        catalog.AddOrUpdateEntry(null, messageId, plural, $"{pathRelative}:{arguments[0].GetLocation().GetLineSpan().StartLinePosition.Line + 1}");
+                        isFormatString = arguments.Count > 2 || arguments[0].DescendantNodes().OfType<InterpolationSyntax>().Any() || arguments[1].DescendantNodes().OfType<InterpolationSyntax>().Any();
+                        catalog.AddOrUpdateEntry(null, messageId, plural, $"{pathRelative}:{arguments[0].GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString);
                         break;
                     case "GetParticularPluralString": //first argument is context, second is message id, third is plural message
                         context = ExtractText(arguments[0]);
                         messageId = ExtractText(arguments[1]);
                         plural = ExtractText(arguments[2]);
-                        catalog.AddOrUpdateEntry(context, messageId, plural, $"{pathRelative}:{arguments[1].GetLocation().GetLineSpan().StartLinePosition.Line + 1}");
+                        isFormatString = arguments.Count > 3 || arguments[1].DescendantNodes().OfType<InterpolationSyntax>().Any() || arguments[2].DescendantNodes().OfType<InterpolationSyntax>().Any();
+                        catalog.AddOrUpdateEntry(context, messageId, plural, $"{pathRelative}:{arguments[1].GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString);
                         break;
                 }
             }
@@ -72,13 +77,17 @@ namespace GetText.Extractor.Engine
                 Where((item) => ControlTextProperties.Contains(((item.Left as MemberAccessExpressionSyntax)?.Name as IdentifierNameSyntax)?.Identifier.ValueText)))
             {
                 if (item.Right.IsKind(SyntaxKind.InvocationExpression)) //maybe log for verbose output?
+                {
                     continue;
+                }
 
                 messageId = ExtractText(item.Right);
+                isFormatString = item.Right.DescendantNodes().OfType<InterpolationSyntax>().Any();
                 //this skips the case when Windows Forms Controls still have there default text which is set to the control name (identifier) 
                 if (item.Left.DescendantNodes().OfType<IdentifierNameSyntax>().Reverse().ElementAtOrDefault(1)?.Identifier.ValueText.Equals(messageId, StringComparison.OrdinalIgnoreCase) ?? false)
                     continue;
-                catalog.AddOrUpdateEntry(null, messageId, $"{pathRelative}:{item.Right.GetLocation().GetLineSpan().StartLinePosition.Line + 1}");
+
+                catalog.AddOrUpdateEntry(null, messageId, $"{pathRelative}:{item.Right.GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString);
             }
             foreach (InvocationExpressionSyntax item in root.DescendantNodes().OfType<InvocationExpressionSyntax>().
                 Where((item) => ControlTextMethods.Contains(methodName = ((item.Expression as MemberAccessExpressionSyntax)?.Name as IdentifierNameSyntax)?.Identifier.ValueText)))
@@ -88,7 +97,8 @@ namespace GetText.Extractor.Engine
                 {
                     case "SetToolTip":
                         messageId = ExtractText(arguments[1]);
-                        catalog.AddOrUpdateEntry(null, messageId, $"{pathRelative}:{arguments[1].GetLocation().GetLineSpan().StartLinePosition.Line + 1}");
+                        isFormatString = arguments[1].DescendantNodes().OfType<InterpolationSyntax>().Any();
+                        catalog.AddOrUpdateEntry(null, messageId, $"{pathRelative}:{arguments[1].GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString);
                         break;
                 }
             }

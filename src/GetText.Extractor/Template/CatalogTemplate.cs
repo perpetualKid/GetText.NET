@@ -23,7 +23,7 @@ namespace GetText.Extractor.Template
             Header = new CatalogHeader();
         }
 
-        public void AddOrUpdateEntry(string context, string messageId, string reference)
+        public void AddOrUpdateEntry(string context, string messageId, string reference, bool formatString)
         {
             if (string.IsNullOrEmpty(messageId))
                 return;     // don't care about empty message ids
@@ -34,9 +34,10 @@ namespace GetText.Extractor.Template
                     result = entries[result.Key];
             }
             result.References.Add(reference);
+            result.Comments.Flags = formatString ? result.Comments.Flags | MessageFlags.CSharpFormat : result.Comments.Flags & ~MessageFlags.CSharpFormat;
         }
 
-        public void AddOrUpdateEntry(string context, string messageId, string plural, string reference)
+        public void AddOrUpdateEntry(string context, string messageId, string plural, string reference, bool formatString)
         {
             if (string.IsNullOrEmpty(messageId))
                 return;     // don't care about empty message ids
@@ -48,6 +49,7 @@ namespace GetText.Extractor.Template
             }
             result.PluralMessageId = plural;
             result.References.Add(reference);
+            result.Comments.Flags = formatString ? result.Comments.Flags | MessageFlags.CSharpFormat : result.Comments.Flags & ~MessageFlags.CSharpFormat;
         }
 
         public void Read()
