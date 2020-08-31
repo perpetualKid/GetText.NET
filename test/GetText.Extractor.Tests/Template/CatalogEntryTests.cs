@@ -17,7 +17,6 @@ namespace GetText.Extractor.Tests.Template
         public void CatalogEntryCtorTest()
         {
             CatalogEntry entry = new CatalogEntry("MessageId");
-            Assert.IsFalse(entry.HasPlural);
         }
 
         [TestMethod]
