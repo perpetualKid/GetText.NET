@@ -17,7 +17,6 @@ namespace GetText.Extractor.Engine
     internal abstract class ParserBase<T>
     {
         //hardcoded as we don't have a reference to GetText.ICatalog in this package
-        //keep the order as we access some logic through index lookup for performance reason
         internal static readonly List<string> CatalogMethods = new List<string>() { "GetString", "GetParticularString", "GetPluralString", "GetParticularPluralString" };
         internal static readonly List<string> ControlTextProperties = new List<string>() { "Text", "HeaderText", "ToolTipText", };
         internal static readonly List<string> ControlTextMethods = new List<string>() { "SetToolTip" };
