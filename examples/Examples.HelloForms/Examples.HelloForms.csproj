@@ -25,11 +25,11 @@
     <Copy SourceFiles="@(AssetsSourceFiles)" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
   </Target>
   <ItemGroup>
-    <Content Include="fr\messages.mo">
+    <None Update="fr\messages.mo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ru-RU\messages.mo">
+    </None>
+    <None Update="ru-RU\messages.mo">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
   </ItemGroup>
 </Project>
