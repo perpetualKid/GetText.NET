@@ -42,7 +42,8 @@ namespace GetText.Extractor.Template
                 return FILE_ATTRIBUTE_NORMAL;
             }
             else
-                throw new FileNotFoundException("A file or directory with the specified path was not found.", path);
+                return FILE_ATTRIBUTE_NORMAL;
+            //throw new FileNotFoundException("A file or directory with the specified path was not found.", path);
         }
     }
 

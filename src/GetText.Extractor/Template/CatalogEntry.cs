@@ -93,7 +93,7 @@ namespace GetText.Extractor.Template
 
             //format to 80 cols
             //first the simple case: does it fit one one line, with the prefix, and contain no newlines?
-            if (prefix.Length + message.Length < 77 && !message.Contains("\\n"))
+            if (prefix.Length + message.Length < 77 && !message.Contains("\\n", StringComparison.Ordinal))
             {
                 builder.Append($"{prefix} \"{message}\"");
                 builder.Append(CatalogTemplate.Newline);
