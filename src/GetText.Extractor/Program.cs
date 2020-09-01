@@ -22,7 +22,7 @@ namespace GetText.Extractor
             RootCommand rootCommand = CommandLineOptions.RootCommand;
             rootCommand.Add(CommandLineOptions.SourceOption);
             rootCommand.Add(CommandLineOptions.OutFile);
-            rootCommand.Add(CommandLineOptions.Merge);
+//            rootCommand.Add(CommandLineOptions.Merge);
             rootCommand.Add(CommandLineOptions.Verbose);
 
             rootCommand.Handler = CommandHandler.Create(async (FileInfo source, FileInfo target, bool merge, bool verbose) =>

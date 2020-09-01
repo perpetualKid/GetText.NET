@@ -5,60 +5,6 @@ namespace GetText.Extractor.Template
 {
     internal static class StringEscaping
     {
-        //based on http://www-ccs.ucsd.edu/c/charset.html
-        //with modififications, as Gettext dosn't follow all C escaping
-        public static string ToGetTextFormat(string text)
-        {
-            return text;
-            StringBuilder sb = new StringBuilder(text.Length);
-            for (int i = 0; i < text.Length; i++)
-            {
-                char c = text[i];
-                switch (c)
-                {
-                    case '"':
-                        sb.Append("\\\"");
-                        continue;
-
-                    //Gettext doesn't like escaping this
-                    //case '\'':
-                    //	sb.Append ("\\'");
-                    //	continue;
-
-                    //These shouldn't be in translations... but will be caught by IsControl
-                    //case '\a':
-                    //case '\b':
-                    //case '\f':
-                    //case '\v':
-
-                    //this doesn't matter since we're not dealing with trigraphs
-                    //case "?":
-                    //	sb.Append ("\\?");
-                    //	continue;
-
-                    case '\\':
-                        sb.Append("\\\\");
-                        continue;
-                    case '\n':
-                        sb.Append("\\n");
-                        continue;
-                    case '\r':
-                        sb.Append("\\r");
-                        continue;
-                    case '\t':
-                        sb.Append("\\t");
-                        continue;
-                }
-
-                if (c != '_' && char.IsControl(c))
-                {
-                    throw new FormatException($"Invalid character '{c}' in translatable string: '{text}'");
-                }
-                sb.Append(c);
-            }
-            return sb.ToString();
-        }
-
         public static string FromGetTextFormat(string text)
         {
             StringBuilder sb = new StringBuilder(text.Length);

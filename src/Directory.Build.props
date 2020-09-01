@@ -1,11 +1,12 @@
 <Project>
   <PropertyGroup>
-    <NoWarn>CS1591;CA1303;HAA0101;HAA0401;HAA0601</NoWarn>
+    <NoWarn>CA1303</NoWarn>
+    <!--    <NoWarn>CS1591;CA1303;HAA0101;HAA0401;HAA0601</NoWarn>-->
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <Version>0.9.2-alpha.1</Version>
+    <Version>0.9.2-beta.1</Version>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -29,4 +30,14 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageTags>gettext.net;gettext;internationalization;localization;i18n;l10n;translate</PackageTags>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 </Project>
