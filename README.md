@@ -8,10 +8,14 @@ GetText.NET
 |GetText.NET|[![NuGet version](https://badge.fury.io/nu/gettext.net.svg)](https://badge.fury.io/nu/gettext.net)|
 |GetText.NET.PluralCompile|[![NuGet version](https://badge.fury.io/nu/gettext.net.PluralCompile.svg)](https://badge.fury.io/nu/gettext.net.PluralCompile)|
 |GetText.NET.WindowsForms|[![NuGet version](https://badge.fury.io/nu/gettext.net.windowsforms.svg)](https://badge.fury.io/nu/gettext.net.windowsforms)|
+|GetText.NET.Extractor|[![NuGet version](https://badge.fury.io/nu/gettext.net.extractor.svg)](https://badge.fury.io/nu/gettext.net.extractor)|
 
-A cross-platform .NET implementation of the GNU Gettext library, largely based on [NGettext](https://github.com/VitaliiTsilnyk/NGettext). GetText.NET supports [**string interpolation**](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated) and [**FormattableString**](https://docs.microsoft.com/en-us/dotnet/api/system.formattablestring?redirectedfrom=MSDN&view=netcore-3.1)
+A cross-platform .NET implementation of the GNU Gettext library, largely based on [NGettext](https://github.com/VitaliiTsilnyk/NGettext).  
+GetText.NET supports [**string interpolation**](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated) and [**FormattableString**](https://docs.microsoft.com/en-us/dotnet/api/system.formattablestring?redirectedfrom=MSDN&view=netcore-3.1).  
+GetText.NET.Extractor extracts string values from C# source code in  GetText.ICatalog method calls to Get\*String(), and also Windows.Forms.Control properties showing text, such as .Text, .HeaderText or .ToopTipText.
 
-GetText.NET has simplified usage (i.e. removed the need for LC_MESSAGES subfolder to place translation files), and focuses on more recent .NET implementations such as .NET framework 4.8 and .NET Core 3.1. To allow independent nuget publishing, it has been renamed to GetText.NET and repackaged.
+Where possible, GetText.NET has simplified usage over NGetText and original GNU Gettext tools, i.e. removed Get\*String**Fmt**() methods and pass parameters directly to Get\*String() overloads, and removed the need for LC_MESSAGES subfolder to place translation files. The focus is on more recent .NET implementations such as .NET framework 4.8 and .NET Core 3.1.  
+To allow independent nuget publishing from NGetText, it has been renamed to GetText.NET and repackaged.
 
 This fully managed library targets **Microsoft .NET Standard 2.0** to support a wide range of .NET implementations including **.NET Framework** >=4.6.1, **.NET Core** >=2.0, **Mono** and [more](https://github.com/dotnet/standard/blob/master/docs/versions/netstandard2.0.md).
 It is fully **COM** and **CLS** compatible.
@@ -44,7 +48,7 @@ GetText.NET is originally forked from NGettext. NGettext uses an extensive folde
 * GetText.NET uses a nice and simple API, compatible with any type of application (console, GUI, web...)
 * [GetText.NET.WindowsForms](https://www.nuget.org/packages/GetText.NET.WindowsForms/) (separate package) allows localization of Windows Forms standard properties
 * GetText.NET supports [string interpolation](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated) and [FormattableString](https://docs.microsoft.com/en-us/dotnet/api/system.formattablestring?redirectedfrom=MSDN&view=netcore-3.1)
-
+* [GetText.NET.Extractor](https://www.nuget.org/packages/GetText.NET.Extractor/) is a .Net Core tool allows extraction of strings from C# source code (similar to xgettext), but includes support for interpolated strings.
 
 Installation and usage
 ----------------------
@@ -195,7 +199,7 @@ In `doc/examples/T.cs` an example of shorter syntax creation for GetText.NET is 
 Poedit compatibility
 --------------------
 
-For [Poedit](http://www.poedit.net/) compatibility, the plural form needs to be specified in the *.pot file header, also for english language:
+For [Poedit](http://www.poedit.net/) compatibility, the plural form needs to be specified in the *.po file header, also for english language:
 ```
 	"Plural-Forms: nplurals=2; plural=n != 1;\n"
 ```
@@ -205,4 +209,32 @@ And a keywords list:
 	"X-Poedit-KeywordsList: GetString;GetPluralString:1,2;GetParticularString:1c,2;GetParticularPluralString:1c,2,3;_;_n:1,2;_p:1c,2;_pn:1c,2,3\n"
 ```
 
+GetText.NET Extractor
+---------------------
 
+GetText.NET.Extractor can be installed as [global .NET Core tool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools)
+
+```
+	dotnet tool install -g GetText.NET.Extractor
+```
+
+NB: To enable installation of preview/pre-release versions, the exact version needs to be specified using the --version option. 
+
+```
+	dotnet tool install -g GetText.NET.Extractor --version 0.9.2-beta.1
+```
+
+Using "dotnet tool list -g" to check installed tools and version
+
+|Package Id|Version|Commands|
+|----------|-------|--------|
+|gettext.net.extractor|0.9.2-beta.1|GetText.Extractor|
+
+Once installed, the tool can be used by simply calling "GetText.Extractor" on the [CLI](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools#use-a-tool).
+
+```
+	GetText.Extractor -s <Source Folder or Solution/Project File> -t <Target Folder or .pot Template file>
+```
+If source is given as project or solution file, the extractor will use the containing folder as root to look for C# source files. Extractor will search for *.cs source files in all subfolders (excluding obj, bin, .vs, .git and .packages subfolder), and extract string arguments for calls to ICatalog.Get\*String(). Also string value assignment to Windows.Forms.Controls.\* Text properties will be extracted, such as label1.Text = "string value".
+
+For further details on each product, also check the [Wiki](https://github.com/perpetualKid/GetText.NET/wiki) pages.
