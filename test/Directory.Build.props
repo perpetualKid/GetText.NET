@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <NoWarn>CS1591;CA1303;HAA0101;HAA0401;HAA0601</NoWarn>
+    <NoWarn>CS1591;CA1303;</NoWarn>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <Version>0.9</Version>

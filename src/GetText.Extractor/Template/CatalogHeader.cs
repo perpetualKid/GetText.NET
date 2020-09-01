@@ -3,7 +3,7 @@ using System.Text;
 
 namespace GetText.Extractor.Template
 {
-    public class CatalogHeader
+    internal class CatalogHeader
     {
         public string ProjectIdVersion { get; set; } = "PACKAGE VERSION";
         public string ReportMsgidBugsTo { get; set; }

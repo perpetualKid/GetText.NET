@@ -3,16 +3,21 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <!--MSBuildLocator and MSBuildWorkspace do not sufficiently support .NET Core-->
-    <TargetFrameworks>net48</TargetFrameworks> 
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks> 
     <Description>Extracts string from .NET solutions and projects for GetText Catalog template files (.pot).</Description>
     <AssemblyTitle>GetText.NET.Extractor</AssemblyTitle>
     <LangVersion>7.3</LangVersion>
     <AssemblyName>GetText.Extractor</AssemblyName>
     <PackageId>GetText.NET.Extractor</PackageId>
+
     <!-- Can't pack .Net Framework binaries as tools
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>Extractor</ToolCommandName>
     -->
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>GetText.Extractor</ToolCommandName>
+    <IsTool>true</IsTool>
+    <IncludeBuildOutput>true</IncludeBuildOutput>
   </PropertyGroup>
 
   <ItemGroup>

@@ -7,7 +7,7 @@ namespace GetText.Extractor.Template
     /// <summary>
     /// https://www.gnu.org/software/gettext/manual/gettext.html#PO-Files
     /// </summary>
-    public class CatalogEntry
+    internal class CatalogEntry
     {
         private CommentData comments;
         private List<string> pluralMessages;

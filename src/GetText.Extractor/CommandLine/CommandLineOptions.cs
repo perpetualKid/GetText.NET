@@ -7,14 +7,6 @@ using System.Linq;
 
 namespace GetText.Extractor.CommandLine
 {
-    public class CommandLineResult
-    {
-        public FileInfo Source { get; private set; }
-        public FileInfo Target { get; private set; }
-        public bool Merge { get; private set; }
-    }
-
-
     internal static class CommandLineOptions
     {
         internal static RootCommand RootCommand => new RootCommand("Extracts strings from C# source code files to creates or updates PO template file");

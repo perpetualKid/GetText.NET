@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace GetText.Extractor.Template
 {
-    public class CommentData
+    internal class CommentData
     {
         private List<string> autoComments;
         private List<string> references;

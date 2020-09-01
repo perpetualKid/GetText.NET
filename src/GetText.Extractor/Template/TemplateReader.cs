@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GetText.Extractor.Template
 {
-    public class TemplateReader
+    internal class TemplateReader
     {
     }
 }
