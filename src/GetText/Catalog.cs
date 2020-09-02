@@ -300,7 +300,7 @@ namespace GetText
         /// <returns>Translated text.</returns>
         public virtual string GetParticularString(string context, FormattableStringAdapter text, params object[] args)
         {
-            return string.Format(this.CultureInfo, this.GetStringDefault(context + CONTEXTGLUE + text?.String, text?.String), args);
+            return string.Format(CultureInfo, GetStringDefault(context + CONTEXTGLUE + text?.String, text?.String), args);
         }
 
         /// <summary>
@@ -314,7 +314,7 @@ namespace GetText
         /// <returns>Translated text.</returns>
         public virtual string GetParticularPluralString(string context, FormattableStringAdapter text, FormattableStringAdapter pluralText, long n)
         {
-            return this.GetPluralStringDefault(context + CONTEXTGLUE + text?.String, text?.String, pluralText?.String, n);
+            return GetPluralStringDefault(context + CONTEXTGLUE + text?.String, text?.String, pluralText?.String, n);
         }
 
         /// <summary>
