@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace GetText.Plural.Ast
+﻿namespace GetText.Plural.Ast
 {
-	/// <summary>
-	/// Represents a node in the abstract syntax tree.
-	/// </summary>
+    /// <summary>
+    /// Represents a node in the abstract syntax tree.
+    /// </summary>
     public sealed class Token
     {
 		public const int MAXCHILDCOUNT = 3;
@@ -33,8 +31,8 @@ namespace GetText.Plural.Ast
         /// <param name="value"></param>
         public Token(TokenType type, long value = 0)
 		{
-			this.Type = type;
-			this.Value = value;
+			Type = type;
+			Value = value;
 		}
     }
 }

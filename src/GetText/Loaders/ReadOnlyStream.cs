@@ -13,7 +13,7 @@ namespace GetText.Loaders
         /// </summary>
         public Stream BaseStream { get; private set; }
 
-        private bool closed = false;
+        private bool closed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReadOnlyStream"/> class that wraps specified underlying stream.
@@ -21,7 +21,7 @@ namespace GetText.Loaders
         /// <param name="baseStream"></param>
         public ReadOnlyStream(Stream baseStream)
         {
-            this.BaseStream = baseStream ?? throw new ArgumentNullException(nameof(baseStream));
+            BaseStream = baseStream ?? throw new ArgumentNullException(nameof(baseStream));
         }
 
         /// <summary>
@@ -47,8 +47,8 @@ namespace GetText.Loaders
         /// <filterpriority>1</filterpriority>
         public override long Seek(long offset, SeekOrigin origin)
         {
-            this.CheckIsClosed();
-            return this.BaseStream.Seek(offset, origin);
+            CheckIsClosed();
+            return BaseStream.Seek(offset, origin);
         }
 
         /// <summary>
@@ -80,8 +80,8 @@ namespace GetText.Loaders
         /// <filterpriority>1</filterpriority>
         public override int Read(byte[] buffer, int offset, int count)
         {
-            this.CheckIsClosed();
-            return this.BaseStream.Read(buffer, offset, count);
+            CheckIsClosed();
+            return BaseStream.Read(buffer, offset, count);
         }
 
         /// <summary>
@@ -103,10 +103,7 @@ namespace GetText.Loaders
         /// true if the stream supports reading; otherwise, false.
         /// </returns>
         /// <filterpriority>1</filterpriority>
-        public override bool CanRead
-        {
-            get { return !this.closed && this.BaseStream.CanRead; }
-        }
+        public override bool CanRead => !closed && BaseStream.CanRead;
 
         /// <summary>
         /// When overridden in a derived class, gets a value indicating whether the current stream supports seeking.
@@ -115,10 +112,7 @@ namespace GetText.Loaders
         /// true if the stream supports seeking; otherwise, false.
         /// </returns>
         /// <filterpriority>1</filterpriority>
-        public override bool CanSeek
-        {
-            get { return !this.closed && this.BaseStream.CanSeek; }
-        }
+        public override bool CanSeek => !closed && BaseStream.CanSeek;
 
         /// <summary>
         /// When overridden in a derived class, gets a value indicating whether the current stream supports writing.
@@ -127,10 +121,7 @@ namespace GetText.Loaders
         /// true if the stream supports writing; otherwise, false.
         /// </returns>
         /// <filterpriority>1</filterpriority>
-        public override bool CanWrite
-        {
-            get { return false; }
-        }
+        public override bool CanWrite => false;
 
         /// <summary>
         /// When overridden in a derived class, gets the length in bytes of the stream.
@@ -141,13 +132,7 @@ namespace GetText.Loaders
         /// <exception cref="NotSupportedException">A class derived from Stream does not support seeking. </exception>
         /// <exception cref="ObjectDisposedException">Methods were called after the stream was closed. </exception>
         /// <filterpriority>1</filterpriority>
-        public override long Length
-        {
-            get
-            {
-                throw new InvalidOperationException("Stream is in read-only mode.");
-            }
-        }
+        public override long Length => throw new InvalidOperationException("Stream is in read-only mode.");
 
         /// <summary>
         /// When overridden in a derived class, gets or sets the position within the current stream.
@@ -163,13 +148,13 @@ namespace GetText.Loaders
         {
             get
             {
-                this.CheckIsClosed();
-                return this.BaseStream.Position;
+                CheckIsClosed();
+                return BaseStream.Position;
             }
             set
             {
-                this.CheckIsClosed();
-                this.BaseStream.Position = value;
+                CheckIsClosed();
+                BaseStream.Position = value;
             }
         }
 
@@ -191,7 +176,7 @@ namespace GetText.Loaders
         /// <filterpriority>2</filterpriority>
         public override IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback callback, object state)
         {
-            this.CheckIsClosed();
+            CheckIsClosed();
             return base.BeginRead(buffer, offset, count, callback, state);
         }
 
@@ -228,7 +213,7 @@ namespace GetText.Loaders
         /// <filterpriority>2</filterpriority>
         public override int EndRead(IAsyncResult asyncResult)
         {
-            this.CheckIsClosed();
+            CheckIsClosed();
             return base.EndRead(asyncResult);
         }
 
@@ -256,7 +241,7 @@ namespace GetText.Loaders
         /// <filterpriority>2</filterpriority>
         public override int ReadByte()
         {
-            this.CheckIsClosed();
+            CheckIsClosed();
             return base.ReadByte();
         }
 
@@ -279,10 +264,7 @@ namespace GetText.Loaders
         /// <filterpriority>1</filterpriority>
         public override void Close()
         {
-            if (!this.closed)
-            {
-                this.closed = true;
-            }
+            closed = true;
         }
 
         /// <summary>
@@ -291,16 +273,13 @@ namespace GetText.Loaders
         /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources</param>
         protected override void Dispose(bool disposing)
         {
-            if (!this.closed)
-            {
-                this.closed = true;
-            }
+            closed = true;
             base.Dispose(disposing);
         }
 
         private void CheckIsClosed()
         {
-            if (this.closed)
+            if (closed)
                 throw new ObjectDisposedException(null, "Stream closed.");
         }
     }

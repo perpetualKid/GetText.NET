@@ -97,19 +97,7 @@ namespace GetText
         public Catalog(ILoader loader, CultureInfo cultureInfo)
             : this(cultureInfo)
         {
-            try
-            {
-                Load(loader);
-            }
-#if DEBUG
-            catch (FileNotFoundException exception)
-            {
-                // Suppress FileNotFound exceptions
-                Trace.WriteLine($"Translation file loading fail: {exception.Message}", "GetText");
-            }
-#else
-			catch (FileNotFoundException) {}
-#endif
+            Load(loader);
         }
 
         /// <summary>

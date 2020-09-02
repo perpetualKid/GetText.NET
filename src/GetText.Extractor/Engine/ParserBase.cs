@@ -43,7 +43,7 @@ namespace GetText.Extractor.Engine
             string methodName = null;
             bool isFormatString;
             CompilationUnitSyntax root = tree.GetCompilationUnitRoot();
-            foreach (InvocationExpressionSyntax item in root.DescendantNodes().OfType<InvocationExpressionSyntax>()?.
+            foreach (InvocationExpressionSyntax item in root.DescendantNodes().OfType<InvocationExpressionSyntax>().
                 Where((item) => CatalogMethods.Contains(methodName = ((item.Expression as MemberAccessExpressionSyntax)?.Name as IdentifierNameSyntax)?.Identifier.ValueText)))
             {
                 List<ArgumentSyntax> arguments = item.DescendantNodes().OfType<ArgumentSyntax>().ToList();
@@ -75,7 +75,7 @@ namespace GetText.Extractor.Engine
                         break;
                 }
             }
-            foreach (AssignmentExpressionSyntax item in root.DescendantNodes().OfType<AssignmentExpressionSyntax>()?.
+            foreach (AssignmentExpressionSyntax item in root.DescendantNodes().OfType<AssignmentExpressionSyntax>().
                 Where((item) => ControlTextProperties.Contains(((item.Left as MemberAccessExpressionSyntax)?.Name as IdentifierNameSyntax)?.Identifier.ValueText)))
             {
                 if (item.Right.IsKind(SyntaxKind.InvocationExpression)) //maybe log for verbose output?
@@ -91,7 +91,7 @@ namespace GetText.Extractor.Engine
 
                 catalog.AddOrUpdateEntry(null, messageId, $"{pathRelative}:{item.Right.GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString);
             }
-            foreach (InvocationExpressionSyntax item in root.DescendantNodes().OfType<InvocationExpressionSyntax>()?.
+            foreach (InvocationExpressionSyntax item in root.DescendantNodes().OfType<InvocationExpressionSyntax>().
                 Where((item) => ControlTextMethods.Contains(methodName = ((item.Expression as MemberAccessExpressionSyntax)?.Name as IdentifierNameSyntax)?.Identifier.ValueText)))
             {
                 List<ArgumentSyntax> arguments = item.DescendantNodes().OfType<ArgumentSyntax>().ToList();
@@ -104,7 +104,7 @@ namespace GetText.Extractor.Engine
                         break;
                 }
             }
-            foreach (EnumDeclarationSyntax item in root.DescendantNodes().OfType<EnumDeclarationSyntax>()?.
+            foreach (EnumDeclarationSyntax item in root.DescendantNodes().OfType<EnumDeclarationSyntax>().
                 Where((item) =>
                     item.DescendantNodes().OfType<AttributeSyntax>().
                     SelectMany((attribute) => attribute.DescendantNodes().OfType<IdentifierNameSyntax>()).

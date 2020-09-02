@@ -26,8 +26,8 @@ namespace GetText.Plural
         {
             if (numPlurals <= 0)
                 throw new ArgumentOutOfRangeException(nameof(numPlurals));
-            this.NumPlurals = numPlurals;
-            this.AstRoot = astRoot ?? throw new ArgumentNullException(nameof(astRoot));
+            NumPlurals = numPlurals;
+            AstRoot = astRoot ?? throw new ArgumentNullException(nameof(astRoot));
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace GetText.Plural
         /// <returns>Plural form index.</returns>
         public int Evaluate(long number)
         {
-            return (int)this.Evaluate(this.AstRoot, number);
+            return (int)Evaluate(AstRoot, number);
         }
 
         protected long Evaluate(Token node, long number)
@@ -54,73 +54,49 @@ namespace GetText.Plural
                     return number;
 
                 case TokenType.Plus:
-                    return this.Evaluate(node.Children[0], number)
-                         + this.Evaluate(node.Children[1], number);
+                    return Evaluate(node.Children[0], number) + Evaluate(node.Children[1], number);
 
                 case TokenType.Minus:
-                    return this.Evaluate(node.Children[0], number)
-                         - this.Evaluate(node.Children[1], number);
+                    return Evaluate(node.Children[0], number) - Evaluate(node.Children[1], number);
 
                 case TokenType.Divide:
-                    return this.Evaluate(node.Children[0], number)
-                         / this.Evaluate(node.Children[1], number);
+                    return Evaluate(node.Children[0], number) / Evaluate(node.Children[1], number);
 
                 case TokenType.Multiply:
-                    return this.Evaluate(node.Children[0], number)
-                         * this.Evaluate(node.Children[1], number);
+                    return Evaluate(node.Children[0], number) * Evaluate(node.Children[1], number);
 
                 case TokenType.Modulo:
-                    return this.Evaluate(node.Children[0], number)
-                         % this.Evaluate(node.Children[1], number);
+                    return Evaluate(node.Children[0], number) % Evaluate(node.Children[1], number);
 
                 case TokenType.GreaterThan:
-                    return this.Evaluate(node.Children[0], number)
-                         > this.Evaluate(node.Children[1], number)
-                         ? 1 : 0;
+                    return Evaluate(node.Children[0], number) > Evaluate(node.Children[1], number) ? 1 : 0;
 
                 case TokenType.GreaterOrEquals:
-                    return this.Evaluate(node.Children[0], number)
-                        >= this.Evaluate(node.Children[1], number)
-                         ? 1 : 0;
+                    return Evaluate(node.Children[0], number) >= Evaluate(node.Children[1], number) ? 1 : 0;
 
                 case TokenType.LessThan:
-                    return this.Evaluate(node.Children[0], number)
-                         < this.Evaluate(node.Children[1], number)
-                         ? 1 : 0;
+                    return Evaluate(node.Children[0], number) < Evaluate(node.Children[1], number) ? 1 : 0;
 
                 case TokenType.LessOrEquals:
-                    return this.Evaluate(node.Children[0], number)
-                        <= this.Evaluate(node.Children[1], number)
-                         ? 1 : 0;
+                    return Evaluate(node.Children[0], number) <= Evaluate(node.Children[1], number) ? 1 : 0;
 
                 case TokenType.Equals:
-                    return this.Evaluate(node.Children[0], number)
-                        == this.Evaluate(node.Children[1], number)
-                         ? 1 : 0;
+                    return Evaluate(node.Children[0], number) == Evaluate(node.Children[1], number) ? 1 : 0;
 
                 case TokenType.NotEquals:
-                    return this.Evaluate(node.Children[0], number)
-                        != this.Evaluate(node.Children[1], number)
-                         ? 1 : 0;
+                    return Evaluate(node.Children[0], number) != Evaluate(node.Children[1], number) ? 1 : 0;
 
                 case TokenType.And:
-                    return this.Evaluate(node.Children[0], number) != 0
-                        && this.Evaluate(node.Children[1], number) != 0
-                         ? 1 : 0;
+                    return Evaluate(node.Children[0], number) != 0 && Evaluate(node.Children[1], number) != 0 ? 1 : 0;
 
                 case TokenType.Or:
-                    return this.Evaluate(node.Children[0], number) != 0
-                        || this.Evaluate(node.Children[1], number) != 0
-                         ? 1 : 0;
+                    return Evaluate(node.Children[0], number) != 0 || Evaluate(node.Children[1], number) != 0 ? 1 : 0;
 
                 case TokenType.Not:
-                    return this.Evaluate(node.Children[0], number) == 0
-                         ? 1 : 0;
+                    return Evaluate(node.Children[0], number) == 0 ? 1 : 0;
 
                 case TokenType.TernaryIf:
-                    return this.Evaluate(node.Children[0], number) != 0
-                         ? this.Evaluate(node.Children[1], number)
-                         : this.Evaluate(node.Children[2], number);
+                    return Evaluate(node.Children[0], number) != 0 ? Evaluate(node.Children[1], number) : Evaluate(node.Children[2], number);
 
                 default:
                     throw new InvalidOperationException($"Can not evaluate token: {node.Type}.");

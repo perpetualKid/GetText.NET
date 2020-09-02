@@ -54,8 +54,8 @@ namespace GetText.Loaders
         /// <filterpriority>2</filterpriority>
         public override short ReadInt16()
         {
-            this.FillBuffer(2);
-            return (short)(this.buffer[1] | this.buffer[0] << 8);
+            FillBuffer(2);
+            return (short)(buffer[1] | buffer[0] << 8);
         }
 
         /// <summary>
@@ -72,8 +72,8 @@ namespace GetText.Loaders
         [CLSCompliant(false)]
         public override ushort ReadUInt16()
         {
-            this.FillBuffer(2);
-            return (ushort)(this.buffer[1] | this.buffer[0] << 8);
+            FillBuffer(2);
+            return (ushort)(buffer[1] | buffer[0] << 8);
         }
 
         /// <summary>
@@ -89,8 +89,8 @@ namespace GetText.Loaders
         /// <filterpriority>2</filterpriority>
         public override int ReadInt32()
         {
-            this.FillBuffer(4);
-            return (int)(this.buffer[3] | this.buffer[2] << 8 | this.buffer[1] << 16 | this.buffer[0] << 24);
+            FillBuffer(4);
+            return buffer[3] | buffer[2] << 8 | buffer[1] << 16 | buffer[0] << 24;
         }
 
         /// <summary>
@@ -107,8 +107,8 @@ namespace GetText.Loaders
         [CLSCompliant(false)]
         public override uint ReadUInt32()
         {
-            this.FillBuffer(4);
-            return (uint)(this.buffer[3] | this.buffer[2] << 8 | this.buffer[1] << 16 | this.buffer[0] << 24);
+            FillBuffer(4);
+            return (uint)(buffer[3] | buffer[2] << 8 | buffer[1] << 16 | buffer[0] << 24);
         }
 
         /// <summary>
@@ -124,13 +124,13 @@ namespace GetText.Loaders
         /// <filterpriority>2</filterpriority>
         public override long ReadInt64()
         {
-            this.FillBuffer(8);
+            FillBuffer(8);
             if (BitConverter.IsLittleEndian)
             {
                 // We don't need to reverse bytes on big-endian machine as BitConverter respects machine endianness
-                Array.Reverse(this.buffer, 0, 8);
+                Array.Reverse(buffer, 0, 8);
             }
-            return BitConverter.ToInt64(this.buffer, 0);
+            return BitConverter.ToInt64(buffer, 0);
         }
 
         /// <summary>
@@ -147,13 +147,13 @@ namespace GetText.Loaders
         [CLSCompliant(false)]
         public override ulong ReadUInt64()
         {
-            this.FillBuffer(8);
+            FillBuffer(8);
             if (BitConverter.IsLittleEndian)
             {
                 // We don't need to reverse bytes on big-endian machine as BitConverter respects machine endianness
-                Array.Reverse(this.buffer, 0, 8);
+                Array.Reverse(buffer, 0, 8);
             }
-            return BitConverter.ToUInt64(this.buffer, 0);
+            return BitConverter.ToUInt64(buffer, 0);
         }
 
         /// <summary>
@@ -169,13 +169,13 @@ namespace GetText.Loaders
         /// <filterpriority>2</filterpriority>
         public override float ReadSingle()
         {
-            this.FillBuffer(4);
+            FillBuffer(4);
             if (BitConverter.IsLittleEndian)
             {
                 // We don't need to reverse bytes on big-endian machine as BitConverter respects machine endianness
-                Array.Reverse(this.buffer, 0, 4);
+                Array.Reverse(buffer, 0, 4);
             }
-            return BitConverter.ToSingle(this.buffer, 0);
+            return BitConverter.ToSingle(buffer, 0);
         }
 
         /// <summary>
@@ -191,30 +191,30 @@ namespace GetText.Loaders
         /// <filterpriority>2</filterpriority>
         public override double ReadDouble()
         {
-            this.FillBuffer(8);
+            FillBuffer(8);
             if (BitConverter.IsLittleEndian)
             {
                 // We don't need to reverse bytes on big-endian machine as BitConverter respects machine endianness
-                Array.Reverse(this.buffer, 0, 8);
+                Array.Reverse(buffer, 0, 8);
             }
-            return BitConverter.ToDouble(this.buffer, 0);
+            return BitConverter.ToDouble(buffer, 0);
         }
 
 
         protected override void FillBuffer(int numBytes)
         {
-            if (numBytes < 2 || numBytes > this.buffer.Length)
+            if (numBytes < 2 || numBytes > buffer.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(numBytes));
             }
             int bytesRead = 0;
-            var stream = this.BaseStream;
+            Stream stream = BaseStream;
             if (stream == null)
                 throw new ObjectDisposedException("Base stream closed.");
 
             do
             {
-                int n = stream.Read(this.buffer, bytesRead, numBytes - bytesRead);
+                int n = stream.Read(buffer, bytesRead, numBytes - bytesRead);
                 if (n == 0)
                 {
                     throw new EndOfStreamException("Unexpected End Of File.");

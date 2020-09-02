@@ -42,11 +42,11 @@ namespace GetText.Loaders
         /// <param name="bigEndian">File endianness.</param>
         public MoFile(Version formatRevision, Encoding encoding = null, bool bigEndian = false)
         {
-            this.FormatRevision = formatRevision;
-            this.BigEndian = bigEndian;
-            this.Encoding = encoding;
-            this.Headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            this.Translations = new Dictionary<string, string[]>();
+            FormatRevision = formatRevision;
+            BigEndian = bigEndian;
+            Encoding = encoding;
+            Headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            Translations = new Dictionary<string, string[]>();
         }
     }
 }

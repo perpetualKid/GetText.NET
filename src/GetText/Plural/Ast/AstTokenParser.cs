@@ -25,67 +25,67 @@ namespace GetText.Plural.Ast
         public AstTokenParser()
         {
             // Ternary operators
-            this.RegisterTokenDefinition(TokenType.TernaryIf, 20)
+            RegisterTokenDefinition(TokenType.TernaryIf, 20)
                 .SetLeftDenotationGetter((self, left) =>
                 {
                     self.Children[0] = left;
-                    self.Children[1] = this.ParseNextExpression();
-                    this.AdvancePosition(TokenType.TernaryElse);
-                    self.Children[2] = this.ParseNextExpression();
+                    self.Children[1] = ParseNextExpression();
+                    AdvancePosition(TokenType.TernaryElse);
+                    self.Children[2] = ParseNextExpression();
                     return self;
                 });
-            this.RegisterTokenDefinition(TokenType.TernaryElse);
+            RegisterTokenDefinition(TokenType.TernaryElse);
 
             // Boolean operators
-            this.RegisterLeftInfixTokenDefinition(TokenType.Or, 30);
-            this.RegisterLeftInfixTokenDefinition(TokenType.And, 40);
+            RegisterLeftInfixTokenDefinition(TokenType.Or, 30);
+            RegisterLeftInfixTokenDefinition(TokenType.And, 40);
 
             // Equal operators
-            this.RegisterLeftInfixTokenDefinition(TokenType.Equals, 50);
-            this.RegisterLeftInfixTokenDefinition(TokenType.NotEquals, 50);
+            RegisterLeftInfixTokenDefinition(TokenType.Equals, 50);
+            RegisterLeftInfixTokenDefinition(TokenType.NotEquals, 50);
 
             // Compare operators
-            this.RegisterLeftInfixTokenDefinition(TokenType.GreaterThan, 50);
-            this.RegisterLeftInfixTokenDefinition(TokenType.LessThan, 50);
-            this.RegisterLeftInfixTokenDefinition(TokenType.GreaterOrEquals, 50);
-            this.RegisterLeftInfixTokenDefinition(TokenType.LessOrEquals, 50);
+            RegisterLeftInfixTokenDefinition(TokenType.GreaterThan, 50);
+            RegisterLeftInfixTokenDefinition(TokenType.LessThan, 50);
+            RegisterLeftInfixTokenDefinition(TokenType.GreaterOrEquals, 50);
+            RegisterLeftInfixTokenDefinition(TokenType.LessOrEquals, 50);
 
             // Add operators
-            this.RegisterLeftInfixTokenDefinition(TokenType.Minus, 60);
-            this.RegisterLeftInfixTokenDefinition(TokenType.Plus, 60);
+            RegisterLeftInfixTokenDefinition(TokenType.Minus, 60);
+            RegisterLeftInfixTokenDefinition(TokenType.Plus, 60);
 
             // Multiply operators
-            this.RegisterLeftInfixTokenDefinition(TokenType.Multiply, 70);
-            this.RegisterLeftInfixTokenDefinition(TokenType.Divide, 70);
-            this.RegisterLeftInfixTokenDefinition(TokenType.Modulo, 70);
+            RegisterLeftInfixTokenDefinition(TokenType.Multiply, 70);
+            RegisterLeftInfixTokenDefinition(TokenType.Divide, 70);
+            RegisterLeftInfixTokenDefinition(TokenType.Modulo, 70);
 
             // Not operator
-            this.RegisterPrefixTokenDefinition(TokenType.Not, 80);
+            RegisterPrefixTokenDefinition(TokenType.Not, 80);
 
             // Literals
-            this.RegisterTokenDefinition(TokenType.N)
+            RegisterTokenDefinition(TokenType.N)
                 .SetNullDenotationGetter((self) =>
                 {
                     return self;
                 });
-            this.RegisterTokenDefinition(TokenType.Number)
+            RegisterTokenDefinition(TokenType.Number)
                 .SetNullDenotationGetter((self) =>
                 {
                     return self;
                 });
 
             // Parentheses
-            this.RegisterTokenDefinition(TokenType.LeftParenthesis)
+            RegisterTokenDefinition(TokenType.LeftParenthesis)
                 .SetNullDenotationGetter((self) =>
                 {
-                    var expression = this.ParseNextExpression();
-                    this.AdvancePosition(TokenType.RightParenthesis);
+                    Token expression = ParseNextExpression();
+                    AdvancePosition(TokenType.RightParenthesis);
                     return expression;
                 });
-            this.RegisterTokenDefinition(TokenType.RightParenthesis);
+            RegisterTokenDefinition(TokenType.RightParenthesis);
 
             // EOF
-            this.RegisterTokenDefinition(TokenType.EOF);
+            RegisterTokenDefinition(TokenType.EOF);
         }
 
         private TokenDefinition RegisterTokenDefinition(TokenType tokenType, int leftBindingPower = 0)
@@ -105,32 +105,32 @@ namespace GetText.Plural.Ast
 
         private TokenDefinition RegisterLeftInfixTokenDefinition(TokenType tokenType, int leftBindingPower)
         {
-            return this.RegisterTokenDefinition(tokenType, leftBindingPower)
+            return RegisterTokenDefinition(tokenType, leftBindingPower)
                 .SetLeftDenotationGetter((self, left) =>
                 {
                     self.Children[0] = left;
-                    self.Children[1] = this.ParseNextExpression(leftBindingPower);
+                    self.Children[1] = ParseNextExpression(leftBindingPower);
                     return self;
                 });
         }
 
         private TokenDefinition RegisterRightInfixTokenDefinition(TokenType tokenType, int leftBindingPower)
         {
-            return this.RegisterTokenDefinition(tokenType, leftBindingPower)
+            return RegisterTokenDefinition(tokenType, leftBindingPower)
                 .SetLeftDenotationGetter((self, left) =>
                 {
                     self.Children[0] = left;
-                    self.Children[1] = this.ParseNextExpression(leftBindingPower - 1);
+                    self.Children[1] = ParseNextExpression(leftBindingPower - 1);
                     return self;
                 });
         }
 
         private TokenDefinition RegisterPrefixTokenDefinition(TokenType tokenType, int leftBindingPower)
         {
-            return this.RegisterTokenDefinition(tokenType, leftBindingPower)
+            return RegisterTokenDefinition(tokenType, leftBindingPower)
                 .SetNullDenotationGetter((self) =>
                 {
-                    self.Children[0] = this.ParseNextExpression(leftBindingPower);
+                    self.Children[0] = ParseNextExpression(leftBindingPower);
                     self.Children[1] = null;
                     return self;
                 });
@@ -154,22 +154,22 @@ namespace GetText.Plural.Ast
         {
             this.input = input + "\0";
             position = 0;
-            currentToken = this.GetNextToken();
+            currentToken = GetNextToken();
 
-            return this.ParseNextExpression();
+            return ParseNextExpression();
         }
 
         private Token ParseNextExpression(int rightBindingPower = 0)
         {
             Token token = currentToken;
-            currentToken = this.GetNextToken();
-            Token left = this.GetDefinition(token.Type).GetNullDenotation(token);
+            currentToken = GetNextToken();
+            Token left = GetDefinition(token.Type).GetNullDenotation(token);
 
-            while (rightBindingPower < this.GetDefinition(currentToken.Type).LeftBindingPower)
+            while (rightBindingPower < GetDefinition(currentToken.Type).LeftBindingPower)
             {
                 token = currentToken;
-                currentToken = this.GetNextToken();
-                left = this.GetDefinition(token.Type).GetLeftDenotation(token, left);
+                currentToken = GetNextToken();
+                left = GetDefinition(token.Type).GetLeftDenotation(token, left);
             }
 
             return left;
@@ -177,7 +177,7 @@ namespace GetText.Plural.Ast
 
         private void AdvancePosition()
         {
-            currentToken = this.GetNextToken();
+            currentToken = GetNextToken();
         }
 
         private void AdvancePosition(TokenType expectedTokenType)
@@ -186,7 +186,7 @@ namespace GetText.Plural.Ast
             {
                 throw new ParserException($"Expected token \"{expectedTokenType}\" but received \"{currentToken.Type}\"");
             }
-            this.AdvancePosition();
+            AdvancePosition();
         }
 
         private Token GetNextToken()

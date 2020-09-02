@@ -10,7 +10,7 @@ namespace GetText.Plural
         /// <summary>
         /// Evaluation delegate instance.
         /// </summary>
-        private PluralRuleEvaluatorDelegate evaluatorDelegate;
+        private readonly PluralRuleEvaluatorDelegate evaluatorDelegate;
 
         /// <summary>
         /// Default plural rule instance.
@@ -35,7 +35,7 @@ namespace GetText.Plural
                 throw new ArgumentOutOfRangeException(nameof(numPlurals));
             }
 
-            this.NumPlurals = numPlurals;
+            NumPlurals = numPlurals;
             this.evaluatorDelegate = evaluatorDelegate ?? throw new ArgumentNullException(nameof(evaluatorDelegate));
         }
 

@@ -30,8 +30,8 @@ namespace GetText.Plural.Ast
         /// <param name="leftBindingPower"></param>
         public TokenDefinition(TokenType tokenType, int leftBindingPower)
         {
-            this.TokenType = tokenType;
-            this.LeftBindingPower = leftBindingPower;
+            TokenType = tokenType;
+            LeftBindingPower = leftBindingPower;
         }
 
         /// <summary>
@@ -66,12 +66,12 @@ namespace GetText.Plural.Ast
             if (self == null)
                 throw new ArgumentNullException(nameof(self));
 
-            if (this.nullDenotationGetter == null)
+            if (nullDenotationGetter == null)
                 throw new InvalidOperationException("Unable to invoke null denotation getter: getter is not set.");
-            if (self.Type != this.TokenType)
+            if (self.Type != TokenType)
                 throw new ArgumentException("Unable to invoke null denotation getter: invalid self type.", nameof(self));
 
-            return this.nullDenotationGetter(self);
+            return nullDenotationGetter(self);
         }
 
         /// <summary>
@@ -85,12 +85,12 @@ namespace GetText.Plural.Ast
             if (self == null)
                 throw new ArgumentNullException(nameof(self));
 
-            if (this.leftDenotationGetter == null)
+            if (leftDenotationGetter == null)
                 throw new InvalidOperationException("Unable to invoke left denotation getter: getter is not set.");
-            if (self.Type != this.TokenType)
+            if (self.Type != TokenType)
                 throw new ArgumentException("Unable to invoke null denotation getter: invalid self type.", nameof(self));
 
-            return this.leftDenotationGetter(self, left);
+            return leftDenotationGetter(self, left);
         }
     }
 }

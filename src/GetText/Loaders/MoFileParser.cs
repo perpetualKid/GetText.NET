@@ -48,8 +48,8 @@ namespace GetText.Loaders
         /// </summary>
         public MoFileParser()
         {
-            this.DefaultEncoding = Encoding.UTF8;
-            this.AutoDetectEncoding = true;
+            DefaultEncoding = Encoding.UTF8;
+            AutoDetectEncoding = true;
         }
 
         /// <summary>
@@ -57,8 +57,8 @@ namespace GetText.Loaders
         /// </summary>
         public MoFileParser(Encoding defaultEncoding, bool autoDetectEncoding = true)
         {
-            this.DefaultEncoding = defaultEncoding;
-            this.AutoDetectEncoding = autoDetectEncoding;
+            DefaultEncoding = defaultEncoding;
+            AutoDetectEncoding = autoDetectEncoding;
         }
 
         /// <summary>
@@ -107,8 +107,8 @@ namespace GetText.Loaders
                         }
                     }
 
-                    var revision = reader.ReadInt32();
-                    var parsedFile = new MoFile(new Version(revision >> 16, revision & 0xffff), this.DefaultEncoding, bigEndian);
+                    int revision = reader.ReadInt32();
+                    MoFile parsedFile = new MoFile(new Version(revision >> 16, revision & 0xffff), DefaultEncoding, bigEndian);
 
 #if DEBUG
                     Trace.WriteLine($"MO File Revision: {parsedFile.FormatRevision.Major}.{parsedFile.FormatRevision.Minor}.", "GetText");
@@ -119,9 +119,9 @@ namespace GetText.Loaders
                         throw new CatalogLoadingException($"Unsupported MO file major revision: {parsedFile.FormatRevision.Major}.");
                     }
 
-                    var stringCount = reader.ReadInt32();
-                    var originalTableOffset = reader.ReadInt32();
-                    var translationTableOffset = reader.ReadInt32();
+                    int stringCount = reader.ReadInt32();
+                    int originalTableOffset = reader.ReadInt32();
+                    int translationTableOffset = reader.ReadInt32();
 
                     // We don't support hash tables and system dependent segments.
 
@@ -210,7 +210,7 @@ namespace GetText.Loaders
         private static string[] ReadStrings(BinaryReader reader, int offset, int length, Encoding encoding)
         {
             reader.BaseStream.Seek(offset, SeekOrigin.Begin);
-            var stringBytes = reader.ReadBytes(length);
+            byte[] stringBytes = reader.ReadBytes(length);
             return encoding.GetString(stringBytes, 0, stringBytes.Length).Split(nullValue);
         }
 

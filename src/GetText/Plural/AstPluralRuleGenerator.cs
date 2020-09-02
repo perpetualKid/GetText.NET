@@ -39,7 +39,7 @@ namespace GetText.Plural
         /// </summary>
         public AstPluralRuleGenerator(AstTokenParser parser)
         {
-            this.Parser = parser;
+            Parser = parser;
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace GetText.Plural
         public AstPluralRuleGenerator(string pluralRuleText)
             : this()
         {
-            this.SetPluralRuleText(pluralRuleText);
+            SetPluralRuleText(pluralRuleText);
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace GetText.Plural
         public AstPluralRuleGenerator(string pluralRuleText, AstTokenParser parser)
             : this(parser)
         {
-            this.SetPluralRuleText(pluralRuleText);
+            SetPluralRuleText(pluralRuleText);
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace GetText.Plural
         /// <param name="pluralRuleText">Plural rule text representation.</param>
         public void SetPluralRuleText(string pluralRuleText)
         {
-            this.PluralRuleText = pluralRuleText;
+            PluralRuleText = pluralRuleText;
         }
 
         /// <summary>
@@ -79,11 +79,11 @@ namespace GetText.Plural
         /// <returns></returns>
         public override IPluralRule CreateRule(CultureInfo cultureInfo)
         {
-            if (this.PluralRuleText != null)
+            if (PluralRuleText != null)
             {
-                var numPlurals = ParseNumPlurals(this.PluralRuleText);
-                var plural = ParsePluralFormulaText(this.PluralRuleText);
-                var astRoot = this.Parser.Parse(plural);
+                int numPlurals = ParseNumPlurals(PluralRuleText);
+                string plural = ParsePluralFormulaText(PluralRuleText);
+                Token astRoot = Parser.Parse(plural);
 
                 return new AstPluralRule(numPlurals, astRoot);
             }
@@ -98,7 +98,7 @@ namespace GetText.Plural
         /// <returns></returns>
         public static int ParseNumPlurals(string input)
         {
-            var match = NPluralsRegex.Match(input);
+            Match match = NPluralsRegex.Match(input);
             if (!match.Success)
                 throw new FormatException("Failed to parse 'nplurals' parameter from the plural rule text: invalid format");
 
@@ -112,7 +112,7 @@ namespace GetText.Plural
         /// <returns></returns>
         public static string ParsePluralFormulaText(string input)
         {
-            var match = PluralRegex.Match(input);
+            Match match = PluralRegex.Match(input);
             if (!match.Success)
                 throw new FormatException("Failed to parse 'plural' parameter from the plural rule text: invalid format");
 
