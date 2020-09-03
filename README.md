@@ -5,10 +5,10 @@ GetText.NET
 
 | Package | Status |
 | ----------- | ----------- |
-|GetText.NET|![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/gettext.net?color=brightgreen&style=plastic)|
-|GetText.NET.PluralCompile|![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/gettext.net.pluralcompile?color=brightgreen&style=plastic)|
-|GetText.NET.WindowsForms|![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/GetText.NET.WindowsForms?color=brightgreen&style=plastic)|
-|GetText.NET.Extractor|![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/gettext.net.extractor?color=brightgreen&style=plastic)|
+|GetText.NET|[![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/gettext.net?color=brightgreen&style=plastic)](https://www.nuget.org/packages/gettext.net)|
+|GetText.NET.PluralCompile|[![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/gettext.net.pluralcompile?color=brightgreen&style=plastic)](https://www.nuget.org/packages/GetText.NET.PluralCompile/)|
+|GetText.NET.WindowsForms|[![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/GetText.NET.WindowsForms?color=brightgreen&style=plastic)](https://www.nuget.org/packages/GetText.NET.WindowsForms/)|
+|GetText.NET.Extractor|[![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/gettext.net.extractor?color=brightgreen&style=plastic)](https://www.nuget.org/packages/GetText.NET.Extractor/)|
 
 A cross-platform .NET implementation of the GNU Gettext library, largely based on [NGettext](https://github.com/VitaliiTsilnyk/NGettext).  
 GetText.NET supports [**string interpolation**](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated) and [**FormattableString**](https://docs.microsoft.com/en-us/dotnet/api/system.formattablestring?redirectedfrom=MSDN&view=netcore-3.1).  
