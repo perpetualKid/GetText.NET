@@ -3,7 +3,7 @@
     <NoWarn>CS1591;CA1303</NoWarn>
     <!--    <NoWarn>CS1591;CA1303;HAA0101;HAA0401;HAA0601</NoWarn>-->
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <Version>0.9.2-beta.2</Version>
+    <Version>0.9.2</Version>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0">
