@@ -58,6 +58,9 @@ namespace GetText.Extractor.Template
 
         public async Task WriteAsync()
         {
+            if (entries.IsEmpty)
+                return;
+
             string backupFile = FileName + ".bak";
             if (File.Exists(backupFile))
             {
