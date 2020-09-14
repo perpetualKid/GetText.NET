@@ -57,12 +57,17 @@ namespace GetText.Extractor.CommandLine
             }
 
             token = Path.GetFullPath(token);
-            if (File.Exists(token) || Directory.Exists(Path.GetDirectoryName(token)))
+            if (File.Exists(token))
             {
-                FileInfo result = new FileInfo(token);
-                if ((result.Attributes | FileAttributes.Directory) == FileAttributes.Directory)
-                    result = new FileInfo(Path.Combine(token, "messages.pot"));
-                return result;
+                return new FileInfo(token);
+            }
+            else if (Directory.Exists(token))
+            {
+                return new FileInfo(Path.Combine(token, "messages.pot"));
+            }
+            else if (Directory.Exists(Path.GetDirectoryName(token)))
+            {
+                return new FileInfo(Path.ChangeExtension(token, ".pot"));
             }
             argument.ErrorMessage = $"The path for '{token}' could not be found.";
             return default;
