@@ -70,6 +70,8 @@ namespace GetText.Extractor.Template
             {
                 File.Move(FileName, backupFile);
             }
+            if (!Directory.Exists(Path.GetDirectoryName(FileName)))
+                Directory.CreateDirectory(Path.GetDirectoryName(FileName));
             await Save().ConfigureAwait(false);
         }
 

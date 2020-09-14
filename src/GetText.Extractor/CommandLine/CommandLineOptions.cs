@@ -56,18 +56,31 @@ namespace GetText.Extractor.CommandLine
                 default: throw new InvalidOperationException("Unexpected token count.");
             }
 
-            token = Path.GetFullPath(token);
-            if (File.Exists(token))
+            try
             {
-                return new FileInfo(token);
+                token = Path.GetFullPath(token);
+                if (File.Exists(token))
+                {
+                    return new FileInfo(token);
+                }
+                else if (Directory.Exists(token))
+                {
+                    return new FileInfo(Path.Combine(token, "messages.pot"));
+                }
+                else if (Directory.Exists(Path.GetDirectoryName(token)))
+                {
+                    return new FileInfo(Path.ChangeExtension(token, ".pot"));
+                }
+                else if (Path.GetExtension(token).Equals(".pot", StringComparison.OrdinalIgnoreCase))
+                {
+                    //assume this will create the file
+                    return new FileInfo(token);
+                }
             }
-            else if (Directory.Exists(token))
+            catch(Exception ex) when (ex is ArgumentException || ex is NotSupportedException)
             {
-                return new FileInfo(Path.Combine(token, "messages.pot"));
-            }
-            else if (Directory.Exists(Path.GetDirectoryName(token)))
-            {
-                return new FileInfo(Path.ChangeExtension(token, ".pot"));
+                argument.ErrorMessage = $"The path for '{token}' is not valid. ({ex.Message})";
+                return default;
             }
             argument.ErrorMessage = $"The path for '{token}' could not be found.";
             return default;
