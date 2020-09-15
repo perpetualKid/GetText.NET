@@ -117,7 +117,7 @@ namespace GetText.Extractor.Engine
                     Any((identifier) => DescriptionAttributes.Contains(identifier.Identifier.ValueText)))?.FirstOrDefault();
                 context = (null != descriptionAttribute) ? ExtractText(descriptionAttribute.ArgumentList) : null;
 
-                foreach(EnumMemberDeclarationSyntax member in item.Members)
+                foreach (EnumMemberDeclarationSyntax member in item.Members)
                 {
                     descriptionAttribute = member.ChildNodes().OfType<AttributeListSyntax>().FirstOrDefault()?.Attributes.
                     Where((attribute) => attribute.DescendantNodes().OfType<IdentifierNameSyntax>().
@@ -148,8 +148,12 @@ namespace GetText.Extractor.Engine
                         {
                             if (item.Kind() == SyntaxKind.InterpolatedStringText)
                                 builder.Append(ToLiteral((item as InterpolatedStringTextSyntax)?.TextToken.ValueText));
-                            else if (item.Kind() == SyntaxKind.Interpolation) //TODO 20200830 add format expression
-                                builder.Append($"{{{i++}}}");
+                            else if (item.Kind() == SyntaxKind.Interpolation)
+                            {
+                                InterpolationAlignmentClauseSyntax alignment = item.DescendantNodes().OfType<InterpolationAlignmentClauseSyntax>().FirstOrDefault();
+                                InterpolationFormatClauseSyntax format = item.DescendantNodes().OfType<InterpolationFormatClauseSyntax>().FirstOrDefault();
+                                builder.Append($"{{{i++}{alignment}{format}}}");
+                            }
                             else
                                 throw new InvalidDataException(item.Kind().ToString());
                         }
