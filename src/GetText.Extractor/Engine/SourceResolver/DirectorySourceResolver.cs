@@ -14,11 +14,16 @@ namespace GetText.Extractor.Engine.SourceResolver
         {
         }
 
-        public override IEnumerable<string> GetInput() => GetCSharpFilesFromFolder(sourcePath.FullName);
+        public override IEnumerable<string> GetInput()
+        {
+            return GetCSharpFilesFromFolder(sourcePath.FullName);
+        }
 
-        private static IEnumerable<string> GetCSharpFilesFromFolder(string folder) =>
-            Directory.EnumerateFiles(folder, "*.cs").Concat(
+        private static IEnumerable<string> GetCSharpFilesFromFolder(string folder)
+        {
+            return Directory.EnumerateFiles(folder, "*.cs").Concat(
                 Directory.EnumerateDirectories(folder).Where(d => !excludedFolders.Contains(Path.GetFileName(d), StringComparer.OrdinalIgnoreCase)).
                 SelectMany(subdir => GetCSharpFilesFromFolder(subdir)));
+        }
     }
 }

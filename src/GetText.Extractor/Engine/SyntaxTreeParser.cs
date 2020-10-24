@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
@@ -19,6 +16,7 @@ namespace GetText.Extractor.Engine
         public SyntaxTreeParser(CatalogTemplate catalog, FileInfo sourceFolder, bool verbose): base(catalog, sourceFolder, verbose)
         {
             sourceResolver = new DirectorySourceResolver(sourceFolder);
+            catalog.Header.ProjectIdVersion = Path.GetFileNameWithoutExtension(sourceFolder.Name);
         }
 
         public override async Task Parse()
