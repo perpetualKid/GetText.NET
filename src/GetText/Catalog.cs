@@ -224,7 +224,7 @@ namespace GetText
         /// <returns>Translated text.</returns>
         public virtual string GetPluralString(FormattableStringAdapter text, FormattableStringAdapter pluralText, long n)
         {
-            return GetPluralStringDefault(text?.String, text?.String, pluralText?.String, n);
+            return string.Format(FormatProvider, GetPluralStringDefault(text?.String, text?.String, pluralText?.String, n), n);
         }
 
         /// <summary>

@@ -32,7 +32,8 @@ namespace Examples.HelloForms
 #pragma warning disable HAA0601 // Value type to reference type conversion causing boxing allocation
             label2.Text = catalog.GetString($"This program is running as process number \"{System.Diagnostics.Process.GetCurrentProcess().Id}\".");
             label3.Text = catalog.GetPluralString($"found {1} similar word", $"found {1} similar words", 1);
-            label4.Text = catalog.GetPluralString($"found {2} similar word", $"found {2} similar words", 2);
+//            label4.Text = catalog.GetPluralString($"found {2} similar word", $"found {2} similar words", 2);
+            label4.Text = catalog.GetPluralString("found {0} similar word", $"found {0} similar words", 2);
             label5.Text = catalog.GetPluralString($"found {5} similar word", $"found {5} similar words", 5);
             label6.Text = string.Format(currentCulture, "{0} ('computers')", catalog.GetParticularString("Computers", "Text encoding"));
             label7.Text = $"{catalog.GetParticularString("Military", "Text encoding")} ('military')";
