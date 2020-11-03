@@ -24,7 +24,7 @@ namespace GetText.Extractor.Template
 
         public void AddOrUpdateEntry(string context, string messageId, string reference, bool formatString)
         {
-            if (string.IsNullOrEmpty(messageId))
+            if (string.IsNullOrWhiteSpace(System.Text.RegularExpressions.Regex.Unescape(messageId)))
                 return;     // don't care about empty message ids
             if (!entries.TryGetValue(CatalogEntry.BuildKey(context, messageId), out CatalogEntry result))
             {
@@ -49,11 +49,6 @@ namespace GetText.Extractor.Template
             result.PluralMessageId = plural;
             result.References.Add(reference);
             result.Comments.Flags = formatString ? result.Comments.Flags | MessageFlags.CSharpFormat : result.Comments.Flags & ~MessageFlags.CSharpFormat;
-        }
-
-        public void Read()
-        {
-
         }
 
         public async Task WriteAsync()

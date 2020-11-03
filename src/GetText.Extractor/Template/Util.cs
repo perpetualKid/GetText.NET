@@ -12,7 +12,10 @@ namespace GetText.Extractor.Template
         /// <summary>
         /// Converts DateTime instance o RFC822 compatible format (yyyy-MM-dd HH':'mm':'sszz00)
         /// </summary>
-        public static string ToRfc822Format(this DateTime dateTime) => dateTime.ToString("yyyy-MM-dd HH':'mm':'sszz00", CultureInfo.InvariantCulture); //rfc822 format
+        public static string ToRfc822Format(this DateTime dateTime)
+        {
+            return dateTime.ToString("yyyy-MM-dd HH':'mm':'sszz00", CultureInfo.InvariantCulture); //rfc822 format
+        }
 
         /// <summary>
         /// Converts RFC822 date format to DateTime instance. Returns DateTime.MinValue if invalid input provided 

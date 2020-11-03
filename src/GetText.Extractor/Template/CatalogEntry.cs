@@ -47,7 +47,10 @@ namespace GetText.Extractor.Template
 
         public string Key => BuildKey(Context, MessageId);
 
-        public static string BuildKey(string context, string messageId) => $"{context?.Trim()}|{messageId}";
+        public static string BuildKey(string context, string messageId)
+        {
+            return $"{context?.Trim()}|{messageId}";
+        }
 
         public override string ToString()
         {
