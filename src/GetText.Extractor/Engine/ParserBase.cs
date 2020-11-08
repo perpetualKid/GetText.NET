@@ -82,14 +82,28 @@ namespace GetText.Extractor.Engine
                 {
                     continue;
                 }
+                if (item.Right.IsKind(SyntaxKind.ConditionalExpression))
+                {
+                    ExpressionSyntax whenTrue = (item.Right as ConditionalExpressionSyntax).WhenTrue;
+                    messageId = ExtractText(whenTrue);
+                    isFormatString = whenTrue.DescendantNodes().OfType<InterpolationSyntax>().Any();
+                    catalog.AddOrUpdateEntry(null, messageId, $"{pathRelative}:{whenTrue.GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString);
 
-                messageId = ExtractText(item.Right);
-                isFormatString = item.Right.DescendantNodes().OfType<InterpolationSyntax>().Any();
-                //this skips the case when Windows Forms Controls still have there default text which is set to the control name (identifier) 
-                if (item.Left.DescendantNodes().OfType<IdentifierNameSyntax>().Reverse().ElementAtOrDefault(1)?.Identifier.ValueText.Equals(messageId, StringComparison.OrdinalIgnoreCase) ?? false)
-                    continue;
+                    ExpressionSyntax whenFalse = (item.Right as ConditionalExpressionSyntax).WhenFalse;
+                    messageId = ExtractText(whenFalse);
+                    isFormatString = whenFalse.DescendantNodes().OfType<InterpolationSyntax>().Any();
+                    catalog.AddOrUpdateEntry(null, messageId, $"{pathRelative}:{whenFalse.GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString);
+                }
+                else
+                {
+                    messageId = ExtractText(item.Right);
+                    isFormatString = item.Right.DescendantNodes().OfType<InterpolationSyntax>().Any();
+                    //this skips the case when Windows Forms Controls still have there default text which is set to the control name (identifier) 
+                    if (item.Left.DescendantNodes().OfType<IdentifierNameSyntax>().Reverse().ElementAtOrDefault(1)?.Identifier.ValueText.Equals(messageId, StringComparison.OrdinalIgnoreCase) ?? false)
+                        continue;
 
-                catalog.AddOrUpdateEntry(null, messageId, $"{pathRelative}:{item.Right.GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString);
+                    catalog.AddOrUpdateEntry(null, messageId, $"{pathRelative}:{item.Right.GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString);
+                }
             }
             foreach (InvocationExpressionSyntax item in root.DescendantNodes().OfType<InvocationExpressionSyntax>().
                 Where((item) => ControlTextMethods.Contains(methodName = ((item.Expression as MemberAccessExpressionSyntax)?.Name as IdentifierNameSyntax)?.Identifier.ValueText)))
