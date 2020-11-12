@@ -86,12 +86,12 @@ namespace GetText.Extractor.Engine
                 {
                     ExpressionSyntax whenTrue = (item.Right as ConditionalExpressionSyntax).WhenTrue;
                     messageId = ExtractText(whenTrue);
-                    isFormatString = whenTrue.DescendantNodes().OfType<InterpolationSyntax>().Any();
+                    isFormatString = whenTrue.DescendantNodes().OfType<ArgumentSyntax>().Any() || whenTrue.DescendantNodes().OfType<InterpolationSyntax>().Any();
                     catalog.AddOrUpdateEntry(null, messageId, $"{pathRelative}:{whenTrue.GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString);
 
                     ExpressionSyntax whenFalse = (item.Right as ConditionalExpressionSyntax).WhenFalse;
                     messageId = ExtractText(whenFalse);
-                    isFormatString = whenFalse.DescendantNodes().OfType<InterpolationSyntax>().Any();
+                    isFormatString = whenFalse.DescendantNodes().OfType<ArgumentSyntax>().Any() || whenFalse.DescendantNodes().OfType<InterpolationSyntax>().Any();
                     catalog.AddOrUpdateEntry(null, messageId, $"{pathRelative}:{whenFalse.GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString);
                 }
                 else

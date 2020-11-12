@@ -32,7 +32,8 @@ namespace GetText.Extractor.Template
                 if (!entries.TryAdd(result.Key, result))
                     result = entries[result.Key];
             }
-            result.References.Add(reference);
+            if (!result.References.Contains(reference))
+                result.References.Add(reference);
             result.Comments.Flags = formatString ? result.Comments.Flags | MessageFlags.CSharpFormat : result.Comments.Flags & ~MessageFlags.CSharpFormat;
         }
 
