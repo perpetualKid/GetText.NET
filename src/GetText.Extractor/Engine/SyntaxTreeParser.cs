@@ -13,7 +13,8 @@ namespace GetText.Extractor.Engine
 {
     internal class SyntaxTreeParser: ParserBase<string>
     {
-        public SyntaxTreeParser(CatalogTemplate catalog, FileInfo sourceFolder, bool verbose): base(catalog, sourceFolder, verbose)
+        public SyntaxTreeParser(CatalogTemplate catalog, FileInfo sourceFolder, bool unixStyle, bool verbose): 
+            base(catalog, sourceFolder, unixStyle, verbose)
         {
             sourceResolver = new DirectorySourceResolver(sourceFolder);
             catalog.Header.ProjectIdVersion = Path.GetFileNameWithoutExtension(sourceFolder.Name);

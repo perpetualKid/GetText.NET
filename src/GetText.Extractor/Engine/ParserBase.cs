@@ -26,19 +26,21 @@ namespace GetText.Extractor.Engine
         protected SourceResolverBase<T> sourceResolver;
         protected FileInfo sourceRoot;
         protected bool verbose;
+        protected bool unixStyle;
 
-        public ParserBase(CatalogTemplate catalog, FileInfo sourceRoot, bool verbose)
+        public ParserBase(CatalogTemplate catalog, FileInfo sourceRoot, bool unixStyle, bool verbose)
         {
             this.catalog = catalog;
             this.sourceRoot = sourceRoot;
             this.verbose = verbose;
+            this.unixStyle = unixStyle;
         }
 
         public abstract Task Parse();
 
         protected void GetStrings(SyntaxTree tree)
         {
-            string pathRelative = PathExtension.GetRelativePath(catalog.FileName, tree.FilePath);
+            string pathRelative = PathExtension.GetRelativePath(catalog.FileName, tree.FilePath, unixStyle);
             string messageId, context, plural;
             string methodName = null;
             bool isFormatString;

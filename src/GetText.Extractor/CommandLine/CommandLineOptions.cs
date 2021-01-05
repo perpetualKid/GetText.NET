@@ -45,6 +45,8 @@ namespace GetText.Extractor.CommandLine
 
         internal static Option<bool> Verbose => new Option<bool>(new[] { "--verbose", "-v" }, "Verbose output");
 
+        internal static Option<bool> UseUnixPathSeparator => new Option<bool>(new[] { "--unixstyle", "-u" }, "Unix-style Path Separator ('/')");
+
         #region private validation and parsing
         private static FileInfo TryParseDefaultTargetFile(ArgumentResult argument)
         {

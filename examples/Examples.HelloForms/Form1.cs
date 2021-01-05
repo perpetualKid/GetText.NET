@@ -10,7 +10,7 @@ namespace Examples.HelloForms
 {
     public partial class Form1 : Form
     {
-		private ObjectPropertiesStore store = new ObjectPropertiesStore();
+		private readonly ObjectPropertiesStore store = new ObjectPropertiesStore();
 		private CultureInfo currentCulture;
 
 		public Form1()
@@ -29,7 +29,6 @@ namespace Examples.HelloForms
             // Manually formatted strings
             //label2.Text = catalog.GetString("This program is running as process number\r \"{0}\".",
             //                                   System.Diagnostics.Process.GetCurrentProcess().Id);
-#pragma warning disable HAA0601 // Value type to reference type conversion causing boxing allocation
             label2.Text = catalog.GetString($"This program is running as process number \"{System.Diagnostics.Process.GetCurrentProcess().Id}\".");
             label3.Text = catalog.GetPluralString($"found {1} similar word", $"found {1} similar words", 1);
 //            label4.Text = catalog.GetPluralString($"found {2} similar word", $"found {2} similar words", 2);
@@ -38,7 +37,6 @@ namespace Examples.HelloForms
             label6.Text = string.Format(currentCulture, "{0} ('computers')", catalog.GetParticularString("Computers", "Text encoding"));
             label7.Text = $"{catalog.GetParticularString("Military", "Text encoding")} ('military')";
             label8.Text = $"{catalog.GetString("Text encoding")} (non contextual)";
-#pragma warning restore HAA0601 // Value type to reference type conversion causing boxing allocation
 		}
 
 		private void OnLocaleChanged(object sender, EventArgs e)

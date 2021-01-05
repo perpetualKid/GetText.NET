@@ -17,7 +17,7 @@ namespace GetText.Extractor.Template
         /// <param name="relativeTo">The source path the result should be relative to. This path is always considered to be a directory.</param>
         /// <param name="path">The destination path.</param>
         /// <returns></returns>
-        public static string GetRelativePath(string relativeTo, string path)
+        public static string GetRelativePath(string relativeTo, string path, bool unixStyle)
         {
             int sourceAttribute = GetPathAttribute(relativeTo);
             int targetAttribute = GetPathAttribute(path);
@@ -27,6 +27,8 @@ namespace GetText.Extractor.Template
             {
                 throw new ArgumentException("Paths must have a common prefix.");
             }
+            if (unixStyle)
+                result.Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 
             return result.ToString();
         }

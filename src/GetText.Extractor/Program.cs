@@ -22,23 +22,24 @@ namespace GetText.Extractor
             RootCommand rootCommand = CommandLineOptions.RootCommand;
             rootCommand.Add(CommandLineOptions.SourceOption);
             rootCommand.Add(CommandLineOptions.OutFile);
-//            rootCommand.Add(CommandLineOptions.Merge);
+            //            rootCommand.Add(CommandLineOptions.Merge);
             rootCommand.Add(CommandLineOptions.Verbose);
+            rootCommand.Add(CommandLineOptions.UseUnixPathSeparator);
 
-            rootCommand.Handler = CommandHandler.Create(async (FileInfo source, FileInfo target, bool merge, bool verbose) =>
+            rootCommand.Handler = CommandHandler.Create(async (FileInfo source, FileInfo target, bool unixstyle, bool verbose) =>
             {
-                await Execute(source, target, verbose).ConfigureAwait(false);
+                await Execute(source, target, unixstyle, verbose).ConfigureAwait(false);
             });
 
             return await rootCommand.InvokeAsync(args).ConfigureAwait(false);
 
         }
 
-        private static async Task Execute(FileInfo source, FileInfo target, bool verbose)
+        private static async Task Execute(FileInfo source, FileInfo target, bool unixStyle, bool verbose)
         {
             catalog = new CatalogTemplate(target.FullName);
 
-            SyntaxTreeParser parser = new SyntaxTreeParser(catalog, source, verbose);
+            SyntaxTreeParser parser = new SyntaxTreeParser(catalog, source, unixStyle, verbose);
             await parser.Parse().ConfigureAwait(false);
 
             await catalog.WriteAsync().ConfigureAwait(false);
