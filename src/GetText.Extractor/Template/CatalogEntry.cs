@@ -92,7 +92,7 @@ namespace GetText.Extractor.Template
 
         private static void FormatMessageStringAndAppend(StringBuilder builder, string prefix, string message)
         {
-            //            string escapedMessage = StringEscaping.ToGetTextFormat(message);
+            message = message.Replace("\"", "\\\"");
 
             //format to 80 cols
             //first the simple case: does it fit one one line, with the prefix, and contain no newlines?

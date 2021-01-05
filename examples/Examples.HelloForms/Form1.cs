@@ -30,6 +30,7 @@ namespace Examples.HelloForms
             //label2.Text = catalog.GetString("This program is running as process number\r \"{0}\".",
             //                                   System.Diagnostics.Process.GetCurrentProcess().Id);
             label2.Text = catalog.GetString($"This program is running as process number \"{System.Diagnostics.Process.GetCurrentProcess().Id}\".");
+            label2.Text = catalog.GetString("This program is running as process number \"{System.Diagnostics.Process.GetCurrentProcess().Id}\".");
             label3.Text = catalog.GetPluralString($"found {1} similar word", $"found {1} similar words", 1);
 //            label4.Text = catalog.GetPluralString($"found {2} similar word", $"found {2} similar words", 2);
             label4.Text = catalog.GetPluralString("found {0} similar word", $"found {0} similar words", 2);
