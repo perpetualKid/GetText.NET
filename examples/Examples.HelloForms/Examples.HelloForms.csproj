@@ -7,7 +7,7 @@
     <Authors>perpetualKid</Authors>
     <Company />
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Version>0.9.7-beta.2</Version>
+    <Version>0.9.7</Version>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
   </PropertyGroup>
 
