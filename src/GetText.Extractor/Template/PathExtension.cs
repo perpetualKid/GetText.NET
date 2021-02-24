@@ -16,6 +16,7 @@ namespace GetText.Extractor.Template
         /// </summary>
         /// <param name="relativeTo">The source path the result should be relative to. This path is always considered to be a directory.</param>
         /// <param name="path">The destination path.</param>
+        /// <param name="unixStyle">Whether to use forward or backward slash path separator (Windows or Unix style)</param>
         /// <returns></returns>
         public static string GetRelativePath(string relativeTo, string path, bool unixStyle)
         {
