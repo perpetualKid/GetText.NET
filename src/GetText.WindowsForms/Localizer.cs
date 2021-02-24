@@ -153,21 +153,27 @@ namespace GetText.WindowsForms
                 IterateControls(child, mode);
             }
 
-            if (control is DataGridView gridView)
+            switch (control)
             {
-                foreach (DataGridViewColumn col in gridView.Columns)
-                {
-                    IterateControlHandler(new LocalizableObjectAdapter(col, OriginalTextStore, ToolTips), mode);
-                }
+                case DataGridView gridView:
+                    foreach (DataGridViewColumn col in gridView.Columns)
+                    {
+                        IterateControlHandler(new LocalizableObjectAdapter(col, OriginalTextStore, ToolTips), mode);
+                    }
+                    break;
+                case ListView listView:
+                    foreach (ColumnHeader header in listView.Columns)
+                    {
+                        IterateControlHandler(new LocalizableObjectAdapter(header, OriginalTextStore, ToolTips), mode);
+                    }
+                    break;
+                case ToolStrip toolStrip:
+                    foreach (ToolStripItem item in toolStrip.Items)
+                    {
+                        IterateToolStripItems(item, mode);
+                    }
+                    break;
             }
-            else if (control is ToolStrip toolStrip)
-            {
-                foreach (ToolStripItem item in toolStrip.Items)
-                {
-                    IterateToolStripItems(item, mode);
-                }
-            }
-
             IterateControlHandler(new LocalizableObjectAdapter(control, OriginalTextStore, ToolTips), mode);
         }
 
