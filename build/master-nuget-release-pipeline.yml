@@ -22,9 +22,9 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: NuGetCommand@2
-  inputs:
-    command: 'push'
-    packagesToPush: '**/*.nupkg'
-    nuGetFeedType: 'external'
-    publishFeedCredentials: 'GetText.NET Nuget Feed'
+#- task: NuGetCommand@2
+#  inputs:
+#    command: 'push'
+#    packagesToPush: '**/*.nupkg'
+#    nuGetFeedType: 'external'
+#    publishFeedCredentials: 'GetText.NET Nuget Feed'
