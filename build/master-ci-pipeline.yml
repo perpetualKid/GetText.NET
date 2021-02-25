@@ -3,10 +3,13 @@
 trigger:
   branches:
     include:
-    - master
+    - main
   paths:
     exclude: # file paths which will not trigger a build
     - build/*
+    - README.md
+    - SUPPORT.md
+    - CONTRIBUTING.md
 
 pool:
   vmImage: 'windows-latest'
