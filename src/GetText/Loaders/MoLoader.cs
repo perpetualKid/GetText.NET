@@ -286,6 +286,7 @@ namespace GetText.Loaders
                     if (!cultureInfo.Equals(catalog.CultureInfo))
                     {
 #if DEBUG
+                        Trace.WriteLine($"Updating catalog's CultureInfo from {catalog.CultureInfo.Name} to {language} from file.", "GetText");
 #endif
                         catalog.UpdateCultureInfo(cultureInfo);
                     }
