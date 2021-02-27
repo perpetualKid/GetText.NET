@@ -178,6 +178,18 @@ namespace GetText
             loader.Load(this);
         }
 
+        /// <summary>
+        /// Allows updateing CultureInfo when the loaded mo File has a different language code than the asked one, 
+        /// i.e. when the requested CultureInfo was fr-FR but only fr was found, 
+        /// or simply in case the file name does not reflect the language of catalog.
+        /// </summary>
+        /// <param name="cultureInfo"></param>
+        internal void UpdateCultureInfo(CultureInfo cultureInfo)
+        {
+            CultureInfo = cultureInfo;
+            FormatProvider = cultureInfo;
+        }
+
         #region ICatalog implementation
 
         /// <summary>

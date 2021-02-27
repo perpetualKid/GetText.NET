@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 #if DEBUG
 using System.Diagnostics;
 #endif
@@ -268,16 +269,32 @@ namespace GetText.Loaders
             if (catalog == null)
                 throw new ArgumentNullException(nameof(catalog));
 
-            foreach (var translation in parsedMoFile.Translations)
+            foreach (KeyValuePair<string, string[]> translation in parsedMoFile.Translations)
             {
                 catalog.Translations.Add(translation.Key, translation.Value);
             }
 
-            if (parsedMoFile.Headers.ContainsKey("Plural-Forms"))
+            if (parsedMoFile.Headers.TryGetValue("Plural-Forms", out string pluralForms) && (PluralRuleGenerator is IPluralRuleTextParser generator))
             {
-                if (PluralRuleGenerator is IPluralRuleTextParser generator)
+                generator.SetPluralRuleText(pluralForms);
+            }
+            if (parsedMoFile.Headers.TryGetValue("Language", out string language))
+            {
+                try
                 {
-                    generator.SetPluralRuleText(parsedMoFile.Headers["Plural-Forms"]);
+                    CultureInfo cultureInfo = new CultureInfo(language);
+                    if (!cultureInfo.Equals(catalog.CultureInfo))
+                    {
+#if DEBUG
+#endif
+                        catalog.UpdateCultureInfo(cultureInfo);
+                    }
+                }
+                catch (CultureNotFoundException) 
+                {
+#if DEBUG
+                    Trace.WriteLine($"Could not create CultureInfo from language code {language}.", "GetText");
+#endif
                 }
             }
             catalog.PluralRule = PluralRuleGenerator.CreateRule(catalog.CultureInfo);
