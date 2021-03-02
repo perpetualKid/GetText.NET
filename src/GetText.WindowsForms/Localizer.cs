@@ -15,7 +15,7 @@ namespace GetText.WindowsForms
         public ICatalog Catalog { get; private set; }
         public ObjectPropertiesStore OriginalTextStore { get; private set; }
         public ToolTipControls ToolTips { get; } = new ToolTipControls();
-        private readonly Control root;
+        protected readonly Control root;
 
         #region Constructors
         public Localizer(Control rootControl, string resourceBaseName)
@@ -108,7 +108,7 @@ namespace GetText.WindowsForms
         #endregion
 
         #region Handlers for different types
-        private enum IterateMode
+        protected enum IterateMode
         {
             Localize,
             Revert
@@ -146,13 +146,17 @@ namespace GetText.WindowsForms
         }
 
 
-        private void IterateControls(Control control, IterateMode mode)
+        protected virtual void IterateControls(Control control, IterateMode mode)
         {
             foreach (Control child in control.Controls)
             {
                 IterateControls(child, mode);
             }
+            HandleControl(control, mode);
+        }
 
+        protected void HandleControl(Control control, IterateMode mode)
+        {
             switch (control)
             {
                 case DataGridView gridView:
