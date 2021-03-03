@@ -60,7 +60,7 @@ namespace GetText.WindowsForms
             }
         }
 
-        private void InitFromContainer(IContainer container)
+        protected virtual void InitFromContainer(IContainer container)
         {
             if (container?.Components == null)
                 return;
@@ -135,7 +135,7 @@ namespace GetText.WindowsForms
 
         #endregion
 
-        private void IterateControls(Control control, OnIterateControl onIterateControl)
+        protected virtual void IterateControls(Control control, OnIterateControl onIterateControl)
         {
             foreach (Control child in control.Controls)
             {
@@ -155,7 +155,7 @@ namespace GetText.WindowsForms
             HandleControl(control, mode);
         }
 
-        protected void HandleControl(Control control, IterateMode mode)
+        protected virtual void HandleControl(Control control, IterateMode mode)
         {
             switch (control)
             {
@@ -181,7 +181,7 @@ namespace GetText.WindowsForms
             IterateControlHandler(new LocalizableObjectAdapter(control, OriginalTextStore, ToolTips), mode);
         }
 
-        private void IterateToolStripItems(ToolStripItem item, IterateMode mode)
+        protected virtual void IterateToolStripItems(ToolStripItem item, IterateMode mode)
         {
             if (item is ToolStripDropDownItem toolStripDropDownItem)
             {
