@@ -8,7 +8,6 @@ namespace GetText
     /// </summary>
     public class FormattableStringAdapter
     {
-#pragma warning disable CA1720 // Identifier contains type name
         public string String { get; }
 
         public FormattableStringAdapter(string s)
@@ -25,7 +24,5 @@ namespace GetText
         {
             throw new InvalidOperationException($"Missing FormattableString overload of method taking this type as argument {fs}");
         }
-#pragma warning restore CA1720 // Identifier contains type name
-
     }
 }

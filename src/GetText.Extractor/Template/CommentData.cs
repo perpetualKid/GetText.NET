@@ -34,7 +34,7 @@ namespace GetText.Extractor.Template
                 }
             if (Flags != MessageFlags.None)
             {
-                builder.Append($"#");
+                builder.Append('#');
                 if ((Flags & MessageFlags.Fuzzy) == MessageFlags.Fuzzy)
                     builder.Append(", fuzzy");
                 if ((Flags & MessageFlags.CSharpFormat) == MessageFlags.CSharpFormat)

@@ -9,11 +9,11 @@ namespace GetText.WindowsForms
     {
     }
 
-    internal class LocalizableObjectAdapter
+    public class LocalizableObjectAdapter
     {
         public object Source { get; private set; }
-        public ObjectPropertiesStore Store { get; set; }
-        public ToolTipControls ToolTips { get; set; }
+        public ObjectPropertiesStore Store { get; private set; }
+        public ToolTipControls ToolTips { get; private set; }
 
         #region Constructors
         public LocalizableObjectAdapter(object source, ObjectPropertiesStore store, ToolTipControls toolTips)
@@ -25,7 +25,7 @@ namespace GetText.WindowsForms
         #endregion
 
         #region Public interface
-        public void Localize(ICatalog catalog)
+        public virtual void Localize(ICatalog catalog)
         {
             LocalizeProperty(catalog, "Text");
             LocalizeProperty(catalog, "HeaderText");
@@ -47,7 +47,7 @@ namespace GetText.WindowsForms
             }
         }
 
-        public void Revert()
+        public virtual void Revert()
         {
             RevertProperty("Text");
             RevertProperty("HeaderText");
@@ -82,14 +82,14 @@ namespace GetText.WindowsForms
             }
         }
 
-        private void LocalizeProperty(ICatalog catalog, string propertyName)
+        protected virtual void LocalizeProperty(ICatalog catalog, string propertyName)
         {
             string text = GetPropertyValue(propertyName);
             if (text != null)
                 SetPropertyValue(propertyName, catalog.GetString(text));
         }
 
-        private void RevertProperty(string propertyName)
+        protected virtual void RevertProperty(string propertyName)
         {
             if (Store != null)
             {

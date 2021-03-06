@@ -95,41 +95,34 @@ namespace GetText.WindowsForms
             loc.Revert();
         }
 
-        public void Localize()
+        public virtual void Localize()
         {
-            IterateControls(root, IterateMode.Localize);
+            IterateControls(root, false);
         }
 
-        public void Revert()
+        public virtual void Revert()
         {
-            IterateControls(root, IterateMode.Revert);
+            IterateControls(root, true);
         }
 
         #endregion
 
         #region Handlers for different types
-        protected enum IterateMode
+        protected void IterateControlHandler(LocalizableObjectAdapter adapter, bool revert)
         {
-            Localize,
-            Revert
-        }
-
-        private void IterateControlHandler(LocalizableObjectAdapter adapter, IterateMode mode)
-        {
-            switch (mode)
+            if (revert)
             {
-                case IterateMode.Localize:
 #if DEBUG
-                    Debug.WriteLine($"Localizing '{adapter}'");
+                Debug.WriteLine($"Reverting '{adapter}'");
 #endif
-                    adapter.Localize(Catalog);
-                    break;
-                case IterateMode.Revert:
+                adapter.Revert();
+            }
+            else 
+            {
 #if DEBUG
-                    Debug.WriteLine($"Reverting '{adapter}'");
+                Debug.WriteLine($"Localizing '{adapter}'");
 #endif
-                    adapter.Revert();
-                    break;
+                adapter.Localize(Catalog);
             }
         }
 
@@ -146,51 +139,51 @@ namespace GetText.WindowsForms
         }
 
 
-        protected virtual void IterateControls(Control control, IterateMode mode)
+        protected virtual void IterateControls(Control control, bool revert)
         {
             foreach (Control child in control.Controls)
             {
-                IterateControls(child, mode);
+                IterateControls(child, revert);
             }
-            HandleControl(control, mode);
+            HandleControl(control, revert);
         }
 
-        protected virtual void HandleControl(Control control, IterateMode mode)
+        protected virtual void HandleControl(Control control, bool revert)
         {
             switch (control)
             {
                 case DataGridView gridView:
                     foreach (DataGridViewColumn col in gridView.Columns)
                     {
-                        IterateControlHandler(new LocalizableObjectAdapter(col, OriginalTextStore, ToolTips), mode);
+                        IterateControlHandler(new LocalizableObjectAdapter(col, OriginalTextStore, ToolTips), revert);
                     }
                     break;
                 case ListView listView:
                     foreach (ColumnHeader header in listView.Columns)
                     {
-                        IterateControlHandler(new LocalizableObjectAdapter(header, OriginalTextStore, ToolTips), mode);
+                        IterateControlHandler(new LocalizableObjectAdapter(header, OriginalTextStore, ToolTips), revert);
                     }
                     break;
                 case ToolStrip toolStrip:
                     foreach (ToolStripItem item in toolStrip.Items)
                     {
-                        IterateToolStripItems(item, mode);
+                        IterateToolStripItems(item, revert);
                     }
                     break;
             }
-            IterateControlHandler(new LocalizableObjectAdapter(control, OriginalTextStore, ToolTips), mode);
+            IterateControlHandler(new LocalizableObjectAdapter(control, OriginalTextStore, ToolTips), revert);
         }
 
-        protected virtual void IterateToolStripItems(ToolStripItem item, IterateMode mode)
+        protected virtual void IterateToolStripItems(ToolStripItem item, bool revert)
         {
             if (item is ToolStripDropDownItem toolStripDropDownItem)
             {
                 foreach (ToolStripItem subitem in toolStripDropDownItem.DropDownItems)
                 {
-                    IterateToolStripItems(subitem, mode);
+                    IterateToolStripItems(subitem, revert);
                 }
             }
-            IterateControlHandler(new LocalizableObjectAdapter(item, OriginalTextStore, ToolTips), mode);
+            IterateControlHandler(new LocalizableObjectAdapter(item, OriginalTextStore, ToolTips), revert);
         }
     }
 }
