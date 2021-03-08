@@ -3,7 +3,7 @@
     <NoWarn>CS1591;CA1303;</NoWarn>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-    <Version>0.9.8</Version>
+    <Version>0.9.9</Version>
     <Authors>perpetualKid</Authors>
     <Company></Company>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
