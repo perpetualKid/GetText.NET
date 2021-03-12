@@ -24,7 +24,7 @@ namespace GetText.Extractor.Template
 
         public void AddOrUpdateEntry(string context, string messageId, string reference, bool formatString)
         {
-            if (string.IsNullOrWhiteSpace(System.Text.RegularExpressions.Regex.Unescape(messageId)))
+            if (messageId == null || string.IsNullOrWhiteSpace(System.Text.RegularExpressions.Regex.Unescape(messageId)))
                 return;     // don't care about empty message ids
             if (!entries.TryGetValue(CatalogEntry.BuildKey(context, messageId), out CatalogEntry result))
             {
