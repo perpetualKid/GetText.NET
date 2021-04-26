@@ -13,5 +13,9 @@
     "buildNumber": {
       "enabled": true
     }
+  },
+  "release": {
+    "versionIncrement": "build",
+    "firstUnstableTag": "dev"
   }
 }
