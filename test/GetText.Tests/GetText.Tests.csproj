@@ -42,6 +42,10 @@
     <ProjectReference Include="..\..\src\GetText\GetText.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.9.4" />
+  </ItemGroup>
+
   <Target Name="CopyTestResources" AfterTargets="PostBuildEvent">
     <ItemGroup>
       <SourceFiles Include="$(MSBuildProjectDirectory)/TestResources/**/*.*" />
