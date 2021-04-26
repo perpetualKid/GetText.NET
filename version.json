@@ -15,7 +15,6 @@
     }
   },
   "release": {
-    "versionIncrement": "build",
     "firstUnstableTag": "dev"
   }
 }
