@@ -2,7 +2,6 @@
   <PropertyGroup>
     <NoWarn>CS1591;CA1303</NoWarn>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <Version>0.9.12-dev.1</Version>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
   </PropertyGroup>
   <ItemGroup>
@@ -11,6 +10,12 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Nerdbank.GitVersioning" Condition="!Exists('packages.config')">
+      <Version>3.4.194</Version>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Release' ">
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
