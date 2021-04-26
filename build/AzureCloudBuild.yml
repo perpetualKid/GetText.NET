@@ -1,0 +1,99 @@
+# .NET Desktop
+# Build and run tests for .NET Desktop or Windows classic desktop solutions.
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/windows/dot-net
+
+trigger:
+  branches:
+    include:
+    - '*' 
+  paths:
+    exclude: # file paths which will not trigger a build
+    - Build/*
+    - README.md
+    - SUPPORT.md
+    - CONTRIBUTING.md
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release' #changes to Debug below if this is a prerelease version 
+
+steps:
+- task: NuGetToolInstaller@1
+  displayName: Installing Nuget tools
+
+- task: NuGetCommand@2
+  displayName: Restore Nuget Packages for Solution
+  inputs:
+    restoreSolution: '$(solution)'
+
+- task: DotNetCoreCLI@2
+  displayName: Prepare DotNet tool install
+  inputs:
+    command: 'custom'
+    custom: 'new'
+    arguments: 'tool-manifest'
+
+- task: DotNetCoreCLI@2  
+  displayName: Install NBGV tool
+  inputs:
+    command: custom
+    custom: tool
+    arguments: install --tool-path . nbgv
+
+#need to run in the correct folder as version.json is not in root
+- script: .\nbgv cloud -a
+  displayName: Set NBGV Variables
+
+- task: Bash@3
+  displayName: List all Environment Variables
+  inputs:
+    targetType: 'inline'
+    script: 'env | sort'
+
+- task: PowerShell@2
+  displayName: Set build configuration
+  inputs:
+    targetType: 'inline'
+    script: |
+      if ($env:NBGV_PUBLICRELEASE -eq $false) {
+        Write-Host '##vso[task.setvariable variable=buildConfiguration]Debug'}
+
+- task: VSBuild@1
+  inputs:
+    solution: '$(solution)'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet test'
+  inputs:
+    command: test
+    projects: '**/*Tests/*.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet pack'
+  inputs:
+    command: 'pack'
+    packagesToPack: '**/*.csproj;!**/*.Tests.csproj;!**/Examples.*.csproj'
+
+- task: PublishPipelineArtifact@1
+  displayName: Publishing build artifacts
+  inputs:
+    targetPath: './Program/'
+    publishLocation: 'pipeline'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet push internal'
+  condition: and(succeeded(), xor(eq(variables['Build.SourceBranch'], 'refs/heads/main'), ne(variables['NBGV_PRERELEASEVERSION'], '')))
+  inputs:
+    command: 'push'
+    packagesToPush: '**/*.nupkg;**/*.snupkg'
+    nuGetFeedType: 'internal'
+    publishVstsFeed: '71589b5a-c83e-44cc-9f4b-6df1b1fd504f/b46b6124-d691-47ce-b673-64341bee5601'
+    publishPackageMetadata: true # Optional
