@@ -9,7 +9,7 @@ trigger:
     - '*' 
   paths:
     exclude: # file paths which will not trigger a build
-    - Build/*
+    - build/*
     - README.md
     - SUPPORT.md
     - CONTRIBUTING.md
@@ -85,7 +85,7 @@ steps:
 - task: PublishPipelineArtifact@1
   displayName: Publishing build artifacts
   inputs:
-    targetPath: './Program/'
+    targetPath: '$(Pipeline.Workspace)'
     publishLocation: 'pipeline'
 
 - task: DotNetCoreCLI@2
