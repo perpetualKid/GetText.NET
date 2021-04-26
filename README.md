@@ -1,7 +1,7 @@
 GetText.NET 
 ========
 
-[![Build Status](https://dev.azure.com/perpetualKid/GetText.NET/_apis/build/status/Master%20CI?branchName=master)](https://dev.azure.com/perpetualKid/GetText.NET/_build/latest?definitionId=5&branchName=master)
+[![Build Status](https://dev.azure.com/perpetualKid/GetText.NET/_apis/build/status/Master%20CI?branchName=main)](https://dev.azure.com/perpetualKid/GetText.NET/_build/latest?definitionId=5&branchName=main)
 
 | Package | Status |
 | ----------- | ----------- |
