@@ -4,16 +4,11 @@
     <Description>Provides support of plural rule compilation to the IL bytecode.</Description>
     <AssemblyTitle>GetText.NET.PluralCompile</AssemblyTitle>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>7.3</LangVersion>
     <AssemblyName>GetText.PluralCompile</AssemblyName>
     <PackageId>GetText.NET.PluralCompile</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="3.4.194">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.7.0" />
     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.7.0" />
   </ItemGroup>

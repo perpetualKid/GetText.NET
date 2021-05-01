@@ -4,19 +4,7 @@
     <Description>A .NET Standard implementation of the GNU Gettext library.</Description>
     <AssemblyTitle>GetText.NET</AssemblyTitle>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>7.3</LangVersion>
     <AssemblyName>GetText</AssemblyName>
     <PackageId>GetText.NET</PackageId>
   </PropertyGroup>
-
-  <ItemGroup Condition="'$(Configuration)'=='Debug' ">
-    <PackageReference Include="System.Diagnostics.TraceSource" Version="4.3.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="3.4.194">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
 </Project>

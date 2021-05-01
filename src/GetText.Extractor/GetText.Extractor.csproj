@@ -6,14 +6,9 @@
     <TargetFrameworks>netcoreapp3.1</TargetFrameworks> 
     <Description>Extracts string from .NET solutions and projects for GetText Catalog template files (.pot).</Description>
     <AssemblyTitle>GetText.NET.Extractor</AssemblyTitle>
-    <LangVersion>7.3</LangVersion>
     <AssemblyName>GetText.Extractor</AssemblyName>
     <PackageId>GetText.NET.Extractor</PackageId>
 
-    <!-- Can't pack .Net Framework binaries as tools
-    <PackAsTool>true</PackAsTool>
-    <ToolCommandName>Extractor</ToolCommandName>
-    -->
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>GetText.Extractor</ToolCommandName>
     <IsTool>true</IsTool>
@@ -27,10 +22,6 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.9.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="3.9.0" />
     <PackageReference Include="Microsoft.Net.Compilers" Version="3.9.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="3.4.194">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

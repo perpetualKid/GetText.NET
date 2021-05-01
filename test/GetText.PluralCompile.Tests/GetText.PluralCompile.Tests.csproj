@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFrameworks>net48;netcoreapp3.1</TargetFrameworks>
-    <LangVersion>7.3</LangVersion>
     <AssemblyName>GetText.PluralCompile.Tests</AssemblyName>
     <PackageId>GetText.PluralCompile.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
@@ -16,10 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="3.4.194">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
