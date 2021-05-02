@@ -1,0 +1,32 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Examples.OtherLibrary\n"
+"POT-Creation-Date: 2021-05-02 21:03:38+0200\n"
+"PO-Revision-Date: 2021-05-02 21:03:39+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: GetText.NET Extractor\n"
+
+#: .\Examples.OtherLibrary\Enums.cs:10
+msgctxt "UI Languages"
+msgid "French Language"
+msgstr ""
+
+#: .\Examples.OtherLibrary\Enums.cs:12
+msgctxt "UI Languages"
+msgid "Russian Language"
+msgstr ""
+
+#: .\Examples.OtherLibrary\Enums.cs:8
+msgctxt "UI Languages"
+msgid "English Language"
+msgstr ""
+
+#: .\Examples.OtherLibrary\ProcessDetails.cs:11
+#, csharp-format
+msgid "This program is running as process number \"{0}\"."
+msgstr ""
+

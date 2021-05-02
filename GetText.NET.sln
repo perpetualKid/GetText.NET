@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 		LICENSE = LICENSE
 		README.md = README.md
+		ReleaseNotes.md = ReleaseNotes.md
 		version.json = version.json
 	EndProjectSection
 EndProject
@@ -44,7 +45,32 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GetText.Extractor.Tests", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Examples.HelloForms", "examples\Examples.HelloForms\Examples.HelloForms.csproj", "{F7F37818-07F3-457D-B03C-592D5B97BF67}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples.OtherLibrary", "examples\Examples.OtherLibrary\Examples.OtherLibrary.csproj", "{E8CFE73F-F480-47A2-8FAA-4B277E55802F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Examples.OtherLibrary", "examples\Examples.OtherLibrary\Examples.OtherLibrary.csproj", "{E8CFE73F-F480-47A2-8FAA-4B277E55802F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Locales", "Locales", "{32C72975-A0A7-4E4E-A7CE-2B741E9E01B7}"
+	ProjectSection(SolutionItems) = preProject
+		examples\Locales\Examples.HelloForms.pot = examples\Locales\Examples.HelloForms.pot
+		examples\Locales\Examples.OtherLibrary.pot = examples\Locales\Examples.OtherLibrary.pot
+		examples\Locales\Messages.pot = examples\Locales\Messages.pot
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "fr", "fr", "{029866F1-9DB8-41DE-B200-00A072F00B15}"
+	ProjectSection(SolutionItems) = preProject
+		examples\Locales\fr\Examples.HelloForms.mo = examples\Locales\fr\Examples.HelloForms.mo
+		examples\Locales\fr\Examples.HelloForms.po = examples\Locales\fr\Examples.HelloForms.po
+		examples\Locales\fr\Examples.OtherLibrary.mo = examples\Locales\fr\Examples.OtherLibrary.mo
+		examples\Locales\fr\Examples.OtherLibrary.po = examples\Locales\fr\Examples.OtherLibrary.po
+		examples\Locales\fr\messages.mo = examples\Locales\fr\messages.mo
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ru-RU", "ru-RU", "{E9437919-99FE-4247-A72B-7C0CB03A20DB}"
+	ProjectSection(SolutionItems) = preProject
+		examples\Locales\ru-RU\Examples.HelloForms.mo = examples\Locales\ru-RU\Examples.HelloForms.mo
+		examples\Locales\ru-RU\Examples.HelloForms.po = examples\Locales\ru-RU\Examples.HelloForms.po
+		examples\Locales\ru-RU\Examples.OtherLibrary.mo = examples\Locales\ru-RU\Examples.OtherLibrary.mo
+		examples\Locales\ru-RU\Examples.OtherLibrary.po = examples\Locales\ru-RU\Examples.OtherLibrary.po
+		examples\Locales\ru-RU\messages.mo = examples\Locales\ru-RU\messages.mo
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -102,6 +128,9 @@ Global
 		{EB79D30E-3749-4261-ADD8-6431E6277F64} = {E9CE19D0-FF12-4ACE-86D2-5B649D56E11C}
 		{F7F37818-07F3-457D-B03C-592D5B97BF67} = {4AAD088A-469B-4766-81D9-E0878F20638F}
 		{E8CFE73F-F480-47A2-8FAA-4B277E55802F} = {4AAD088A-469B-4766-81D9-E0878F20638F}
+		{32C72975-A0A7-4E4E-A7CE-2B741E9E01B7} = {4AAD088A-469B-4766-81D9-E0878F20638F}
+		{029866F1-9DB8-41DE-B200-00A072F00B15} = {32C72975-A0A7-4E4E-A7CE-2B741E9E01B7}
+		{E9437919-99FE-4247-A72B-7C0CB03A20DB} = {32C72975-A0A7-4E4E-A7CE-2B741E9E01B7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E1354A30-F0A7-41F1-9880-21BFE0558F7E}
