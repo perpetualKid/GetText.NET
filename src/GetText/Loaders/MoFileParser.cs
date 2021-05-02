@@ -77,7 +77,7 @@ namespace GetText.Loaders
 
             if (stream == null || stream.Length < 20)
             {
-                throw new ArgumentException("Stream can not be null of less than 20 bytes long.");
+                throw new ArgumentException("Stream can not be null or less than 20 bytes long.");
             }
 
             bool bigEndian = false;
