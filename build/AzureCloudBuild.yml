@@ -102,7 +102,7 @@ steps:
     
 - task: NuGetCommand@2
   displayName: 'dotnet push Nuget'
-  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/v'), eq(variables['NBGV_PRERELEASEVERSION'], ''), eq(variables['NBGV_PUBLICRELEASE'], 'true'), eq(variables['Build_Reason'], 'Manual'))
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/v'), eq(variables['NBGV_PUBLICRELEASE'], 'true'), eq(variables['Build_Reason'], 'Manual'))
   inputs:
     command: 'push'
     packagesToPush: '**/*.nupkg'
