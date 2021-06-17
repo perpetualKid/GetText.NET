@@ -19,7 +19,7 @@ For details on each product, examples and FAQ please check the [Wiki](https://gi
 Version History
 ---------------
 
-Please check [Releases Notes](ReleaseNotes) for version history
+Please check [Releases Notes](ReleaseNotes.md) for version history
 
 Status
 ---------------
