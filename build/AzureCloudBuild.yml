@@ -92,7 +92,7 @@ steps:
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet push internal'
-  condition: and(succeeded(), xor(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['NBGV_PRERELEASEVERSION'], '')))
+  condition: and(succeeded(), xor(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['NBGV_PRERELEASEVERSION'], '')), ne(variables['Build.Reason'], 'Manual'))
   inputs:
     command: 'push'
     packagesToPush: '**/*.nupkg;**/*.snupkg'
