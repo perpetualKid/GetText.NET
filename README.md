@@ -24,7 +24,7 @@ Please check [Releases Notes](ReleaseNotes.md) for version history
 Status
 ---------------
 
-[![Build Status](https://dev.azure.com/perpetualKid/GetText.NET/_apis/build/status/Master%20CI?branchName=main)](https://dev.azure.com/perpetualKid/GetText.NET/_build/latest?definitionId=5&branchName=main)
+[![Build Status](https://dev.azure.com/perpetualKid/GetText.NET/_apis/build/status/Azure%20Cloud%20Build?branchName=v0.12)](https://dev.azure.com/perpetualKid/GetText.NET/_build/latest?definitionId=18&branchName=v0.12)
 
 | Package | Status |
 | ----------- | ----------- |
