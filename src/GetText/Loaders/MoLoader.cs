@@ -272,9 +272,15 @@ namespace GetText.Loaders
             foreach (KeyValuePair<string, string[]> translation in parsedMoFile.Translations)
             {
                 if (!catalog.Translations.ContainsKey(translation.Key))
+                {
                     catalog.Translations.Add(translation.Key, translation.Value);
+                }
                 else
+                {
+#if DEBUG
                     Trace.WriteLine($"Duplicate Translation Key: \"{translation.Key}\".", "GetText");
+#endif
+                }
             }
 
             if (parsedMoFile.Headers.TryGetValue("Plural-Forms", out string pluralForms) && (PluralRuleGenerator is IPluralRuleTextParser generator))
