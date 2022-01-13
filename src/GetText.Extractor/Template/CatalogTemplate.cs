@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace GetText.Extractor.Template
 {
@@ -77,10 +78,12 @@ namespace GetText.Extractor.Template
             builder.Append(CatalogEntry.Empty);
             builder.Append(Header.ToString());
 
-            foreach (KeyValuePair<string, CatalogEntry> item in entries)
+            //Sorting catalog entries to allow easier diff ie in source control workflows
+            foreach (string key in entries.Keys.OrderBy(entry => entry))
             {
-                builder.Append(item.Value.ToString());
+                builder.Append(entries[key].ToString());
             }
+
             return builder.ToString();
         }
 

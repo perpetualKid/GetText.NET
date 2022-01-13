@@ -6,6 +6,8 @@
     <Authors>perpetualKid</Authors>
     <Company></Company>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <NeutralLanguage>en</NeutralLanguage>
+	<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
