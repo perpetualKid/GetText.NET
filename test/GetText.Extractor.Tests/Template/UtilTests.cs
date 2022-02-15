@@ -18,7 +18,7 @@ namespace GetText.Extractor.Tests.Template
             string rfcDate = now.ToRfc822Format();
             Assert.AreEqual(24, rfcDate.Length);
             Assert.AreEqual(now.Date,
-                new DateTime(int.Parse(rfcDate.Substring(0, 4), CultureInfo.InvariantCulture),
+                new DateTime(int.Parse(rfcDate[..4], CultureInfo.InvariantCulture),
                 int.Parse(rfcDate.Substring(5, 2), CultureInfo.InvariantCulture),
                 int.Parse(rfcDate.Substring(8, 2), CultureInfo.InvariantCulture)));
 

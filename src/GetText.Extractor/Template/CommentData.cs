@@ -8,9 +8,9 @@ namespace GetText.Extractor.Template
         private List<string> autoComments;
         private List<string> references;
 
-        public List<string> AutoComments => autoComments ?? (autoComments = new List<string>());
+        public List<string> AutoComments => autoComments ??= new List<string>();
 
-        public List<string> References => references ?? (references = new List<string>());
+        public List<string> References => references ??= new List<string>();
 
         public MessageFlags Flags { get; set; }
 

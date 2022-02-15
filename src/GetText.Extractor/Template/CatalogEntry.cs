@@ -16,8 +16,8 @@ namespace GetText.Extractor.Template
         public string MessageId { get; }
         public string Message { get; set; } = string.Empty;
         public string PluralMessageId { get; set; }
-        public List<string> PluralMessages => pluralMessages ?? (pluralMessages = new List<string>());
-        public CommentData Comments => comments ?? (comments = new CommentData());
+        public List<string> PluralMessages => pluralMessages ??= new List<string>();
+        public CommentData Comments => comments ??= new CommentData();
         public List<string> References => Comments.References;
 
         public static CatalogEntry Empty { get; } = new CatalogEntry();
@@ -143,7 +143,7 @@ namespace GetText.Extractor.Template
                 }
                 if (forceBreak || (currLineLen >= 77 && possibleBreak != -1))
                 {
-                    builder.Append($"\"{message.Substring(lastBreakAt, possibleBreak - lastBreakAt)}\"");
+                    builder.Append($"\"{message[lastBreakAt..possibleBreak]}\"");
                     builder.Append(CatalogTemplate.Newline);
 
                     //reset state for new line
@@ -155,7 +155,7 @@ namespace GetText.Extractor.Template
                 pos++;
                 currLineLen++;
             }
-            string remainder = message.Substring(lastBreakAt);
+            string remainder = message[lastBreakAt..];
             if (remainder.Length > 0)
             {
                 builder.Append($"\"{remainder}\"");

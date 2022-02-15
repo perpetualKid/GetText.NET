@@ -20,16 +20,19 @@ namespace GetText.Extractor
         private static async Task<int> Main(string[] args)
         {
             RootCommand rootCommand = CommandLineOptions.RootCommand;
-            rootCommand.Add(CommandLineOptions.SourceOption);
-            rootCommand.Add(CommandLineOptions.OutFile);
-            //            rootCommand.Add(CommandLineOptions.Merge);
-            rootCommand.Add(CommandLineOptions.Verbose);
-            rootCommand.Add(CommandLineOptions.UseUnixPathSeparator);
+            Option sourceOption = CommandLineOptions.SourceOption;
+            Option outFile = CommandLineOptions.OutFile;
+            Option verbose = CommandLineOptions.Verbose;
+            Option unixPathSeparator = CommandLineOptions.UseUnixPathSeparator;
+            rootCommand.Add(sourceOption);
+            rootCommand.Add(outFile);
+            rootCommand.Add(verbose);
+            rootCommand.Add(unixPathSeparator);
 
-            rootCommand.Handler = CommandHandler.Create(async (FileInfo source, FileInfo target, bool unixstyle, bool verbose) =>
+            rootCommand.SetHandler(async (FileInfo source, FileInfo target, bool unixstyle, bool sortOutput, bool verbose) =>
             {
                 await Execute(source, target, unixstyle, verbose).ConfigureAwait(false);
-            });
+            }, sourceOption, outFile, verbose, unixPathSeparator);
 
             return await rootCommand.InvokeAsync(args).ConfigureAwait(false);
 

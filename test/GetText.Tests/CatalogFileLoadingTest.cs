@@ -6,7 +6,7 @@ namespace GetText.Tests
 {
 	public class CatalogFileLoadingTest
 	{
-		private string localesDir;
+		private readonly string localesDir;
 
 		public CatalogFileLoadingTest()
 		{

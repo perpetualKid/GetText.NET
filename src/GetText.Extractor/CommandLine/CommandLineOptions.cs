@@ -15,12 +15,7 @@ namespace GetText.Extractor.CommandLine
         {
             get
             {
-                Argument<FileInfo> argument = new Argument<FileInfo>(TryParseSourceFilePathArgument, true) {
-                    Name = "solution-file or project-file or directory",
-                };
-
-                return new Option<FileInfo>(new[] { "-s", "--source" }, "Visual Studio Solution file, Project file, or source directory") {
-                    Argument = argument,
+                return new Option<FileInfo>(new[] { "-s", "--source" }, TryParseSourceFilePathArgument, true, "Visual Studio Solution file, Project file, or source directory") {
                     Name = "Source",
                 };
             }
@@ -30,12 +25,7 @@ namespace GetText.Extractor.CommandLine
         {
             get
             {
-                Argument<FileInfo> argument = new Argument<FileInfo>(TryParseDefaultTargetFile, true) {
-                    Name = "target PO template file name (*.pot). Extension may be omitted",
-                };
-
-                return new Option<FileInfo>(new[] { "-t", "--target" }, "Target PO template file. ") {
-                    Argument = argument,
+                return new Option<FileInfo>(new[] { "-t", "--target" }, TryParseDefaultTargetFile, true, "Target PO template file. ") {
                     Name = "Target",
                 };
             }
@@ -50,14 +40,12 @@ namespace GetText.Extractor.CommandLine
         #region private validation and parsing
         private static FileInfo TryParseDefaultTargetFile(ArgumentResult argument)
         {
-            string token;
-            switch (argument.Tokens.Count)
+            string token = argument.Tokens.Count switch
             {
-                case 0: token = "messages.pot"; break;
-                case 1: token = argument.Tokens[0].Value; break;
-                default: throw new InvalidOperationException("Unexpected token count.");
-            }
-
+                0 => "messages.pot",
+                1 => argument.Tokens[0].Value,
+                _ => throw new InvalidOperationException("Unexpected token count."),
+            };
             try
             {
                 token = Path.GetFullPath(token);
@@ -90,14 +78,12 @@ namespace GetText.Extractor.CommandLine
 
         private static FileInfo TryParseSourceFilePathArgument(ArgumentResult argument)
         {
-            string token;
-            switch (argument.Tokens.Count)
+            string token = argument.Tokens.Count switch
             {
-                case 0: token = "."; break;
-                case 1: token = argument.Tokens[0].Value; break;
-                default: throw new InvalidOperationException("Unexpected token count.");
-            }
-
+                0 => ".",
+                1 => argument.Tokens[0].Value,
+                _ => throw new InvalidOperationException("Unexpected token count."),
+            };
             if (File.Exists(token))
             {
                 return new FileInfo(Path.GetFullPath(token));
