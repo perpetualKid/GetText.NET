@@ -1,5 +1,4 @@
 ﻿using System.CommandLine;
-using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -24,28 +23,31 @@ namespace GetText.Extractor
             Option outFile = CommandLineOptions.OutFile;
             Option verbose = CommandLineOptions.Verbose;
             Option unixPathSeparator = CommandLineOptions.UseUnixPathSeparator;
+            Option sort = CommandLineOptions.SortOutput;
+
             rootCommand.Add(sourceOption);
             rootCommand.Add(outFile);
             rootCommand.Add(verbose);
             rootCommand.Add(unixPathSeparator);
+            rootCommand.Add(sort);
 
             rootCommand.SetHandler(async (FileInfo source, FileInfo target, bool unixstyle, bool sortOutput, bool verbose) =>
             {
-                await Execute(source, target, unixstyle, verbose).ConfigureAwait(false);
-            }, sourceOption, outFile, verbose, unixPathSeparator);
+                await Execute(source, target, unixstyle, sortOutput, verbose).ConfigureAwait(false);
+            }, sourceOption, outFile, unixPathSeparator, sort, verbose);
 
             return await rootCommand.InvokeAsync(args).ConfigureAwait(false);
 
         }
 
-        private static async Task Execute(FileInfo source, FileInfo target, bool unixStyle, bool verbose)
+        private static async Task Execute(FileInfo source, FileInfo target, bool unixStyle, bool sortOutput, bool verbose)
         {
             catalog = new CatalogTemplate(target.FullName);
 
             SyntaxTreeParser parser = new SyntaxTreeParser(catalog, source, unixStyle, verbose);
             await parser.Parse().ConfigureAwait(false);
 
-            await catalog.WriteAsync().ConfigureAwait(false);
+            await catalog.WriteAsync(sortOutput).ConfigureAwait(false);
 
         }
     }

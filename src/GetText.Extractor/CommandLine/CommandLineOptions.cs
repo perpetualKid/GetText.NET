@@ -37,6 +37,8 @@ namespace GetText.Extractor.CommandLine
 
         internal static Option<bool> UseUnixPathSeparator => new Option<bool>(new[] { "--unixstyle", "-u" }, "Unix-style Path Separator ('/')");
 
+        internal static Option<bool> SortOutput => new Option<bool>(new[] { "--order", "-o" }, "Sort catalogue entries before exporting to template");
+
         #region private validation and parsing
         private static FileInfo TryParseDefaultTargetFile(ArgumentResult argument)
         {
