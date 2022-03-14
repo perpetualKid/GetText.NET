@@ -40,7 +40,7 @@ namespace GetText.Extractor.Engine
 
         protected void GetStrings(SyntaxTree tree)
         {
-            string pathRelative = PathExtension.GetRelativePath(catalog.FileName, tree.FilePath, unixStyle);
+            string pathRelative = Path.GetRelativePath(catalog.FileName, tree.FilePath);
             string messageId, context, plural;
             string methodName = null;
             bool isFormatString;
