@@ -17,9 +17,14 @@ namespace GetText.Extractor.Engine
     internal abstract class ParserBase<T>
     {
         //hardcoded as we don't have a reference to GetText.ICatalog in this package
-        internal static readonly List<string> CatalogMethods = new List<string>() { "GetString", "GetParticularString", "GetPluralString", "GetParticularPluralString" };
+        internal static readonly List<string> CatalogMethods = new List<string>() {
+            "GetString", "GetParticularString", "GetPluralString", "GetParticularPluralString",
+            "_", "_p", "_n", "_pn"
+        };
         internal static readonly List<string> ControlTextProperties = new List<string>() { "Text", "HeaderText", "ToolTipText", };
+
         internal static readonly List<string> ControlTextMethods = new List<string>() { "SetToolTip" };
+
         internal static readonly List<string> DescriptionAttributes = new List<string>() { "Description", "DescriptionAttribute" };
 
         protected CatalogTemplate catalog;
@@ -46,29 +51,36 @@ namespace GetText.Extractor.Engine
             bool isFormatString;
             CompilationUnitSyntax root = tree.GetCompilationUnitRoot();
             foreach (InvocationExpressionSyntax item in root.DescendantNodes().OfType<InvocationExpressionSyntax>().
-                Where((item) => CatalogMethods.Contains(methodName = ((item.Expression as MemberAccessExpressionSyntax)?.Name as IdentifierNameSyntax)?.Identifier.ValueText)))
+                Where((item) => CatalogMethods.Contains(methodName = ((item.Expression as MemberAccessExpressionSyntax)?.Name as IdentifierNameSyntax)?.Identifier.ValueText) ||
+                    CatalogMethods.Contains(methodName = ((item.Expression as  IdentifierNameSyntax)?.Identifier.ValueText))
+                    ))
             {
                 List<ArgumentSyntax> arguments = item.DescendantNodes().OfType<ArgumentSyntax>().ToList();
                 switch (methodName)
                 {
-                    case "GetString":   //first argument is message id
+                    case "GetString": //first argument is message id
+                    case "_":
                         messageId = ExtractText(arguments[0]);
                         isFormatString = arguments.Count > 1 || arguments[0].DescendantNodes().OfType<InterpolationSyntax>().Any();
-                        catalog.AddOrUpdateEntry(null, messageId, $"{pathRelative}:{arguments[0].GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString); ;
+                        catalog.AddOrUpdateEntry(null, messageId, $"{pathRelative}:{arguments[0].GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString);
+                        ;
                         break;
                     case "GetParticularString": //first argument is context, second is message id
+                    case "_p":
                         context = ExtractText(arguments[0]);
                         messageId = ExtractText(arguments[1]);
                         isFormatString = arguments.Count > 2 || arguments[1].DescendantNodes().OfType<InterpolationSyntax>().Any();
                         catalog.AddOrUpdateEntry(context, messageId, $"{pathRelative}:{arguments[1].GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString);
                         break;
                     case "GetPluralString": //first argument is message id, second is plural message
+                    case "_n":
                         messageId = ExtractText(arguments[0]);
                         plural = ExtractText(arguments[1]);
                         isFormatString = arguments.Count > 2 || arguments[0].DescendantNodes().OfType<InterpolationSyntax>().Any() || arguments[1].DescendantNodes().OfType<InterpolationSyntax>().Any();
                         catalog.AddOrUpdateEntry(null, messageId, plural, $"{pathRelative}:{arguments[0].GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString);
                         break;
                     case "GetParticularPluralString": //first argument is context, second is message id, third is plural message
+                    case "_pn":
                         context = ExtractText(arguments[0]);
                         messageId = ExtractText(arguments[1]);
                         plural = ExtractText(arguments[2]);
