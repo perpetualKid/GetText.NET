@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace GetText.Extractor.Template
 {
@@ -80,8 +81,26 @@ namespace GetText.Extractor.Template
             builder.Append(CatalogEntry.Empty);
             builder.Append(Header.ToString());
 
-            //Sorting catalog entries to allow easier diff ie in source control workflows
-            foreach (string key in sortOutput ? entries.Keys.OrderBy(entry => entry) : entries.Keys.AsEnumerable())
+            IEnumerable<string> keys;
+            if (sortOutput)
+            {
+                //Sorting catalog entries based on source and line position.
+                keys = entries
+                   .Select(q => new
+                   {
+                       key = q.Key,
+                       match = Regex.Match(q.Value.References.First(), @"^(.*):(\d+)$")
+                   })
+                  .OrderBy(q => q.match.Groups[1].Value)
+                  .ThenBy(q => int.Parse(q.match.Groups[2].Value))
+                  .Select(q => q.key);
+            }
+            else
+            {
+                keys = entries.Keys.AsEnumerable();
+            }
+
+            foreach (string key in keys)
             {
                 builder.Append(entries[key].ToString());
             }
