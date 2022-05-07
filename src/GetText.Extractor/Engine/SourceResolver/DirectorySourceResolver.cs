@@ -21,7 +21,10 @@ namespace GetText.Extractor.Engine.SourceResolver
 
         private static IEnumerable<string> GetCSharpFilesFromFolder(string folder)
         {
-            return Directory.EnumerateFiles(folder, "*.cs").Concat(
+            return Directory.EnumerateFiles(folder, "*.cs")
+                .Concat(Directory.EnumerateFiles(folder, "*.razor"))
+                .Concat(Directory.EnumerateFiles(folder, "*.cshtml"))
+                .Concat(
                 Directory.EnumerateDirectories(folder).Where(d => !excludedFolders.Contains(Path.GetFileName(d), StringComparer.OrdinalIgnoreCase)).
                 SelectMany(subdir => GetCSharpFilesFromFolder(subdir)));
         }
