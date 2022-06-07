@@ -8,6 +8,7 @@ namespace GetText.Extractor.Engine.SourceResolver
     internal class DirectorySourceResolver : SourceResolverBase<string>
     {
         private static readonly string[] excludedFolders = new string[] { "obj", "packages", "bin", ".vs", ".git" };
+        private static readonly string[] fileTypes = new string[] { "*.cs", "*.razor", "*.cshtml" };
 
         public DirectorySourceResolver(FileInfo sourcePath) :
             base(sourcePath.Attributes.HasFlag(FileAttributes.Directory) ? sourcePath : new FileInfo(sourcePath.DirectoryName))
@@ -21,7 +22,7 @@ namespace GetText.Extractor.Engine.SourceResolver
 
         private static IEnumerable<string> GetCSharpFilesFromFolder(string folder)
         {
-            return Directory.EnumerateFiles(folder, "*.cs").Concat(
+            return fileTypes.SelectMany(fileType => Directory.EnumerateFiles(folder, fileType)).Concat(
                 Directory.EnumerateDirectories(folder).Where(d => !excludedFolders.Contains(Path.GetFileName(d), StringComparer.OrdinalIgnoreCase)).
                 SelectMany(subdir => GetCSharpFilesFromFolder(subdir)));
         }
