@@ -52,28 +52,40 @@ namespace GetText.Extractor.Engine
                 switch (methodName)
                 {
                     case "GetString":   //first argument is message id
-                        messageId = ExtractText(arguments[0]);
-                        isFormatString = arguments.Count > 1 || arguments[0].DescendantNodes().OfType<InterpolationSyntax>().Any();
-                        catalog.AddOrUpdateEntry(null, messageId, $"{pathRelative}:{arguments[0].GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString); ;
+                        if (arguments.Count >= 1)
+                        {
+                            messageId = ExtractText(arguments[0]);
+                            isFormatString = arguments.Count > 1 || arguments[0].DescendantNodes().OfType<InterpolationSyntax>().Any();
+                            catalog.AddOrUpdateEntry(null, messageId, $"{pathRelative}:{arguments[0].GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString);
+                        }
                         break;
                     case "GetParticularString": //first argument is context, second is message id
-                        context = ExtractText(arguments[0]);
-                        messageId = ExtractText(arguments[1]);
-                        isFormatString = arguments.Count > 2 || arguments[1].DescendantNodes().OfType<InterpolationSyntax>().Any();
-                        catalog.AddOrUpdateEntry(context, messageId, $"{pathRelative}:{arguments[1].GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString);
+                        if (arguments.Count >= 2)
+                        {
+                            context = ExtractText(arguments[0]);
+                            messageId = ExtractText(arguments[1]);
+                            isFormatString = arguments.Count > 2 || arguments[1].DescendantNodes().OfType<InterpolationSyntax>().Any();
+                            catalog.AddOrUpdateEntry(context, messageId, $"{pathRelative}:{arguments[1].GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString);
+                        }
                         break;
                     case "GetPluralString": //first argument is message id, second is plural message
-                        messageId = ExtractText(arguments[0]);
-                        plural = ExtractText(arguments[1]);
-                        isFormatString = arguments.Count > 2 || arguments[0].DescendantNodes().OfType<InterpolationSyntax>().Any() || arguments[1].DescendantNodes().OfType<InterpolationSyntax>().Any();
-                        catalog.AddOrUpdateEntry(null, messageId, plural, $"{pathRelative}:{arguments[0].GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString);
+                        if (arguments.Count >= 2)
+                        {
+                            messageId = ExtractText(arguments[0]);
+                            plural = ExtractText(arguments[1]);
+                            isFormatString = arguments.Count > 2 || arguments[0].DescendantNodes().OfType<InterpolationSyntax>().Any() || arguments[1].DescendantNodes().OfType<InterpolationSyntax>().Any();
+                            catalog.AddOrUpdateEntry(null, messageId, plural, $"{pathRelative}:{arguments[0].GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString);
+                        }
                         break;
                     case "GetParticularPluralString": //first argument is context, second is message id, third is plural message
-                        context = ExtractText(arguments[0]);
-                        messageId = ExtractText(arguments[1]);
-                        plural = ExtractText(arguments[2]);
-                        isFormatString = arguments.Count > 3 || arguments[1].DescendantNodes().OfType<InterpolationSyntax>().Any() || arguments[2].DescendantNodes().OfType<InterpolationSyntax>().Any();
-                        catalog.AddOrUpdateEntry(context, messageId, plural, $"{pathRelative}:{arguments[1].GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString);
+                        if (arguments.Count >= 3)
+                        {
+                            context = ExtractText(arguments[0]);
+                            messageId = ExtractText(arguments[1]);
+                            plural = ExtractText(arguments[2]);
+                            isFormatString = arguments.Count > 3 || arguments[1].DescendantNodes().OfType<InterpolationSyntax>().Any() || arguments[2].DescendantNodes().OfType<InterpolationSyntax>().Any();
+                            catalog.AddOrUpdateEntry(context, messageId, plural, $"{pathRelative}:{arguments[1].GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString);
+                        }
                         break;
                 }
             }
