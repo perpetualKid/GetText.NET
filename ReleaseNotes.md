@@ -1,6 +1,6 @@
 # Release Notes
 
-### 1.3.6
+### 1.3
 * Checking argument count as simple way to exclude non-GetText `GetString*` calls in Extractor [PR #37](https://github.com/perpetualKid/GetText.NET/pull/37)
 * Include Razor-based source files files (*.razor, *.cshtml) for Extractor ([see Discussion](https://github.com/perpetualKid/GetText.NET/discussions/35))
 
