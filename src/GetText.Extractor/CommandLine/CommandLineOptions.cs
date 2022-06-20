@@ -11,12 +11,14 @@ namespace GetText.Extractor.CommandLine
     {
         internal static RootCommand RootCommand => new RootCommand("Extracts strings from C# source code files to creates or updates PO template file");
 
-        internal static Option<FileInfo> SourceOption
+        internal static Option<IList<FileInfo>> SourceOption
         {
             get
             {
-                return new Option<FileInfo>(new[] { "-s", "--source" }, TryParseSourceFilePathArgument, true, "Visual Studio Solution file, Project file, or source directory") {
+                return new Option<IList<FileInfo>>(new[] { "-s", "--source" }, TryParseSourceFilePathArgument, true, "Visual Studio Solution file, Project file, or source directory. Multiple entries are allowed.")
+                {
                     Name = "Source",
+                    Arity = ArgumentArity.OneOrMore,
                 };
             }
         }
@@ -25,7 +27,8 @@ namespace GetText.Extractor.CommandLine
         {
             get
             {
-                return new Option<FileInfo>(new[] { "-t", "--target" }, TryParseDefaultTargetFile, true, "Target PO template file. ") {
+                return new Option<FileInfo>(new[] { "-t", "--target" }, TryParseDefaultTargetFile, true, "Target PO template file")
+                {
                     Name = "Target",
                 };
             }
@@ -69,7 +72,7 @@ namespace GetText.Extractor.CommandLine
                     return new FileInfo(token);
                 }
             }
-            catch(Exception ex) when (ex is ArgumentException || ex is NotSupportedException)
+            catch (Exception ex) when (ex is ArgumentException || ex is NotSupportedException)
             {
                 argument.ErrorMessage = $"The path for '{token}' is not valid. ({ex.Message})";
                 return default;
@@ -78,33 +81,44 @@ namespace GetText.Extractor.CommandLine
             return default;
         }
 
-        private static FileInfo TryParseSourceFilePathArgument(ArgumentResult argument)
+        private static IList<FileInfo> TryParseSourceFilePathArgument(ArgumentResult argument)
         {
-            string token = argument.Tokens.Count switch
+            if (argument.Tokens.Count == 0)
             {
-                0 => ".",
-                1 => argument.Tokens[0].Value,
-                _ => throw new InvalidOperationException("Unexpected token count."),
-            };
-            if (File.Exists(token))
-            {
-                return new FileInfo(Path.GetFullPath(token));
+                return new[] { new FileInfo(Path.GetFullPath(".")) };
             }
 
-            if (Directory.Exists(token))
+            var fileInfos = argument.Tokens.Select(token =>
             {
-                if (TryFindProjectFile(token, out string path))
+                var tokenValue = token.Value;
+
+                if (File.Exists(tokenValue))
                 {
-                    return new FileInfo(path);
+                    return new FileInfo(Path.GetFullPath(tokenValue));
                 }
-                else
+
+                if (Directory.Exists(tokenValue))
                 {
-                    return new FileInfo(Path.GetFullPath(token));
+                    if (TryFindProjectFile(tokenValue, out string path))
+                    {
+                        return new FileInfo(path);
+                    }
+                    else
+                    {
+                        return new FileInfo(Path.GetFullPath(tokenValue));
+                    }
                 }
+
+                argument.ErrorMessage = $"The file or directory '{tokenValue}' could not be found.";
+                return default;
+            }).ToList();
+
+            if (argument.ErrorMessage != null)
+            {
+                return default;
             }
 
-            argument.ErrorMessage = $"The file or directory '{token}' could not be found.";
-            return default;
+            return fileInfos;
         }
 
         private static bool TryFindProjectFile(string directoryPath, out string result)
