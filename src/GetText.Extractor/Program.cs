@@ -1,4 +1,5 @@
-﻿using System.CommandLine;
+﻿using System.Collections.Generic;
+using System.CommandLine;
 using System.CommandLine.Parsing;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -31,20 +32,20 @@ namespace GetText.Extractor
             rootCommand.Add(unixPathSeparator);
             rootCommand.Add(sort);
 
-            rootCommand.SetHandler(async (FileInfo source, FileInfo target, bool unixstyle, bool sortOutput, bool verbose) =>
+            rootCommand.SetHandler(async (IList<FileInfo> sources, FileInfo target, bool unixstyle, bool sortOutput, bool verbose) =>
             {
-                await Execute(source, target, unixstyle, sortOutput, verbose).ConfigureAwait(false);
+                await Execute(sources, target, unixstyle, sortOutput, verbose).ConfigureAwait(false);
             }, sourceOption, outFile, unixPathSeparator, sort, verbose);
 
             return await rootCommand.InvokeAsync(args).ConfigureAwait(false);
 
         }
 
-        private static async Task Execute(FileInfo source, FileInfo target, bool unixStyle, bool sortOutput, bool verbose)
+        private static async Task Execute(IList<FileInfo> sources, FileInfo target, bool unixStyle, bool sortOutput, bool verbose)
         {
             catalog = new CatalogTemplate(target.FullName);
 
-            SyntaxTreeParser parser = new SyntaxTreeParser(catalog, source, unixStyle, verbose);
+            SyntaxTreeParser parser = new SyntaxTreeParser(catalog, sources, unixStyle, verbose);
             await parser.Parse().ConfigureAwait(false);
 
             await catalog.WriteAsync(sortOutput).ConfigureAwait(false);

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using GetText.Extractor.Engine.SourceResolver;
 using GetText.Extractor.Template;
 
 using Microsoft.CodeAnalysis;
@@ -14,7 +13,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace GetText.Extractor.Engine
 {
-    internal abstract class ParserBase<T>
+    internal abstract class ParserBase
     {
         //hardcoded as we don't have a reference to GetText.ICatalog in this package
         internal static readonly List<string> CatalogMethods = new List<string>() { "GetString", "GetParticularString", "GetPluralString", "GetParticularPluralString" };
@@ -23,15 +22,12 @@ namespace GetText.Extractor.Engine
         internal static readonly List<string> DescriptionAttributes = new List<string>() { "Description", "DescriptionAttribute" };
 
         protected CatalogTemplate catalog;
-        protected SourceResolverBase<T> sourceResolver;
-        protected FileInfo sourceRoot;
         protected bool verbose;
         protected bool unixStyle;
 
-        public ParserBase(CatalogTemplate catalog, FileInfo sourceRoot, bool unixStyle, bool verbose)
+        public ParserBase(CatalogTemplate catalog, bool unixStyle, bool verbose)
         {
             this.catalog = catalog;
-            this.sourceRoot = sourceRoot;
             this.verbose = verbose;
             this.unixStyle = unixStyle;
         }
