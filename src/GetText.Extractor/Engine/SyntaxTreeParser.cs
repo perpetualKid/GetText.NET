@@ -17,8 +17,8 @@ namespace GetText.Extractor.Engine
     {
         private readonly IList<FileInfo> sources;
 
-        public SyntaxTreeParser(CatalogTemplate catalog, IList<FileInfo> sources, bool unixStyle, bool verbose) :
-            base(catalog, unixStyle, verbose)
+        public SyntaxTreeParser(CatalogTemplate catalog, IList<FileInfo> sources, bool unixStyle, bool verbose, Aliases aliases) :
+            base(catalog, unixStyle, verbose, aliases)
         {
             this.sources = sources;
             catalog.Header.ProjectIdVersion = Path.GetFileNameWithoutExtension(sources.First().Name);

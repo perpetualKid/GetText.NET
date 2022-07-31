@@ -16,7 +16,12 @@ namespace GetText.Extractor.Engine
     internal abstract class ParserBase
     {
         //hardcoded as we don't have a reference to GetText.ICatalog in this package
-        internal static readonly List<string> CatalogMethods = new List<string>() { "GetString", "GetParticularString", "GetPluralString", "GetParticularPluralString" };
+        internal readonly HashSet<string> CatalogMethods;
+        internal readonly HashSet<string> GetStringAliases;
+        internal readonly HashSet<string> GetParticularStringAliases;
+        internal readonly HashSet<string> GetPluralStringAliases;
+        internal readonly HashSet<string> GetParticularPluralStringAliases;
+
         internal static readonly List<string> ControlTextProperties = new List<string>() { "Text", "HeaderText", "ToolTipText", };
         internal static readonly List<string> ControlTextMethods = new List<string>() { "SetToolTip" };
         internal static readonly List<string> DescriptionAttributes = new List<string>() { "Description", "DescriptionAttribute" };
@@ -25,11 +30,17 @@ namespace GetText.Extractor.Engine
         protected bool verbose;
         protected bool unixStyle;
 
-        public ParserBase(CatalogTemplate catalog, bool unixStyle, bool verbose)
+        public ParserBase(CatalogTemplate catalog, bool unixStyle, bool verbose, Aliases aliases)
         {
             this.catalog = catalog;
             this.verbose = verbose;
             this.unixStyle = unixStyle;
+
+            GetStringAliases = aliases.GetString?.ToHashSet();
+            GetParticularStringAliases = aliases.GetParticularString?.ToHashSet();
+            GetPluralStringAliases = aliases.GetPluralString?.ToHashSet();
+            GetParticularPluralStringAliases = aliases.GetParticularPluralString?.ToHashSet();
+            CatalogMethods = GetStringAliases.Concat(GetParticularStringAliases).Concat(GetPluralStringAliases).Concat(GetParticularPluralStringAliases).ToHashSet();
         }
 
         public abstract Task Parse();
@@ -45,44 +56,33 @@ namespace GetText.Extractor.Engine
                 Where((item) => CatalogMethods.Contains(methodName = ((item.Expression as MemberAccessExpressionSyntax)?.Name as IdentifierNameSyntax)?.Identifier.ValueText)))
             {
                 List<ArgumentSyntax> arguments = item.DescendantNodes().OfType<ArgumentSyntax>().ToList();
-                switch (methodName)
+                if(GetStringAliases.Contains(methodName) && arguments.Count >= 1)    //first argument is message id
                 {
-                    case "GetString":   //first argument is message id
-                        if (arguments.Count >= 1)
-                        {
-                            messageId = ExtractText(arguments[0]);
-                            isFormatString = arguments.Count > 1 || arguments[0].DescendantNodes().OfType<InterpolationSyntax>().Any();
-                            catalog.AddOrUpdateEntry(null, messageId, $"{pathRelative}:{arguments[0].GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString);
-                        }
-                        break;
-                    case "GetParticularString": //first argument is context, second is message id
-                        if (arguments.Count >= 2)
-                        {
-                            context = ExtractText(arguments[0]);
-                            messageId = ExtractText(arguments[1]);
-                            isFormatString = arguments.Count > 2 || arguments[1].DescendantNodes().OfType<InterpolationSyntax>().Any();
-                            catalog.AddOrUpdateEntry(context, messageId, $"{pathRelative}:{arguments[1].GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString);
-                        }
-                        break;
-                    case "GetPluralString": //first argument is message id, second is plural message
-                        if (arguments.Count >= 2)
-                        {
-                            messageId = ExtractText(arguments[0]);
-                            plural = ExtractText(arguments[1]);
-                            isFormatString = arguments.Count > 2 || arguments[0].DescendantNodes().OfType<InterpolationSyntax>().Any() || arguments[1].DescendantNodes().OfType<InterpolationSyntax>().Any();
-                            catalog.AddOrUpdateEntry(null, messageId, plural, $"{pathRelative}:{arguments[0].GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString);
-                        }
-                        break;
-                    case "GetParticularPluralString": //first argument is context, second is message id, third is plural message
-                        if (arguments.Count >= 3)
-                        {
-                            context = ExtractText(arguments[0]);
-                            messageId = ExtractText(arguments[1]);
-                            plural = ExtractText(arguments[2]);
-                            isFormatString = arguments.Count > 3 || arguments[1].DescendantNodes().OfType<InterpolationSyntax>().Any() || arguments[2].DescendantNodes().OfType<InterpolationSyntax>().Any();
-                            catalog.AddOrUpdateEntry(context, messageId, plural, $"{pathRelative}:{arguments[1].GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString);
-                        }
-                        break;
+                    messageId = ExtractText(arguments[0]);
+                    isFormatString = arguments.Count > 1 || arguments[0].DescendantNodes().OfType<InterpolationSyntax>().Any();
+                    catalog.AddOrUpdateEntry(null, messageId, $"{pathRelative}:{arguments[0].GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString);
+                }
+                else if(GetParticularStringAliases.Contains(methodName) && arguments.Count >= 2)   //first argument is context, second is message id
+                {
+                    context = ExtractText(arguments[0]);
+                    messageId = ExtractText(arguments[1]);
+                    isFormatString = arguments.Count > 2 || arguments[1].DescendantNodes().OfType<InterpolationSyntax>().Any();
+                    catalog.AddOrUpdateEntry(context, messageId, $"{pathRelative}:{arguments[1].GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString);
+                }   
+                else if(GetPluralStringAliases.Contains(methodName) && arguments.Count >= 2)   //first argument is message id, second is plural message
+                {
+                    messageId = ExtractText(arguments[0]);
+                    plural = ExtractText(arguments[1]);
+                    isFormatString = arguments.Count > 2 || arguments[0].DescendantNodes().OfType<InterpolationSyntax>().Any() || arguments[1].DescendantNodes().OfType<InterpolationSyntax>().Any();
+                    catalog.AddOrUpdateEntry(null, messageId, plural, $"{pathRelative}:{arguments[0].GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString);
+                }
+                else if(GetParticularPluralStringAliases.Contains(methodName) && arguments.Count >= 3)   //first argument is context, second is message id, third is plural message
+                {
+                    context = ExtractText(arguments[0]);
+                    messageId = ExtractText(arguments[1]);
+                    plural = ExtractText(arguments[2]);
+                    isFormatString = arguments.Count > 3 || arguments[1].DescendantNodes().OfType<InterpolationSyntax>().Any() || arguments[2].DescendantNodes().OfType<InterpolationSyntax>().Any();
+                    catalog.AddOrUpdateEntry(context, messageId, plural, $"{pathRelative}:{arguments[1].GetLocation().GetLineSpan().StartLinePosition.Line + 1}", isFormatString);
                 }
             }
             foreach (AssignmentExpressionSyntax item in root.DescendantNodes().OfType<AssignmentExpressionSyntax>().

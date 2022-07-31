@@ -42,6 +42,11 @@ namespace GetText.Extractor.CommandLine
 
         internal static Option<bool> SortOutput => new Option<bool>(new[] { "--order", "-o" }, "Sort catalogue entries before exporting to template");
 
+        internal static Option<List<string>> GetStringAliases => new Option<List<string>>(new[] { "--aliasgetstring", "-as" }, "List of aliases for GetString");
+        internal static Option<List<string>> GetParticularStringAliases => new Option<List<string>>(new[] { "--aliasgetparticular", "-ad" }, "List of aliases for GetParticularString");
+        internal static Option<List<string>> GetPluralStringAliases => new Option<List<string>>(new[] { "--aliasgetplural", "-ap" }, "List of aliases for GetPluralString");
+        internal static Option<List<string>> GetParticularPluralStringAliases => new Option<List<string>>(new[] { "--aliasgetparticularplural", "-adp" }, "List of aliases for GetParticularPluralString");
+
         #region private validation and parsing
         private static FileInfo TryParseDefaultTargetFile(ArgumentResult argument)
         {
