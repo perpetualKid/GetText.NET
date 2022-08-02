@@ -36,10 +36,10 @@ namespace GetText.Extractor.Engine
             this.verbose = verbose;
             this.unixStyle = unixStyle;
 
-            GetStringAliases = aliases.GetString?.ToHashSet();
-            GetParticularStringAliases = aliases.GetParticularString?.ToHashSet();
-            GetPluralStringAliases = aliases.GetPluralString?.ToHashSet();
-            GetParticularPluralStringAliases = aliases.GetParticularPluralString?.ToHashSet();
+            GetStringAliases = new List<string>() { "GetString" }.Concat(aliases.GetString ?? Enumerable.Empty<string>()).ToHashSet();
+            GetParticularStringAliases = new List<string>() { "GetParticularString" }.Concat(aliases.GetParticularString ?? Enumerable.Empty<string>()).ToHashSet();
+            GetPluralStringAliases = new List<string>() { "GetPluralString" }.Concat(aliases.GetPluralString ?? Enumerable.Empty<string>()).ToHashSet();
+            GetParticularPluralStringAliases = new List<string>() { "GetParticularPluralString" }.Concat(aliases.GetParticularPluralString ?? Enumerable.Empty<string>()).ToHashSet();
             CatalogMethods = GetStringAliases.Concat(GetParticularStringAliases).Concat(GetPluralStringAliases).Concat(GetParticularPluralStringAliases).ToHashSet();
         }
 

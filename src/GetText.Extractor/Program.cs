@@ -31,11 +31,6 @@ namespace GetText.Extractor
             Option aliasPlural = CommandLineOptions.GetPluralStringAliases;
             Option aliasDefinitePlural = CommandLineOptions.GetParticularPluralStringAliases;
 
-            aliasString.AllowMultipleArgumentsPerToken = true;
-            aliasDefinite.AllowMultipleArgumentsPerToken = true;
-            aliasPlural.AllowMultipleArgumentsPerToken = true;
-            aliasDefinitePlural.AllowMultipleArgumentsPerToken = true;
-
             rootCommand.Add(sourceOption);
             rootCommand.Add(outFile);
             rootCommand.Add(verbose);
@@ -62,10 +57,10 @@ namespace GetText.Extractor
             catalog = new CatalogTemplate(target.FullName);
 
             SyntaxTreeParser parser = new SyntaxTreeParser(catalog, sources, unixStyle, verbose, new Aliases()
-            {   GetString = new List<string>() { "GetString" }.Concat(getStringAliases).ToList(),
-                GetParticularString = new List<string>() { "GetParticularString" }.Concat(getParticularStringAliases).ToList(),
-                GetPluralString = new List<string>() { "GetPluralString" }.Concat(getPluralStringAliases).ToList(),
-                GetParticularPluralString = new List<string>() { "GetParticularPluralString" }.Concat(getParticularPluralStringAliases).ToList() });
+            {   GetString = getStringAliases,
+                GetParticularString = getParticularStringAliases,
+                GetPluralString = getPluralStringAliases,
+                GetParticularPluralString = getParticularPluralStringAliases });
             await parser.Parse().ConfigureAwait(false);
 
             await catalog.WriteAsync(sortOutput).ConfigureAwait(false);
