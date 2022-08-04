@@ -53,7 +53,8 @@ namespace GetText.Extractor.Engine
             bool isFormatString;
             CompilationUnitSyntax root = tree.GetCompilationUnitRoot();
             foreach (InvocationExpressionSyntax item in root.DescendantNodes().OfType<InvocationExpressionSyntax>().
-                Where((item) => CatalogMethods.Contains(methodName = ((item.Expression as MemberAccessExpressionSyntax)?.Name as IdentifierNameSyntax)?.Identifier.ValueText)))
+                Where((item) => CatalogMethods.Contains(methodName = ((item.Expression as MemberAccessExpressionSyntax)?.Name as IdentifierNameSyntax)?.Identifier.ValueText)
+                || CatalogMethods.Contains(methodName = ((item.Expression as IdentifierNameSyntax)?.Identifier.ValueText))))
             {
                 List<ArgumentSyntax> arguments = item.DescendantNodes().OfType<ArgumentSyntax>().ToList();
                 if(GetStringAliases.Contains(methodName) && arguments.Count >= 1)    //first argument is message id
