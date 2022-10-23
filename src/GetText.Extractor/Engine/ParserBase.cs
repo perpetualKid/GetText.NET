@@ -195,7 +195,7 @@ namespace GetText.Extractor.Engine
             }
             else
             {
-                foreach (CSharpSyntaxNode stringNode in syntaxNode.DescendantNodes().
+                foreach (CSharpSyntaxNode stringNode in syntaxNode.DescendantNodes((node) => node == syntaxNode || syntaxNode.Parent == syntaxNode).
                     Where((node) => node.IsKind(SyntaxKind.InterpolatedStringExpression) || node.IsKind(SyntaxKind.StringLiteralExpression)))
                 {
                     ExtractFromStringNode(stringNode);
