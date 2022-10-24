@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Drawing;
 
 using GetText;
 
@@ -24,7 +24,19 @@ namespace ExtractorTestSample
             catalog.GetString($"0 - Triple nested {catalog.GetString($"1 - double nested {catalog.GetString($"2 - single nested {catalog.GetString("3 - Inner literal string")}")}")}");//Expected: line 24 : "0 - Triple nested {0}", "1 - double nested {0}", "2 - single nested {0}", "3 - Inner literal string"
             catalog.GetString($"Simple" + " concatenation");//Expected: line 25 : "Simple concatenation"
             catalog.GetString($"first part" + " and " + "another part");//Expected: line 26 : "first part and another part"
+            //Test case to cover issue #44 https://github.com/perpetualKid/GetText.NET/issues/44
+            string Specifier = "Specifier";
+            catalog.GetString($"{Specifier}login {"username".Color(Color.White)} {"password".Color(Color.Green)} - Logs in using your username and password.");//Expected: line 30 : "{0}login {1} {2} - Logs in using your username and password."
         }
 
     }
+
+    static class StringExtension
+    {
+        public static string Color(this string value, Color color)
+        {
+            return value;
+        }
+    }
+
 }

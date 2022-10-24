@@ -82,6 +82,9 @@ namespace GetText.Extractor.Tests.Engine
         [TestMethod]
         public void ConcatenatedStringTest() => TestValidity(26, "first part and another part");
 
+        [TestMethod]
+        public void Issue44Test() => TestValidity(29, "{0}login {1} {2} - Logs in using your username and password.");
+
         private void TestValidity(int line, string expected, int resultNumber = 0)
         {
             CatalogEntry entry = catalog.entries.Values.Where((entry) => entry.References.Where(reference => reference.EndsWith($":{line}")).Any()).OrderBy(entry => entry.MessageId).Skip(resultNumber).FirstOrDefault();
