@@ -186,6 +186,9 @@ namespace GetText.Extractor.Engine
                     case SyntaxKind.StringLiteralExpression:
                         builder.Append(ToLiteral((stringNode as LiteralExpressionSyntax).Token.Value?.ToString()));
                         break;
+                    case SyntaxKind.AddExpression:
+                        builder.Append(ExtractText(stringNode));
+                        break;
                 }
             }
 
@@ -196,7 +199,7 @@ namespace GetText.Extractor.Engine
             else
             {
                 foreach (CSharpSyntaxNode stringNode in syntaxNode.DescendantNodes((node) => node == syntaxNode || syntaxNode.Parent == syntaxNode).
-                    Where((node) => node.IsKind(SyntaxKind.InterpolatedStringExpression) || node.IsKind(SyntaxKind.StringLiteralExpression)))
+                    Where((node) => node.IsKind(SyntaxKind.InterpolatedStringExpression) || node.IsKind(SyntaxKind.StringLiteralExpression) || node.IsKind(SyntaxKind.AddExpression)))
                 {
                     ExtractFromStringNode(stringNode);
                 }
