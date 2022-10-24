@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30225.117
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{11866FB2-5A5E-45EC-99D2-690156524ED9}"
 	ProjectSection(SolutionItems) = preProject
@@ -72,6 +72,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ru-RU", "ru-RU", "{E9437919
 		examples\Locales\ru-RU\messages.mo = examples\Locales\ru-RU\messages.mo
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sample", "Sample", "{BFF1E7E6-F5C8-4CEC-8609-FD4E59BE8717}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExtractorTestSample", "test\Sample\ExtractorTestSample\ExtractorTestSample.csproj", "{7A9B0A60-4183-4834-A67F-A573EC2AB44D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -114,6 +118,10 @@ Global
 		{E8CFE73F-F480-47A2-8FAA-4B277E55802F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E8CFE73F-F480-47A2-8FAA-4B277E55802F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E8CFE73F-F480-47A2-8FAA-4B277E55802F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A9B0A60-4183-4834-A67F-A573EC2AB44D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A9B0A60-4183-4834-A67F-A573EC2AB44D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A9B0A60-4183-4834-A67F-A573EC2AB44D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A9B0A60-4183-4834-A67F-A573EC2AB44D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -131,6 +139,8 @@ Global
 		{32C72975-A0A7-4E4E-A7CE-2B741E9E01B7} = {4AAD088A-469B-4766-81D9-E0878F20638F}
 		{029866F1-9DB8-41DE-B200-00A072F00B15} = {32C72975-A0A7-4E4E-A7CE-2B741E9E01B7}
 		{E9437919-99FE-4247-A72B-7C0CB03A20DB} = {32C72975-A0A7-4E4E-A7CE-2B741E9E01B7}
+		{BFF1E7E6-F5C8-4CEC-8609-FD4E59BE8717} = {E9CE19D0-FF12-4ACE-86D2-5B649D56E11C}
+		{7A9B0A60-4183-4834-A67F-A573EC2AB44D} = {BFF1E7E6-F5C8-4CEC-8609-FD4E59BE8717}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E1354A30-F0A7-41F1-9880-21BFE0558F7E}

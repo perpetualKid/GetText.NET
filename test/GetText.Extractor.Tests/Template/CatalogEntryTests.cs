@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,14 +17,15 @@ namespace GetText.Extractor.Tests.Template
         [TestMethod]
         public void CatalogEntryCtorTest()
         {
-            CatalogEntry entry = new CatalogEntry("MessageId");
+            string messageId = "MessageId";
+            CatalogEntry entry = new CatalogEntry(messageId);
+            Assert.AreEqual(entry.MessageId, messageId);
         }
 
         [TestMethod]
         public void CatalogEntryWrapLongLineTest()
         {
             CatalogEntry entry = new CatalogEntry("Restoring wrong weather type : trying to restore dynamic weather but save contains user controlled weather");
-
             string test = entry.ToString();
         }
     }
