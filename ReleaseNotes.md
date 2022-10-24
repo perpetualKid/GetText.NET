@@ -1,5 +1,11 @@
 # Release Notes
 
+### 1.7
+* Fixing an issue with nested string interpolation and GetString* calls [Bug #44](https://github.com/perpetualKid/GetText.NET/issues/44)
+* Improving nested string handling and resolving of GetString* calls 
+* adding test cases for Extractor both to enable regression testing and to help clarifying supported Extractor/GetString* cases. 
+See [Extractor documentation](https://github.com/perpetualKid/GetText.NET/wiki/Extractor%20Intro) for details
+
 ### 1.5
 * Customizable aliases (such as shorthand _(), _p(), _n(), _pn()) added by [Owlblocks](https://github.com/Owlblocks) in [PR #39](https://github.com/perpetualKid/GetText.NET/pull/39)
 
