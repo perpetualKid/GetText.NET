@@ -12,7 +12,7 @@ namespace GetText.Extractor.Template
     {
         internal static string Newline = Environment.NewLine;
         internal static string[] LineEndings = new string[] { "\n\r", "\r\n", "\r", "\n", "\r" };
-        private readonly ConcurrentDictionary<string, CatalogEntry> entries = new ConcurrentDictionary<string, CatalogEntry>();
+        internal readonly ConcurrentDictionary<string, CatalogEntry> entries = new ConcurrentDictionary<string, CatalogEntry>();
         private bool sortOutput;
 
         public string FileName { get; private set; }
@@ -30,7 +30,7 @@ namespace GetText.Extractor.Template
                 return;     // don't care about empty message ids
             if (!entries.TryGetValue(CatalogEntry.BuildKey(context, messageId), out CatalogEntry result))
             {
-                result = new CatalogEntry(context, messageId, string.Empty);
+                result = new CatalogEntry(context, messageId);
                 if (!entries.TryAdd(result.Key, result))
                     result = entries[result.Key];
             }
@@ -45,7 +45,7 @@ namespace GetText.Extractor.Template
                 return;     // don't care about empty message ids
             if (!entries.TryGetValue(CatalogEntry.BuildKey(context, messageId), out CatalogEntry result))
             {
-                result = new CatalogEntry(context, messageId, string.Empty);
+                result = new CatalogEntry(context, messageId);
                 if (!entries.TryAdd(result.Key, result))
                     result = entries[result.Key];
             }

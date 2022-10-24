@@ -10,13 +10,10 @@ namespace GetText.Extractor.Template
     internal class CatalogEntry
     {
         private CommentData comments;
-        private List<string> pluralMessages;
 
         public string Context { get; }
         public string MessageId { get; }
-        public string Message { get; set; } = string.Empty;
         public string PluralMessageId { get; set; }
-        public List<string> PluralMessages => pluralMessages ??= new List<string>();
         public CommentData Comments => comments ??= new CommentData();
         public List<string> References => Comments.References;
 
@@ -35,12 +32,7 @@ namespace GetText.Extractor.Template
             MessageId = messageId;
         }
 
-        public CatalogEntry(string messageId, string message) : this(messageId)
-        {
-            Message = message;
-        }
-
-        public CatalogEntry(string context, string messageId, string message) : this(messageId, message)
+        public CatalogEntry(string context, string messageId) : this(messageId)
         {
             Context = context;
         }
@@ -66,24 +58,12 @@ namespace GetText.Extractor.Template
             if (!string.IsNullOrEmpty(PluralMessageId))
             {
                 FormatMessageStringAndAppend(builder, "msgid_plural", PluralMessageId);
-                if (pluralMessages?.Count > 1)
-                {
-                    for (int i = 0; i < PluralMessages.Count; i++)
-                    {
-                        FormatMessageStringAndAppend(builder, $"msgstr[{i}]", EnsureCorrectEndings(MessageId, PluralMessages[i]));
-                    }
-                }
-                else
-                {
-                    for (int i = 0; i < 2; i++)
-                    {
-                        FormatMessageStringAndAppend(builder, $"msgstr[{i}]", string.Empty);
-                    }
-                }
+                FormatMessageStringAndAppend(builder, $"msgstr[{0}]", string.Empty);
+                FormatMessageStringAndAppend(builder, $"msgstr[{1}]", string.Empty);
             }
             else
             {
-                FormatMessageStringAndAppend(builder, "msgstr", EnsureCorrectEndings(MessageId, Message));
+                FormatMessageStringAndAppend(builder, "msgstr", string.Empty);
             }
             if (!string.IsNullOrEmpty(MessageId))
                 builder.Append(CatalogTemplate.Newline);
@@ -163,23 +143,5 @@ namespace GetText.Extractor.Template
             }
             return;
         }
-
-        // Ensures that the end lines of text are the same as in the reference string.
-        private static string EnsureCorrectEndings(string reference, string text)
-        {
-            if (text.Length == 0)
-                return string.Empty;
-
-            int numEndings = 0;
-            for (int i = text.Length - 1; i >= 0 && text[i] == '\n'; i--)
-                numEndings++;
-            StringBuilder builder = new StringBuilder(text, 0, text.Length - numEndings, text.Length + reference.Length - numEndings);
-            for (int i = reference.Length - 1; i >= 0 && reference[i] == '\n'; i--)
-            {
-                builder.Append('\n');
-            }
-            return builder.ToString();
-        }
-
     }
 }
