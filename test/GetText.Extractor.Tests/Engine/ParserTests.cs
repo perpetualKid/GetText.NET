@@ -35,55 +35,61 @@ namespace GetText.Extractor.Tests.Engine
         }
 
         [TestMethod]
-        public void LiteralStringTest() => TestValidity(16, "Simple literal string");
+        public void InputLineNumberCheck()
+        {
+            ExtractorTestSample.Program.Main(null);
+        }
 
         [TestMethod]
-        public void LiteralStringWithParamTest() => TestValidity(17, "Simple literal string with param {0}");
+        public void LiteralStringTest() => TestValidity(22, "Simple literal string");
 
         [TestMethod]
-        public void InterpolatedStringNoParamTest() => TestValidity(18, "Simple interpolated string");
+        public void LiteralStringWithParamTest() => TestValidity(23, "Simple literal string with param {0}");
 
         [TestMethod]
-        public void InterpolatedStringOneParamTest() => TestValidity(19, "Simple {0} interpolated string");
+        public void InterpolatedStringNoParamTest() => TestValidity(24, "Simple interpolated string");
 
         [TestMethod]
-        public void InterpolatedStringTwoParamTest() => TestValidity(20, "{0} and {1} params interpolated string");
+        public void InterpolatedStringOneParamTest() => TestValidity(25, "Simple {0} interpolated string");
 
         [TestMethod]
-        public void InterpolatedStringNestedLiteralStringTest() => TestValidity(21, "Nested interpolated string {0} literal param");
+        public void InterpolatedStringTwoParamTest() => TestValidity(26, "{0} and {1} params interpolated string");
+
+        [TestMethod]
+        public void InterpolatedStringNestedLiteralStringTest() => TestValidity(27, "Nested interpolated string {0} literal param");
 
         [TestMethod]
         public void InterpolatedStringNestedTranslatedStringTest()
         {
-            TestValidity(22, "0 - Nested interpolated string {0} param");
-            TestValidity(22, "1 - Literal string", 1);
+            TestValidity(28, "0 - Nested interpolated string {0} param");
+            TestValidity(28, "1 - Literal string", 1);
         }
 
         [TestMethod]
         public void InterpolatedStringTwoNestedTranslatedStringTest()
         {
-            TestValidity(23, "0 - Another nested interpolated string with {0} and {1} param");
-            TestValidity(23, "1 - one literal string", 1);
-            TestValidity(23, "2 - another literal string", 2);
+            TestValidity(29, "0 - Another nested interpolated string with {0} and {1} param");
+            TestValidity(29, "1 - one literal string", 1);
+            TestValidity(29, "2 - another literal string", 2);
         }
 
         [TestMethod]
         public void InterpolatedStringTripleNestedTranslatedStringTest()
         {
-            TestValidity(24, "0 - Triple nested {0}");
-            TestValidity(24, "1 - double nested {0}", 1);
-            TestValidity(24, "2 - single nested {0}", 2);
-            TestValidity(24, "3 - Inner literal string", 3);
+            TestValidity(30, "0 - Triple nested {0}");
+            TestValidity(30, "1 - double nested {0}", 1);
+            TestValidity(30, "2 - single nested {0}", 2);
+            TestValidity(30, "3 - Inner literal string", 3);
         }
 
         [TestMethod]
-        public void SimpleConcatenatedStringTest() => TestValidity(25, "Simple concatenation");
+        public void SimpleConcatenatedStringTest() => TestValidity(31, "Simple concatenation");
 
         [TestMethod]
-        public void ConcatenatedStringTest() => TestValidity(26, "first part and another part");
+        public void ConcatenatedStringTest() => TestValidity(32, "first part and another part");
 
         [TestMethod]
-        public void Issue44Test() => TestValidity(29, "{0}login {1} {2} - Logs in using your username and password.");
+        public void Issue44Test() => TestValidity(35, "{0}login {1} {2} - Logs in using your username and password.");
 
         private void TestValidity(int line, string expected, int resultNumber = 0)
         {

@@ -22,5 +22,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\GetText.Extractor\GetText.Extractor.csproj" />
+    <ProjectReference Include="..\Sample\ExtractorTestSample\ExtractorTestSample.csproj" />
   </ItemGroup>
 </Project>
