@@ -47,9 +47,9 @@ namespace GetText.Extractor.Engine
                 foreach (string fileName in sourceResolver.GetInput())
                 {
                     inputBlock.Post(fileName);
+                    Counter++;
                 }
             }
-
             inputBlock.Complete();
             await actionBlock.Completion.ConfigureAwait(false);
         }

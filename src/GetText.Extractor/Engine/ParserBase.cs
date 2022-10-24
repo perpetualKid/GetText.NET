@@ -26,6 +26,8 @@ namespace GetText.Extractor.Engine
         internal static readonly List<string> ControlTextMethods = new List<string>() { "SetToolTip" };
         internal static readonly List<string> DescriptionAttributes = new List<string>() { "Description", "DescriptionAttribute" };
 
+        internal int Counter;
+
         protected CatalogTemplate catalog;
         protected bool verbose;
         protected bool unixStyle;
