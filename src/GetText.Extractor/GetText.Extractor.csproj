@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <!--MSBuildLocator and MSBuildWorkspace do not sufficiently support .NET Core-->
-    <TargetFrameworks>netcoreapp3.1</TargetFrameworks> 
+    <TargetFrameworks>netcoreapp3.1;net60</TargetFrameworks> 
     <Description>Extracts string from .NET solutions and projects for GetText Catalog template files (.pot).</Description>
     <AssemblyTitle>GetText.NET.Extractor</AssemblyTitle>
     <AssemblyName>GetText.Extractor</AssemblyName>

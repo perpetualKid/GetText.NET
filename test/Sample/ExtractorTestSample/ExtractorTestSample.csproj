@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-    <StartupObject>ExtractorTestSample.Program</StartupObject>
+	  <TargetFrameworks>netcoreapp3.1;net6.0</TargetFrameworks>
+	  <StartupObject>ExtractorTestSample.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
