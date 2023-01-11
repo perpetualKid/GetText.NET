@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>Localizer functionality translating text properties in Windows Forms controls.</Description>
     <AssemblyTitle>GetText.NET.WindowsForm</AssemblyTitle>
-    <TargetFrameworks>net461;netcoreapp3.1;net60-windows</TargetFrameworks>
+    <TargetFrameworks>net461;net60-windows</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
     <AssemblyName>GetText.WindowsForms</AssemblyName>
     <PackageId>GetText.NET.WindowsForms</PackageId>

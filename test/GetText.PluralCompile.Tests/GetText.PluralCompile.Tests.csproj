@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net48;netcoreapp3.1;net6.0</TargetFrameworks>
+    <TargetFrameworks>net48;net6.0</TargetFrameworks>
     <AssemblyName>GetText.PluralCompile.Tests</AssemblyName>
     <PackageId>GetText.PluralCompile.Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
