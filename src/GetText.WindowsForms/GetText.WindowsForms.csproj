@@ -7,6 +7,8 @@
     <UseWindowsForms>true</UseWindowsForms>
     <AssemblyName>GetText.WindowsForms</AssemblyName>
     <PackageId>GetText.NET.WindowsForms</PackageId>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\gettext.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>

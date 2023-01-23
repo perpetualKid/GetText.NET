@@ -6,6 +6,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>GetText.PluralCompile</AssemblyName>
     <PackageId>GetText.NET.PluralCompile</PackageId>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\gettext.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>

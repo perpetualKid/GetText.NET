@@ -12,6 +12,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B2C3CAAC-6C5B-48C2-9895-964882670F4D}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		gettext.snk = gettext.snk
 		LICENSE = LICENSE
 		README.md = README.md
 		ReleaseNotes.md = ReleaseNotes.md
