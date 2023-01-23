@@ -17,7 +17,7 @@ trigger:
     - ReleaseNotes.md
 
 pool:
-  vmImage: 'windows-2022'
+  vmImage: 'windows-latest'
 
 variables:
   solution: '**/*.sln'
@@ -34,22 +34,37 @@ steps:
     restoreSolution: '$(solution)'
 
 - task: DotNetCoreCLI@2
-  displayName: Prepare DotNet tool install
-  inputs:
-    command: 'custom'
-    custom: 'new'
-    arguments: 'tool-manifest'
-
-- task: DotNetCoreCLI@2  
-  displayName: Install NBGV tool
+  displayName: Restore dotnet tools
   inputs:
     command: custom
     custom: tool
-    arguments: install --tool-path . nbgv
+    arguments: 'restore --tool-manifest .\.config\dotnet-tools.json'
+
+#- task: DotNetCoreCLI@2
+#  displayName: Prepare DotNet tool install
+#  inputs:
+#    command: 'custom'
+#    custom: 'new'
+#    arguments: 'tool-manifest'
+#
+#- task: DotNetCoreCLI@2  
+#  displayName: Install NBGV tool
+#  inputs:
+#    command: custom
+#    custom: tool
+#    arguments: install --tool-path . nbgv
 
 #need to run in the correct folder as version.json is not in root
-- script: .\nbgv cloud -a
+#- script: .\nbgv cloud -a
+#  displayName: Set NBGV Variables
+
+- task: DotNetCoreCLI@2
   displayName: Set NBGV Variables
+  inputs:
+    command: 'custom'
+    custom: 'tool'
+    arguments: 'run nbgv cloud -a'
+    workingDirectory: '.\src'
 
 - task: Bash@3
   displayName: List all Environment Variables
