@@ -1,5 +1,9 @@
 # Release Notes
 
+### 1.8
+* Signing assembly GetText assemblies with strong name signing key [Issue #47](https://github.com/perpetualKid/GetText.NET/issues/47)
+* Upgrading all projects from .NET Core 3.1 to .Net 6.0, removing EOL .NET Core 3.1 [Issue #46](https://github.com/perpetualKid/GetText.NET/issues/46)
+
 ### 1.7
 * Fixing an issue with nested string interpolation and GetString* calls [Bug #44](https://github.com/perpetualKid/GetText.NET/issues/44)
 * Improving nested string handling and resolving of GetString* calls 
