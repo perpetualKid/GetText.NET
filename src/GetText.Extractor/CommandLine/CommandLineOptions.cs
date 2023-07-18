@@ -9,7 +9,7 @@ namespace GetText.Extractor.CommandLine
 {
     internal static class CommandLineOptions
     {
-        internal static RootCommand RootCommand => new RootCommand("Extracts strings from C# source code files to creates or updates PO template file");
+        internal static RootCommand RootCommand => new RootCommand("Extracts strings from C# source code files to create or update PO template file");
 
         internal static Option<IList<FileInfo>> SourceOption
         {
@@ -148,20 +148,17 @@ namespace GetText.Extractor.CommandLine
                 matches.RemoveAll(m => m.EndsWith(".csproj", StringComparison.OrdinalIgnoreCase));
             }
 
-            if (matches.Count == 0)
+            switch (matches.Count)
             {
-                result = $"No project file or solution file was found in directory '{Path.GetFullPath(directoryPath)}'.";
-                return false;
-            }
-            else if (matches.Count == 1)
-            {
-                result = matches[0];
-                return true;
-            }
-            else
-            {
-                result = $"More than one project file or solution file was found in directory '{Path.GetFullPath(directoryPath)}'.";
-                return false;
+                case 0:
+                    result = $"No project file or solution file was found in directory '{Path.GetFullPath(directoryPath)}'.";
+                    return false;
+                case 1:
+                    result = matches[0];
+                    return true;
+                default:
+                    result = $"More than one project file or solution file was found in directory '{Path.GetFullPath(directoryPath)}'.";
+                    return false;
             }
         }
         #endregion
