@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Globalization;
 using System.Reflection;
-using System.Text;
 
 namespace GetText
 {
@@ -41,7 +40,7 @@ namespace GetText
     public class CatalogManager
     {
         private protected static readonly Catalog emptyCatalog = new Catalog(CultureInfo.InvariantCulture);
-        private protected static readonly Dictionary<CultureInfo, Dictionary<string, Catalog>> catalogs = new Dictionary<CultureInfo, Dictionary<string, Catalog>>();
+        private protected static readonly ConcurrentDictionary<CultureInfo, ConcurrentDictionary<string, Catalog>> catalogs = new ConcurrentDictionary<CultureInfo, ConcurrentDictionary<string, Catalog>>();
         private protected static CatalogDomainPattern catalogDomainPattern;
         private protected static string pattern;
         private protected static string folder;
@@ -66,17 +65,17 @@ namespace GetText
                         break;
                 }
                 
-                if (!catalogs.TryGetValue(CultureInfo.CurrentCulture, out Dictionary<string, Catalog> cultureCatalogs))
+                if (!catalogs.TryGetValue(CultureInfo.CurrentCulture, out ConcurrentDictionary<string, Catalog> cultureCatalogs))
                 {
-                    cultureCatalogs = new Dictionary<string, Catalog>();
-                    catalogs.Add(CultureInfo.CurrentCulture, cultureCatalogs);
+                    cultureCatalogs = new ConcurrentDictionary<string, Catalog>();
+                    catalogs.TryAdd(CultureInfo.CurrentCulture, cultureCatalogs);
                 }
                 
                 Catalog catalog = null;
                 if (!string.IsNullOrWhiteSpace(domain) && !cultureCatalogs.TryGetValue(domain, out catalog))
                 {
                     catalog = string.IsNullOrEmpty(folder) ? new Catalog(domain) : new Catalog(domain, folder);
-                    cultureCatalogs.Add(domain, catalog);
+                    cultureCatalogs.TryAdd(domain, catalog);
                 }
 
                 return catalog ?? emptyCatalog;
@@ -122,17 +121,17 @@ namespace GetText
                         break;
                 }
                 
-                if (!catalogs.TryGetValue(CultureInfo.CurrentUICulture, out Dictionary<string, Catalog> cultureCatalogs))
+                if (!catalogs.TryGetValue(CultureInfo.CurrentUICulture, out ConcurrentDictionary<string, Catalog> cultureCatalogs))
                 {
-                    cultureCatalogs = new Dictionary<string, Catalog>();
-                    catalogs.Add(CultureInfo.CurrentUICulture, cultureCatalogs);
+                    cultureCatalogs = new ConcurrentDictionary<string, Catalog>();
+                    catalogs.TryAdd(CultureInfo.CurrentUICulture, cultureCatalogs);
                 }
                 
                 Catalog catalog = null;
                 if (!string.IsNullOrWhiteSpace(domain) && !cultureCatalogs.TryGetValue(domain, out catalog))
                 {
                     catalog = string.IsNullOrEmpty(folder) ? new Catalog(domain) : new Catalog(domain, folder);
-                    cultureCatalogs.Add(domain, catalog);
+                    cultureCatalogs.TryAdd(domain, catalog);
                 }
 
                 return catalog ?? emptyCatalog;
