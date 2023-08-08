@@ -24,7 +24,10 @@ namespace GetText.Extractor.Tests.Engine
 
             catalog = new CatalogTemplate(outputFile);
 
-            SyntaxTreeParser parser = new SyntaxTreeParser(catalog, new List<FileInfo>() { new FileInfo(".\\..\\..\\..\\..\\Sample\\ExtractorTestSample\\ExtractorTestSample.csproj") }, false, false, new Aliases());
+            SyntaxTreeParser parser = new SyntaxTreeParser(catalog, new List<FileInfo>()
+            {
+                new FileInfo(Path.Combine("..","..","..","..","Sample","ExtractorTestSample","ExtractorTestSample.csproj"))
+            }, false, false, new Aliases());
             await parser.Parse().ConfigureAwait(false);
         }
 
