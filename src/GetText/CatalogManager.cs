@@ -98,6 +98,7 @@ namespace GetText
             catalogDomainPattern = patternType;
             CatalogManager.pattern = pattern;
             CatalogManager.folder = folder;
+            Reset();
         }
     }
 
