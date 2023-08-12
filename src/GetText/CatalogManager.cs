@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Globalization;
 using System.Reflection;
-using System.Text;
 
 namespace GetText
 {
@@ -40,7 +39,8 @@ namespace GetText
     /// </summary>
     public class CatalogManager
     {
-        private protected static readonly Dictionary<string, Catalog> catalogs = new Dictionary<string, Catalog>();
+        private protected static readonly Catalog emptyCatalog = new Catalog(CultureInfo.InvariantCulture);
+        private protected static readonly ConcurrentDictionary<CultureInfo, ConcurrentDictionary<string, Catalog>> catalogs = new ConcurrentDictionary<CultureInfo, ConcurrentDictionary<string, Catalog>>();
         private protected static CatalogDomainPattern catalogDomainPattern;
         private protected static string pattern;
         private protected static string folder;
@@ -50,7 +50,6 @@ namespace GetText
             get
             {
                 string domain = null;
-                Catalog catalog;
                 switch (catalogDomainPattern)
                 {
                     case CatalogDomainPattern.AssemblyName:
@@ -60,28 +59,31 @@ namespace GetText
                         domain = pattern;
                         break;
                     case CatalogDomainPattern.FormatPattern:
-                        domain = pattern.Replace("{AssemblyName}", Assembly.GetCallingAssembly().GetName().Name).Replace("{CultureName}", CultureInfo.CurrentCulture.Name);
+                        domain = pattern.Replace("{AssemblyName}", Assembly.GetCallingAssembly().GetName().Name)
+                                        .Replace("{CultureName}", CultureInfo.CurrentCulture.Name)
+                                        .Replace("{UICultureName}", CultureInfo.CurrentUICulture.Name);
                         break;
                 }
-                if (!string.IsNullOrWhiteSpace(domain))
+                
+                if (!catalogs.TryGetValue(CultureInfo.CurrentCulture, out ConcurrentDictionary<string, Catalog> cultureCatalogs))
                 {
-                    if (!catalogs.TryGetValue(domain, out catalog))
-                    {
-                        catalog = string.IsNullOrEmpty(folder) ? new Catalog(domain) : new Catalog(domain, folder);
-                        catalogs.Add(domain, catalog);
-                    }
+                    cultureCatalogs = new ConcurrentDictionary<string, Catalog>();
+                    catalogs.TryAdd(CultureInfo.CurrentCulture, cultureCatalogs);
                 }
-                else
+                
+                Catalog catalog = null;
+                if (!string.IsNullOrWhiteSpace(domain) && !cultureCatalogs.TryGetValue(domain, out catalog))
                 {
-                    catalog = new Catalog();
-                    catalogs.Add(domain, catalog);
+                    catalog = string.IsNullOrEmpty(folder) ? new Catalog(domain) : new Catalog(domain, folder);
+                    cultureCatalogs.TryAdd(domain, catalog);
                 }
-                return catalog;
+
+                return catalog ?? emptyCatalog;
             }
         }
 
         /// <summary>
-        /// Remove all existing catalogs, i.e. when switching languages
+        /// Remove all existing catalogs.
         /// </summary>
         public static void Reset()
         {
@@ -96,6 +98,7 @@ namespace GetText
             catalogDomainPattern = patternType;
             CatalogManager.pattern = pattern;
             CatalogManager.folder = folder;
+            Reset();
         }
     }
 
@@ -106,7 +109,6 @@ namespace GetText
             get
             {
                 string domain = null;
-                Catalog catalog;
                 switch (catalogDomainPattern)
                 {
                     case CatalogDomainPattern.AssemblyName:
@@ -119,20 +121,21 @@ namespace GetText
                         domain = pattern.Replace("{AssemblyName}", typeof(T).Assembly.GetName().Name).Replace("{CultureName}", CultureInfo.CurrentCulture.Name);
                         break;
                 }
-                if (!string.IsNullOrWhiteSpace(domain))
+                
+                if (!catalogs.TryGetValue(CultureInfo.CurrentUICulture, out ConcurrentDictionary<string, Catalog> cultureCatalogs))
                 {
-                    if (!catalogs.TryGetValue(domain, out catalog))
-                    {
-                        catalog = string.IsNullOrEmpty(folder) ? new Catalog(domain) : new Catalog(domain, folder);
-                        catalogs.Add(domain, catalog);
-                    }
+                    cultureCatalogs = new ConcurrentDictionary<string, Catalog>();
+                    catalogs.TryAdd(CultureInfo.CurrentUICulture, cultureCatalogs);
                 }
-                else
+                
+                Catalog catalog = null;
+                if (!string.IsNullOrWhiteSpace(domain) && !cultureCatalogs.TryGetValue(domain, out catalog))
                 {
-                    catalog = new Catalog();
-                    catalogs.Add(domain, catalog);
+                    catalog = string.IsNullOrEmpty(folder) ? new Catalog(domain) : new Catalog(domain, folder);
+                    cultureCatalogs.TryAdd(domain, catalog);
                 }
-                return catalog;
+
+                return catalog ?? emptyCatalog;
             }
         }
 
