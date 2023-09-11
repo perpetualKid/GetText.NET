@@ -1,5 +1,9 @@
 # Release Notes
 
+### 1.9
+* Include [PR49](https://github.com/perpetualKid/GetText.NET/pull/49) improving CatalogManager to support multiple Cultures and make it thread-safe
+* Bugfix for wrongly extracted string when multiple concatenated function calls where one of them is a GetString call https://github.com/perpetualKid/GetText.NET/issues/50
+
 ### 1.8
 * Signing assembly GetText assemblies with strong name signing key [Issue #47](https://github.com/perpetualKid/GetText.NET/issues/47)
 * Upgrading all projects from .NET Core 3.1 to .Net 6.0, removing EOL .NET Core 3.1 [Issue #46](https://github.com/perpetualKid/GetText.NET/issues/46)
