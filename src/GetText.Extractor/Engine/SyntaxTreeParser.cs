@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
 
 using GetText.Extractor.Engine.SourceResolver;
 using GetText.Extractor.Template;
 
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
 namespace GetText.Extractor.Engine
@@ -26,32 +24,20 @@ namespace GetText.Extractor.Engine
 
         public override async Task Parse()
         {
-            //https://stackoverflow.com/questions/11564506/nesting-await-in-parallel-foreach?rq=1
-            TransformBlock<string, SyntaxTree> inputBlock = new TransformBlock<string, SyntaxTree>
-                (async fileName =>
+            await Parallel.ForEachAsync(sources, async (fileInfo, token) =>
+            {
+                DirectorySourceResolver sourceResolver = new DirectorySourceResolver(fileInfo);
+                await Parallel.ForEachAsync(sourceResolver.GetInput(), async (fileName, token) =>
                 {
                     using (StreamReader reader = File.OpenText(fileName))
                     {
                         string sourceCode = await reader.ReadToEndAsync().ConfigureAwait(false);
-                        return CSharpSyntaxTree.ParseText(sourceCode, null, fileName);
+                        GetStrings(CSharpSyntaxTree.ParseText(sourceCode, null, fileName));
                     }
-                },
-                new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = Environment.ProcessorCount * 2 });
 
-            ActionBlock<SyntaxTree> actionBlock = new ActionBlock<SyntaxTree>(tree => GetStrings(tree));
-            inputBlock.LinkTo(actionBlock, new DataflowLinkOptions { PropagateCompletion = true });
-
-            foreach (var source in sources)
-            {
-                DirectorySourceResolver sourceResolver = new DirectorySourceResolver(source);
-                foreach (string fileName in sourceResolver.GetInput())
-                {
-                    inputBlock.Post(fileName);
-                    Counter++;
-                }
-            }
-            inputBlock.Complete();
-            await actionBlock.Completion.ConfigureAwait(false);
+                    Interlocked.Increment(ref Counter);
+                }).ConfigureAwait(false);
+            }).ConfigureAwait(false);
         }
     }
 }
