@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 using GetText.Extractor.Template;
 
@@ -196,17 +197,29 @@ namespace GetText.Extractor.Engine
                 }
             }
 
-            if (syntaxNode.IsKind(SyntaxKind.InterpolatedStringExpression) || syntaxNode.IsKind(SyntaxKind.StringLiteralExpression))
+            switch (syntaxNode.Kind())
             {
-                ExtractFromStringNode(syntaxNode);
-            }
-            else
-            {
-                foreach (CSharpSyntaxNode stringNode in syntaxNode.DescendantNodes((node) => node == syntaxNode || syntaxNode.Parent == syntaxNode).
-                    Where((node) => node.IsKind(SyntaxKind.InterpolatedStringExpression) || node.IsKind(SyntaxKind.StringLiteralExpression) || node.IsKind(SyntaxKind.AddExpression)))
-                {
-                    ExtractFromStringNode(stringNode);
-                }
+                case SyntaxKind.InterpolatedStringExpression:
+                case SyntaxKind.StringLiteralExpression:
+                    ExtractFromStringNode(syntaxNode);
+                    break;
+                case SyntaxKind.AttributeArgumentList:
+                    {
+                        foreach (AttributeArgumentSyntax argument in (syntaxNode as AttributeArgumentListSyntax).Arguments.
+                            Where((argumentNode) => argumentNode.Expression.IsKind(SyntaxKind.InterpolatedStringExpression) || argumentNode.Expression.IsKind(SyntaxKind.StringLiteralExpression) 
+                            || argumentNode.Expression.IsKind(SyntaxKind.AddExpression)))
+                            {
+                            ExtractFromStringNode(argument.Expression);
+                        }
+                    }
+                    break;
+                default:
+                    foreach (CSharpSyntaxNode stringNode in syntaxNode.DescendantNodes((node) => node == syntaxNode || syntaxNode.Parent == syntaxNode).
+                        Where((node) => node.IsKind(SyntaxKind.InterpolatedStringExpression) || node.IsKind(SyntaxKind.StringLiteralExpression) || node.IsKind(SyntaxKind.AddExpression)))
+                    {
+                        ExtractFromStringNode(stringNode);
+                    }
+                    break;
             }
             return builder.ToString();
         }
