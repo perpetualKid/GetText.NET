@@ -1,24 +1,6 @@
 <Project>
   <PropertyGroup>
-    <NoWarn>CS1591;CA1303;</NoWarn>
-    <TargetFrameworks>net48;net8.0</TargetFrameworks>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-    <Authors>perpetualKid</Authors>
-    <Company></Company>
+    <TargetFrameworks>net48;net10.0</TargetFrameworks>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <EnableNETAnalyzers>true</EnableNETAnalyzers>
-    <NeutralLanguage>en</NeutralLanguage>
-	<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
   </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.101">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="3.9.50">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
 </Project>
