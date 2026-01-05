@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
-
   <PropertyGroup>
     <Description>Localizer functionality translating text properties in Windows Forms controls.</Description>
     <AssemblyTitle>GetText.NET.WindowsForm</AssemblyTitle>
@@ -10,7 +9,6 @@
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\gettext.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\GetText\GetText.csproj" />
   </ItemGroup>
