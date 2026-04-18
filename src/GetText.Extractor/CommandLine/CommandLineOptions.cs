@@ -15,10 +15,12 @@ namespace GetText.Extractor.CommandLine
         {
             get
             {
-                return new Option<IList<FileInfo>>(new[] { "-s", "--source" }, TryParseSourceFilePathArgument, true, "Visual Studio Solution file, Project file, or source directory. Multiple entries are allowed.")
+                return new Option<IList<FileInfo>>("--source", "-s")
                 {
-                    Name = "Source",
+                    Description = "Visual Studio Solution file, Project file, or source directory. Multiple entries are allowed.",
                     Arity = ArgumentArity.OneOrMore,
+                    CustomParser = TryParseSourceFilePathArgument,
+                    DefaultValueFactory = _ => new[] { new FileInfo(Path.GetFullPath(".")) },
                 };
             }
         }
@@ -27,25 +29,27 @@ namespace GetText.Extractor.CommandLine
         {
             get
             {
-                return new Option<FileInfo>(new[] { "-t", "--target" }, TryParseDefaultTargetFile, true, "Target PO template file")
+                return new Option<FileInfo>("--target", "-t")
                 {
-                    Name = "Target",
+                    Description = "Target PO template file",
+                    CustomParser = TryParseDefaultTargetFile,
+                    DefaultValueFactory = _ => new FileInfo(Path.GetFullPath("messages.pot")),
                 };
             }
         }
 
-        internal static Option<bool> Merge => new Option<bool>(new[] { "--merge", "-m" }, "Merge with existing file instead of overwrite");
+        internal static Option<bool> Merge => new Option<bool>("--merge", "-m") { Description = "Merge with existing file instead of overwrite" };
 
-        internal static Option<bool> Verbose => new Option<bool>(new[] { "--verbose", "-v" }, "Verbose output");
+        internal static Option<bool> Verbose => new Option<bool>("--verbose", "-v") { Description = "Verbose output" };
 
-        internal static Option<bool> UseUnixPathSeparator => new Option<bool>(new[] { "--unixstyle", "-u" }, "Unix-style Path Separator ('/')");
+        internal static Option<bool> UseUnixPathSeparator => new Option<bool>("--unixstyle", "-u") { Description = "Unix-style Path Separator ('/')" };
 
-        internal static Option<bool> SortOutput => new Option<bool>(new[] { "--order", "-o" }, "Sort catalogue entries before exporting to template");
+        internal static Option<bool> SortOutput => new Option<bool>("--order", "-o") { Description = "Sort catalogue entries before exporting to template" };
 
-        internal static Option<List<string>> GetStringAliases => new Option<List<string>>(new[] { "--aliasgetstring", "-as" }, "List of aliases for GetString") { AllowMultipleArgumentsPerToken = true };
-        internal static Option<List<string>> GetParticularStringAliases => new Option<List<string>>(new[] { "--aliasgetparticular", "-ad" }, "List of aliases for GetParticularString") { AllowMultipleArgumentsPerToken = true };
-        internal static Option<List<string>> GetPluralStringAliases => new Option<List<string>>(new[] { "--aliasgetplural", "-ap" }, "List of aliases for GetPluralString") { AllowMultipleArgumentsPerToken = true };
-        internal static Option<List<string>> GetParticularPluralStringAliases => new Option<List<string>>(new[] { "--aliasgetparticularplural", "-adp" }, "List of aliases for GetParticularPluralString") { AllowMultipleArgumentsPerToken = true };
+        internal static Option<List<string>> GetStringAliases => new Option<List<string>>("--aliasgetstring", "-as") { Description = "List of aliases for GetString", AllowMultipleArgumentsPerToken = true };
+        internal static Option<List<string>> GetParticularStringAliases => new Option<List<string>>("--aliasgetparticular", "-ad") { Description = "List of aliases for GetParticularString", AllowMultipleArgumentsPerToken = true };
+        internal static Option<List<string>> GetPluralStringAliases => new Option<List<string>>("--aliasgetplural", "-ap") { Description = "List of aliases for GetPluralString", AllowMultipleArgumentsPerToken = true };
+        internal static Option<List<string>> GetParticularPluralStringAliases => new Option<List<string>>("--aliasgetparticularplural", "-adp") { Description = "List of aliases for GetParticularPluralString", AllowMultipleArgumentsPerToken = true };
 
         #region private validation and parsing
         private static FileInfo TryParseDefaultTargetFile(ArgumentResult argument)
@@ -79,10 +83,10 @@ namespace GetText.Extractor.CommandLine
             }
             catch (Exception ex) when (ex is ArgumentException || ex is NotSupportedException)
             {
-                argument.ErrorMessage = $"The path for '{token}' is not valid. ({ex.Message})";
+                argument.AddError($"The path for '{token}' is not valid. ({ex.Message})");
                 return default;
             }
-            argument.ErrorMessage = $"The path for '{token}' could not be found.";
+            argument.AddError($"The path for '{token}' could not be found.");
             return default;
         }
 
@@ -93,34 +97,26 @@ namespace GetText.Extractor.CommandLine
                 return new[] { new FileInfo(Path.GetFullPath(".")) };
             }
 
-            var fileInfos = argument.Tokens.Select(token =>
+            var fileInfos = new List<FileInfo>();
+            foreach (var token in argument.Tokens)
             {
                 var tokenValue = token.Value;
 
                 if (File.Exists(tokenValue))
                 {
-                    return new FileInfo(Path.GetFullPath(tokenValue));
+                    fileInfos.Add(new FileInfo(Path.GetFullPath(tokenValue)));
                 }
-
-                if (Directory.Exists(tokenValue))
+                else if (Directory.Exists(tokenValue))
                 {
-                    if (TryFindProjectFile(tokenValue, out string path))
-                    {
-                        return new FileInfo(path);
-                    }
-                    else
-                    {
-                        return new FileInfo(Path.GetFullPath(tokenValue));
-                    }
+                    fileInfos.Add(TryFindProjectFile(tokenValue, out string path)
+                        ? new FileInfo(path)
+                        : new FileInfo(Path.GetFullPath(tokenValue)));
                 }
-
-                argument.ErrorMessage = $"The file or directory '{tokenValue}' could not be found.";
-                return default;
-            }).ToList();
-
-            if (argument.ErrorMessage != null)
-            {
-                return default;
+                else
+                {
+                    argument.AddError($"The file or directory '{tokenValue}' could not be found.");
+                    return default;
+                }
             }
 
             return fileInfos;

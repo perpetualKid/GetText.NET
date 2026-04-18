@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.CommandLine;
-using System.CommandLine.Parsing;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 using GetText.Extractor.CommandLine;
@@ -22,45 +22,57 @@ namespace GetText.Extractor
 
         private static async Task<int> Main(string[] args)
         {
+            // Typed locals are required — parseResult.GetValue(option) needs the same instance
+            Option<IList<FileInfo>> sourceOption = CommandLineOptions.SourceOption;
+            Option<FileInfo> outFile = CommandLineOptions.OutFile;
+            Option<bool> merge = CommandLineOptions.Merge;
+            Option<bool> verbose = CommandLineOptions.Verbose;
+            Option<bool> unixPathSeparator = CommandLineOptions.UseUnixPathSeparator;
+            Option<bool> sort = CommandLineOptions.SortOutput;
+            Option<List<string>> aliasString = CommandLineOptions.GetStringAliases;
+            Option<List<string>> aliasDefinite = CommandLineOptions.GetParticularStringAliases;
+            Option<List<string>> aliasPlural = CommandLineOptions.GetPluralStringAliases;
+            Option<List<string>> aliasDefinitePlural = CommandLineOptions.GetParticularPluralStringAliases;
+
             RootCommand rootCommand = CommandLineOptions.RootCommand;
-            Option sourceOption = CommandLineOptions.SourceOption;
-            Option outFile = CommandLineOptions.OutFile;
-            Option verbose = CommandLineOptions.Verbose;
-            Option unixPathSeparator = CommandLineOptions.UseUnixPathSeparator;
-            Option sort = CommandLineOptions.SortOutput;
-            Option aliasString = CommandLineOptions.GetStringAliases;
-            Option aliasDefinite = CommandLineOptions.GetParticularStringAliases;
-            Option aliasPlural = CommandLineOptions.GetPluralStringAliases;
-            Option aliasDefinitePlural = CommandLineOptions.GetParticularPluralStringAliases;
+            rootCommand.Options.Add(sourceOption);
+            rootCommand.Options.Add(outFile);
+            rootCommand.Options.Add(merge);
+            rootCommand.Options.Add(verbose);
+            rootCommand.Options.Add(unixPathSeparator);
+            rootCommand.Options.Add(sort);
+            rootCommand.Options.Add(aliasString);
+            rootCommand.Options.Add(aliasDefinite);
+            rootCommand.Options.Add(aliasPlural);
+            rootCommand.Options.Add(aliasDefinitePlural);
 
-            rootCommand.Add(sourceOption);
-            rootCommand.Add(outFile);
-            rootCommand.Add(verbose);
-            rootCommand.Add(unixPathSeparator);
-            rootCommand.Add(sort);
-            rootCommand.Add(aliasString);
-            rootCommand.Add(aliasDefinite);
-            rootCommand.Add(aliasPlural);
-            rootCommand.Add(aliasDefinitePlural);
-
-            rootCommand.SetHandler(async (IList<FileInfo> sources, FileInfo target, bool unixstyle, bool sortOutput, bool verbose,
-                List<string> @as, List<string> ad, List<string> ap, List<string> adp) =>
+            rootCommand.SetAction(async (parseResult, cancellationToken) =>
             {
-                await Execute(sources, target, unixstyle, sortOutput, verbose, @as, ad, ap, adp).ConfigureAwait(false);
-            }, sourceOption, outFile, unixPathSeparator, sort, verbose, aliasString, aliasDefinite, aliasPlural, aliasDefinitePlural);
+                await Execute(
+                    parseResult.GetValue(sourceOption),
+                    parseResult.GetValue(outFile),
+                    parseResult.GetValue(unixPathSeparator),
+                    parseResult.GetValue(sort),
+                    parseResult.GetValue(verbose),
+                    parseResult.GetValue(aliasString),
+                    parseResult.GetValue(aliasDefinite),
+                    parseResult.GetValue(aliasPlural),
+                    parseResult.GetValue(aliasDefinitePlural),
+                    cancellationToken
+                ).ConfigureAwait(false);
+            });
 
-            return await rootCommand.InvokeAsync(args).ConfigureAwait(false);
-
+            return await rootCommand.Parse(args).InvokeAsync().ConfigureAwait(false);
         }
 
         private static async Task Execute(IList<FileInfo> sources, FileInfo target, bool unixStyle, bool sortOutput, bool verbose,
-            List<string> getStringAliases, List<string> getParticularStringAliases, List<string> getPluralStringAliases, List<string> getParticularPluralStringAliases)
+            List<string> getStringAliases, List<string> getParticularStringAliases, List<string> getPluralStringAliases,
+            List<string> getParticularPluralStringAliases, CancellationToken cancellationToken = default)
         {
             Stopwatch stopwatch = null;
             if (verbose)
             {
-                stopwatch = new Stopwatch();
-                stopwatch.Start();
+                stopwatch = Stopwatch.StartNew();
             }
 
             catalog = new CatalogTemplate(target.FullName);
@@ -78,8 +90,8 @@ namespace GetText.Extractor
             if (verbose)
             {
                 stopwatch.Stop();
-                System.Console.WriteLine($"Processed {parser.Counter} files in {stopwatch.Elapsed.TotalSeconds:N2}sec.");
-                System.Console.WriteLine($"Found {catalog.entries.Count} distinct messages in {catalog.entries.Sum(entry => entry.Value.References.Count)} source references.");
+                Console.WriteLine($"Processed {parser.Counter} files in {stopwatch.Elapsed.TotalSeconds:N2}sec.");
+                Console.WriteLine($"Found {catalog.entries.Count} distinct messages in {catalog.entries.Sum(entry => entry.Value.References.Count)} source references.");
             }
         }
     }
