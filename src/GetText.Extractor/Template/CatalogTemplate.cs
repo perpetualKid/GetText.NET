@@ -47,7 +47,8 @@ namespace GetText.Extractor.Template
             lock (result)
             {
                 result.PluralMessageId = plural;
-                result.References.Add(reference);
+                if (!result.References.Contains(reference))
+                    result.References.Add(reference);
                 result.Comments.Flags = formatString ? result.Comments.Flags | MessageFlags.CSharpFormat : result.Comments.Flags & ~MessageFlags.CSharpFormat;
             }
         }
