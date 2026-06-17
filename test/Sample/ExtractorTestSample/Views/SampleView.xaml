@@ -1,0 +1,16 @@
+<UserControl x:Class="ExtractorTestSample.Views.SampleView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:gt="clr-namespace:GetText.Wpf;assembly=GetText.Wpf">
+  <StackPanel>
+    <TextBlock Text="Plain XAML text" />
+    <Button Content="{gt:Gettext Markup extension text}" />
+    <MenuItem Header="{gt:Gettext Menu|Contextual menu item}" />
+    <TextBlock Text="{gt:Gettext Text='Named text', Context='Named context'}" />
+    <TextBlock Text="{gt:Gettext 'Constructor context', 'Constructor text'}" />
+    <TextBlock Text="{gt:Gettext Text='Singular item', PluralText='Plural items', Count=2}" />
+    <TextBlock>Direct text block text</TextBlock>
+    <Run>Direct run text</Run>
+    <Button Content="{Binding DynamicText}" />
+  </StackPanel>
+</UserControl>

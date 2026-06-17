@@ -1,0 +1,62 @@
+<Window x:Class="Samples.Hello.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:gt="clr-namespace:GetText.Wpf;assembly=GetText.Wpf"
+        Title="Hello, world!"
+        Width="560"
+        Height="560"
+        MinWidth="480"
+        MinHeight="440">
+  <DockPanel Margin="12">
+    <GroupBox DockPanel.Dock="Top" Margin="0,0,0,8">
+      <StackPanel Orientation="Horizontal">
+        <RadioButton x:Name="rbEnUs" Margin="8" Content="en-US" ToolTip="Switch to English" Click="OnLocaleChanged" IsChecked="True" />
+        <RadioButton x:Name="rbFrFr" Margin="8" Content="fr-FR" ToolTip="Switch to French" Click="OnLocaleChanged" />
+        <RadioButton x:Name="rbRuRu" Margin="8" Content="ru-RU" ToolTip="Switch to Russian" Click="OnLocaleChanged" />
+      </StackPanel>
+    </GroupBox>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+      <StackPanel>
+        <TextBlock x:Name="helloTextBlock" Margin="0,0,0,4" Text="Hello, world!" />
+        <TextBlock x:Name="processTextBlock" Margin="0,0,0,8" />
+
+        <!-- gt:Gettext markup extension resolving against the same Windows Forms catalog -->
+        <TextBlock Margin="0,0,0,8" Text="{gt:Gettext Hello, world!}" />
+
+        <GroupBox Margin="0,0,0,8">
+          <StackPanel Margin="8">
+            <TextBlock x:Name="singlePluralTextBlock" />
+            <TextBlock x:Name="twoPluralTextBlock" />
+            <TextBlock x:Name="fivePluralTextBlock" />
+          </StackPanel>
+        </GroupBox>
+
+        <TextBlock x:Name="computersContextTextBlock" Margin="0,0,0,4" />
+        <TextBlock x:Name="militaryContextTextBlock" Margin="0,0,0,4" />
+        <TextBlock x:Name="plainContextTextBlock" Margin="0,0,0,8" />
+
+        <!-- Column headers localized by the WPF Localizer using the shared catalog -->
+        <ListView x:Name="translationListView" Height="90" Margin="0,0,0,8">
+          <ListView.View>
+            <GridView>
+              <GridViewColumn Header="Text encoding" DisplayMemberBinding="{Binding}" Width="320" />
+            </GridView>
+          </ListView.View>
+        </ListView>
+
+        <DataGrid x:Name="translationDataGrid" Height="110" Margin="0,0,0,8" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column">
+          <DataGrid.Columns>
+            <DataGridTextColumn Header="Text encoding" Binding="{Binding}" Width="*" />
+          </DataGrid.Columns>
+        </DataGrid>
+
+        <TextBox Margin="0,8,0,0"
+                 MinHeight="80"
+                 IsReadOnly="True"
+                 TextWrapping="Wrap"
+                 Text="Here is an example of how one might continue a very long string&#x0a;for the common case the string represents multi-line output.&#x0a;" />
+      </StackPanel>
+    </ScrollViewer>
+  </DockPanel>
+</Window>

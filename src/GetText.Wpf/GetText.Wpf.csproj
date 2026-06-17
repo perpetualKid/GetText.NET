@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+	<Description>Localizer functionality translating text properties in WPF elements.</Description>
+	<AssemblyTitle>GetText.NET.Wpf</AssemblyTitle>
+	<TargetFrameworks>net461;net10.0-windows</TargetFrameworks>
+	<UseWPF>true</UseWPF>
+	<AssemblyName>GetText.Wpf</AssemblyName>
+	<PackageId>GetText.NET.Wpf</PackageId>
+	<SignAssembly>True</SignAssembly>
+	<AssemblyOriginatorKeyFile>..\..\gettext.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+	<ProjectReference Include="..\GetText\GetText.csproj" />
+  </ItemGroup>
+</Project>
