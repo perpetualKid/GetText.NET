@@ -5,6 +5,7 @@
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <Authors>perpetualKid</Authors>
     <Company></Company>
+    <IsPackable>false</IsPackable>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <NeutralLanguage>en</NeutralLanguage>
 	<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
