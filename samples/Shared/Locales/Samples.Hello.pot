@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Samples.Hello\n"
-"POT-Creation-Date: 2021-05-02 21:03:06+0200\n"
-"PO-Revision-Date: 2021-05-02 21:03:06+0200\n"
+"POT-Creation-Date: 2026-06-18 16:07:48+0200\n"
+"PO-Revision-Date: 2026-06-18 16:07:48+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -10,71 +10,94 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: GetText.NET Extractor\n"
 
-#: .\Samples.Hello.WinForms\Form1.Designer.cs:113
-msgid "Switch to Russian"
-msgstr ""
-
-#: .\Samples.Hello.WinForms\Form1.Designer.cs:102
-msgid "Switch to French"
-msgstr ""
-
-#: .\Samples.Hello.WinForms\Form1.Designer.cs:112
-msgid "ru-RU"
-msgstr ""
-
-#: .\Samples.Hello.WinForms\Form1.cs:64
-msgctxt "Military"
-msgid "Text encoding"
-msgstr ""
-
-#: .\Samples.Hello.WinForms\Form1.Designer.cs:90
-msgid "en-US"
-msgstr ""
-
-#: .\Samples.Hello.WinForms\Form1.cs:65
-#, csharp-format
-msgid "{0} (non contextual)"
-msgstr ""
-
-#: .\Samples.Hello.WinForms\Form1.cs:64
+#: ..\..\Wpf\Samples.Hello.Wpf\MainWindow.xaml.cs:64
+#: ..\..\WinForms\Samples.Hello.WinForms\Form1.cs:65
 #, csharp-format
 msgid "{0} ('military')"
 msgstr ""
 
-#: .\Samples.Hello.WinForms\Form1.Designer.cs:123
-#: .\Samples.Hello.WinForms\Form1.Designer.cs:219
-msgid "Hello, world!"
+#: ..\..\Wpf\Samples.Hello.Wpf\MainWindow.xaml.cs:65
+#: ..\..\WinForms\Samples.Hello.WinForms\Form1.cs:66
+#, csharp-format
+msgid "{0} (non contextual)"
 msgstr ""
 
-#: .\Samples.Hello.WinForms\Form1.cs:59
-#: .\Samples.Hello.WinForms\Form1.cs:61
-#: .\Samples.Hello.WinForms\Form1.cs:62
+#: ..\..\WinForms\Samples.Hello.WinForms\Form1.Designer.cs:90
+#: ..\..\Wpf\Samples.Hello.Wpf\MainWindow.xaml:13
+msgid "en-US"
+msgstr ""
+
+#: ..\..\Wpf\Samples.Hello.Wpf\MainWindow.xaml.cs:60
+#: ..\..\WinForms\Samples.Hello.WinForms\Form1.cs:60
+#: ..\..\Wpf\Samples.Hello.Wpf\MainWindow.xaml.cs:61
+#: ..\..\WinForms\Samples.Hello.WinForms\Form1.cs:62
+#: ..\..\Wpf\Samples.Hello.Wpf\MainWindow.xaml.cs:62
+#: ..\..\WinForms\Samples.Hello.WinForms\Form1.cs:63
 #, csharp-format
 msgid "found {0} similar word"
 msgid_plural "found {0} similar words"
 msgstr[0] ""
 msgstr[1] ""
 
-#: .\Samples.Hello.WinForms\Form1.Designer.cs:101
+#: ..\..\WinForms\Samples.Hello.WinForms\Form1.Designer.cs:101
+#: ..\..\Wpf\Samples.Hello.Wpf\MainWindow.xaml:14
 msgid "fr-FR"
 msgstr ""
 
-#: .\Samples.Hello.WinForms\Form1.cs:65
-msgid "Text encoding"
+#: ..\..\WinForms\Samples.Hello.WinForms\Form1.Designer.cs:123
+#: ..\..\WinForms\Samples.Hello.WinForms\Form1.Designer.cs:219
+#: ..\..\Wpf\Samples.Hello.Wpf\MainWindow.xaml:5
+#: ..\..\Wpf\Samples.Hello.Wpf\MainWindow.xaml:21
+#: ..\..\Wpf\Samples.Hello.Wpf\MainWindow.xaml:25
+msgid "Hello, world!"
 msgstr ""
 
-#: .\Samples.Hello.WinForms\Form1.Designer.cs:91
-msgid "Switch to English"
-msgstr ""
-
-#: .\Samples.Hello.WinForms\Form1.Designer.cs:202
+#: ..\..\WinForms\Samples.Hello.WinForms\Form1.Designer.cs:202
+#: ..\..\Wpf\Samples.Hello.Wpf\MainWindow.xaml:58
 msgid ""
 "Here is an example of how one might continue a very long string\n"
 "for the common case the string represents multi-line output.\n"
 msgstr ""
 
-#: .\Samples.Hello.WinForms\Form1.cs:63
+#: ..\..\WinForms\Samples.Hello.WinForms\Form1.Designer.cs:112
+#: ..\..\Wpf\Samples.Hello.Wpf\MainWindow.xaml:15
+msgid "ru-RU"
+msgstr ""
+
+#: ..\..\WinForms\Samples.Hello.WinForms\Form1.Designer.cs:91
+#: ..\..\Wpf\Samples.Hello.Wpf\MainWindow.xaml:13
+msgid "Switch to English"
+msgstr ""
+
+#: ..\..\WinForms\Samples.Hello.WinForms\Form1.Designer.cs:102
+#: ..\..\Wpf\Samples.Hello.Wpf\MainWindow.xaml:14
+msgid "Switch to French"
+msgstr ""
+
+#: ..\..\WinForms\Samples.Hello.WinForms\Form1.Designer.cs:113
+#: ..\..\Wpf\Samples.Hello.Wpf\MainWindow.xaml:15
+msgid "Switch to Russian"
+msgstr ""
+
+#: ..\..\Wpf\Samples.Hello.Wpf\MainWindow.xaml.cs:65
+#: ..\..\WinForms\Samples.Hello.WinForms\Form1.cs:66
+#: ..\..\Wpf\Samples.Hello.Wpf\MainWindow.xaml.cs:70
+#: ..\..\Wpf\Samples.Hello.Wpf\MainWindow.xaml:43
+#: ..\..\Wpf\Samples.Hello.Wpf\MainWindow.xaml:50
+msgid "Text encoding"
+msgstr ""
+
+#: ..\..\Wpf\Samples.Hello.Wpf\MainWindow.xaml.cs:63
+#: ..\..\WinForms\Samples.Hello.WinForms\Form1.cs:64
+#: ..\..\Wpf\Samples.Hello.Wpf\MainWindow.xaml.cs:71
 msgctxt "Computers"
+msgid "Text encoding"
+msgstr ""
+
+#: ..\..\Wpf\Samples.Hello.Wpf\MainWindow.xaml.cs:64
+#: ..\..\WinForms\Samples.Hello.WinForms\Form1.cs:65
+#: ..\..\Wpf\Samples.Hello.Wpf\MainWindow.xaml.cs:72
+msgctxt "Military"
 msgid "Text encoding"
 msgstr ""
 

@@ -22,7 +22,7 @@
         <TextBlock x:Name="processTextBlock" Margin="0,0,0,8" />
 
         <!-- gt:Gettext markup extension resolving against the same Windows Forms catalog -->
-        <TextBlock Margin="0,0,0,8" Text="{gt:Gettext Hello, world!}" />
+        <TextBlock Margin="0,0,0,8" Text="{gt:Gettext 'Hello, world!'}" />
 
         <GroupBox Margin="0,0,0,8">
           <StackPanel Margin="8">

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,7 +18,7 @@ namespace GetText.Extractor.Engine
             base(catalog, unixStyle, verbose, aliases)
         {
             this.sources = sources;
-            catalog.Header.ProjectIdVersion = Path.GetFileNameWithoutExtension(sources.First().Name);
+            catalog.Header.ProjectIdVersion = Path.GetFileNameWithoutExtension(catalog.FileName);
         }
 
         public override async Task Parse()

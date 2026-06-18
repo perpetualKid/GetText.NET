@@ -2,30 +2,30 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2021-05-02 21:03:38+0200\n"
-"PO-Revision-Date: 2021-05-02 22:56+0200\n"
+"PO-Revision-Date: 2026-06-18 16:35+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.9\n"
 
 #: .\Samples.Shared\Enums.cs:10
 msgctxt "UI Languages"
 msgid "French Language"
-msgstr "langue française"
+msgstr "Langue française"
 
 #: .\Samples.Shared\Enums.cs:12
 msgctxt "UI Languages"
 msgid "Russian Language"
-msgstr "langue russe"
+msgstr "Langue russe"
 
 #: .\Samples.Shared\Enums.cs:8
 msgctxt "UI Languages"
 msgid "English Language"
-msgstr "anglais"
+msgstr "Anglais"
 
 #: .\Samples.Shared\ProcessDetails.cs:11
 #, csharp-format

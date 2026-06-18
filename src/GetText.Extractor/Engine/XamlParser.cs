@@ -66,7 +66,7 @@ namespace GetText.Extractor.Engine
                 return;
             }
 
-            string pathRelative = Path.GetRelativePath(catalog.FileName, fileName);
+            string pathRelative = Path.GetRelativePath(Path.GetDirectoryName(catalog.FileName), fileName);
             if (unixStyle)
                 pathRelative = pathRelative.Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 
