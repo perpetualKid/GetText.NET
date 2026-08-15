@@ -28,30 +28,29 @@ namespace GetText.Extractor.Template
         {
             if (messageId == null || string.IsNullOrWhiteSpace(System.Text.RegularExpressions.Regex.Unescape(messageId)))
                 return;     // don't care about empty message ids
-            if (!entries.TryGetValue(CatalogEntry.BuildKey(context, messageId), out CatalogEntry result))
+            CatalogEntry result = GetOrAddEntry(context, messageId);
+
+            lock (result)
             {
-                result = new CatalogEntry(context, messageId);
-                if (!entries.TryAdd(result.Key, result))
-                    result = entries[result.Key];
+                if (!result.References.Contains(reference))
+                    result.References.Add(reference);
+                result.Comments.Flags = formatString ? result.Comments.Flags | MessageFlags.CSharpFormat : result.Comments.Flags & ~MessageFlags.CSharpFormat;
             }
-            if (!result.References.Contains(reference))
-                result.References.Add(reference);
-            result.Comments.Flags = formatString ? result.Comments.Flags | MessageFlags.CSharpFormat : result.Comments.Flags & ~MessageFlags.CSharpFormat;
         }
 
         public void AddOrUpdateEntry(string context, string messageId, string plural, string reference, bool formatString)
         {
             if (string.IsNullOrEmpty(messageId))
                 return;     // don't care about empty message ids
-            if (!entries.TryGetValue(CatalogEntry.BuildKey(context, messageId), out CatalogEntry result))
+            CatalogEntry result = GetOrAddEntry(context, messageId);
+
+            lock (result)
             {
-                result = new CatalogEntry(context, messageId);
-                if (!entries.TryAdd(result.Key, result))
-                    result = entries[result.Key];
+                result.PluralMessageId = plural;
+                if (!result.References.Contains(reference))
+                    result.References.Add(reference);
+                result.Comments.Flags = formatString ? result.Comments.Flags | MessageFlags.CSharpFormat : result.Comments.Flags & ~MessageFlags.CSharpFormat;
             }
-            result.PluralMessageId = plural;
-            result.References.Add(reference);
-            result.Comments.Flags = formatString ? result.Comments.Flags | MessageFlags.CSharpFormat : result.Comments.Flags & ~MessageFlags.CSharpFormat;
         }
 
         public async Task WriteAsync(bool sort)
@@ -95,6 +94,20 @@ namespace GetText.Extractor.Template
             {
                 await writer.WriteAsync(ToString()).ConfigureAwait(false);
             }
+        }
+
+        private CatalogEntry GetOrAddEntry(string context, string messageId)
+        {
+            if (!entries.TryGetValue(CatalogEntry.BuildKey(context, messageId), out CatalogEntry result))
+            {
+                result = new CatalogEntry(context, messageId);
+                if (!entries.TryAdd(result.Key, result))
+                {
+                    result = entries[result.Key];
+                }
+            }
+
+            return result;
         }
     }
 }

@@ -29,6 +29,12 @@ namespace GetText.Extractor.Tests.Engine
                 new FileInfo(Path.Combine("..","..","..","..","Sample","ExtractorTestSample","ExtractorTestSample.csproj"))
             }, false, false, new Aliases());
             await parser.Parse().ConfigureAwait(false);
+
+            XamlParser xamlParser = new XamlParser(catalog, new List<FileInfo>()
+            {
+                new FileInfo(Path.Combine("..","..","..","..","Sample","ExtractorTestSample","ExtractorTestSample.csproj"))
+            }, false, false, new Aliases());
+            await xamlParser.Parse().ConfigureAwait(false);
         }
 
         [TestCleanup]
@@ -94,11 +100,51 @@ namespace GetText.Extractor.Tests.Engine
         [TestMethod]
         public void Issue44Test() => TestValidity(35, "{0}login {1} {2} - Logs in using your username and password.");
 
+        [TestMethod]
+        public void XamlPlainAttributeTextTest() => TestValidity(6, "Plain XAML text");
+
+        [TestMethod]
+        public void XamlGettextExtensionTextTest() => TestValidity(7, "Markup extension text");
+
+        [TestMethod]
+        public void XamlGettextExtensionContextShortcutTest() => TestContextValidity(8, "Menu", "Contextual menu item");
+
+        [TestMethod]
+        public void XamlGettextExtensionNamedContextTest() => TestContextValidity(9, "Named context", "Named text");
+
+        [TestMethod]
+        public void XamlGettextExtensionConstructorContextTest() => TestContextValidity(10, "Constructor context", "Constructor text");
+
+        [TestMethod]
+        public void XamlGettextExtensionPluralTest() => TestPluralValidity(11, "Singular item", "Plural items");
+
+        [TestMethod]
+        public void XamlDirectTextBlockTextTest() => TestValidity(12, "Direct text block text");
+
+        [TestMethod]
+        public void XamlDirectRunTextTest() => TestValidity(13, "Direct run text");
+
         private void TestValidity(int line, string expected, int resultNumber = 0)
         {
             CatalogEntry entry = catalog.entries.Values.Where((entry) => entry.References.Where(reference => reference.EndsWith($":{line}")).Any()).OrderBy(entry => entry.MessageId).Skip(resultNumber).FirstOrDefault();
             Assert.IsNotNull(entry);
             Assert.AreEqual(expected, entry.MessageId);
+        }
+
+        private void TestContextValidity(int line, string expectedContext, string expected)
+        {
+            CatalogEntry entry = catalog.entries.Values.Where((entry) => entry.References.Where(reference => reference.EndsWith($":{line}")).Any()).OrderBy(entry => entry.MessageId).FirstOrDefault();
+            Assert.IsNotNull(entry);
+            Assert.AreEqual(expectedContext, entry.Context);
+            Assert.AreEqual(expected, entry.MessageId);
+        }
+
+        private void TestPluralValidity(int line, string expected, string expectedPlural)
+        {
+            CatalogEntry entry = catalog.entries.Values.Where((entry) => entry.References.Where(reference => reference.EndsWith($":{line}")).Any()).OrderBy(entry => entry.MessageId).FirstOrDefault();
+            Assert.IsNotNull(entry);
+            Assert.AreEqual(expected, entry.MessageId);
+            Assert.AreEqual(expectedPlural, entry.PluralMessageId);
         }
     }
 }

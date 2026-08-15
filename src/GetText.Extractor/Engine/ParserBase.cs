@@ -49,7 +49,7 @@ namespace GetText.Extractor.Engine
 
         protected void GetStrings(SyntaxTree tree)
         {
-            string pathRelative = Path.GetRelativePath(catalog.FileName, tree.FilePath);
+            string pathRelative = Path.GetRelativePath(Path.GetDirectoryName(catalog.FileName), tree.FilePath);
             if (this.unixStyle)
                 pathRelative = pathRelative.Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
             string messageId, context, plural;

@@ -97,7 +97,7 @@ steps:
   displayName: 'dotnet pack'
   inputs:
     command: 'pack'
-    packagesToPack: '**/*.csproj;!**/*.Tests.csproj;!**/Examples.*.csproj'
+    packagesToPack: '**/*.csproj;!**/*.Tests.csproj;!**/samples/**/*.csproj'
 
 - task: PublishPipelineArtifact@1
   displayName: Publishing build artifacts

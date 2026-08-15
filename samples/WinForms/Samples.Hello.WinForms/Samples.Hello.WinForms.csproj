@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <UseWindowsForms>true</UseWindowsForms>
+    <TargetFrameworks>net48;net10.0-windows</TargetFrameworks>
+    <!-- Shared catalog identity: WinForms and WPF samples both use the Samples.Hello domain -->
+    <RootNamespace>Samples.Hello</RootNamespace>
+    <AssemblyName>Samples.Hello</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\GetText.WindowsForms\GetText.WindowsForms.csproj" />
+    <ProjectReference Include="..\..\Shared\Samples.Shared\Samples.Shared.csproj" />
+  </ItemGroup>
+</Project>

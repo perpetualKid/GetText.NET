@@ -77,20 +77,27 @@ namespace GetText.Extractor
 
             catalog = new CatalogTemplate(target.FullName);
 
-            SyntaxTreeParser parser = new SyntaxTreeParser(catalog, sources, unixStyle, verbose, new Aliases()
+            Aliases aliases = new Aliases()
             {
                 GetString = getStringAliases,
                 GetParticularString = getParticularStringAliases,
                 GetPluralString = getPluralStringAliases,
                 GetParticularPluralString = getParticularPluralStringAliases
-            });
+            };
+
+            SyntaxTreeParser parser = new SyntaxTreeParser(catalog, sources, unixStyle, verbose, aliases);
             await parser.Parse().ConfigureAwait(false);
+
+            cancellationToken.ThrowIfCancellationRequested();
+
+            XamlParser xamlParser = new XamlParser(catalog, sources, unixStyle, verbose, aliases);
+            await xamlParser.Parse().ConfigureAwait(false);
 
             await catalog.WriteAsync(sortOutput).ConfigureAwait(false);
             if (verbose)
             {
                 stopwatch.Stop();
-                Console.WriteLine($"Processed {parser.Counter} files in {stopwatch.Elapsed.TotalSeconds:N2}sec.");
+                Console.WriteLine($"Processed {parser.Counter + xamlParser.Counter} files in {stopwatch.Elapsed.TotalSeconds:N2}sec.");
                 Console.WriteLine($"Found {catalog.entries.Count} distinct messages in {catalog.entries.Sum(entry => entry.Value.References.Count)} source references.");
             }
         }
