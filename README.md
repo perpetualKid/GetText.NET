@@ -12,6 +12,20 @@ It is fully **COM** and **CLS** compatible.
 
 Translations are loaded directly from gettext *.mo files. Multiple translation domains and multiple locales can be loaded in one application instance. There is no need to compile satellite assemblies. GetText.NET supports both little-endian and big-endian MO files, automatic (header-based) encoding detection and (optional) plural form rules parsing.
 
+Cloning the Repository
+---------------
+The repository includes its Wiki as a Git submodule. To clone the source together with the Wiki, use:
+
+```text
+git clone --recurse-submodules https://github.com/perpetualKid/GetText.NET.git
+```
+
+If you have already cloned the repository without `--recurse-submodules`, initialize the Wiki with:
+
+```text
+git submodule update --init --recursive
+```
+
 Documentation and Samples
 ---------------
 For details on each product, examples and FAQ please check the [Wiki](https://github.com/perpetualKid/GetText.NET/wiki) pages.
