@@ -3,7 +3,7 @@ GetText.NET
 
 A cross-platform .NET implementation of the GNU Gettext library, initially forked from [NGettext](https://github.com/VitaliiTsilnyk/NGettext).  
 GetText.NET supports [**string interpolation**](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated) and [**FormattableString**](https://docs.microsoft.com/en-us/dotnet/api/system.formattablestring?redirectedfrom=MSDN&view=netcore-3.1).  
-GetText.NET.Extractor extracts string values from C# source code in  GetText.ICatalog method calls to Get\*String(), and also supports localizing Windows.Forms.Control properties showing text, such as .Text, .HeaderText or .ToopTipText.
+GetText.NET.Extractor extracts string values from C# source code in  GetText.ICatalog method calls to Get\*String(), and also supports localizing Windows.Forms.Control and WPF element properties showing text, such as .Text, .HeaderText, .ToolTip or .Content.
 
 GetText.NET has simplified usage over NGetText and original GNU Gettext tools, i.e. removed Get\*String**Fmt**() methods and pass parameters directly to Get\*String() overloads, and also removed the need for LC_MESSAGES subfolder to place translation files.    
 
@@ -31,6 +31,7 @@ Status
 |GetText.NET|[![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/gettext.net?color=brightgreen&style=plastic)](https://www.nuget.org/packages/gettext.net)|
 |GetText.NET.PluralCompile|[![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/gettext.net.pluralcompile?color=brightgreen&style=plastic)](https://www.nuget.org/packages/GetText.NET.PluralCompile/)|
 |GetText.NET.WindowsForms|[![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/GetText.NET.WindowsForms?color=brightgreen&style=plastic)](https://www.nuget.org/packages/GetText.NET.WindowsForms/)|
+|GetText.NET.Wpf|[![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/GetText.NET.Wpf?color=brightgreen&style=plastic)](https://www.nuget.org/packages/GetText.NET.Wpf/)|
 |GetText.NET.Extractor|[![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/gettext.net.extractor?color=brightgreen&style=plastic)](https://www.nuget.org/packages/GetText.NET.Extractor/)|
 
 
