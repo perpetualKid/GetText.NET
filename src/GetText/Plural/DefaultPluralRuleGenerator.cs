@@ -65,7 +65,7 @@ namespace GetText.Plural
                     return new PluralRule(1, number => 0);
 
                 case "ar":
-                    return new PluralRule(6, number => (number == 0) ? 0 : ((number == 1) ? 1 : ((number == 2) ? 2 : (((number >= 3) && (number <= 10)) ? 3 : (((number >= 11) && (number <= 99)) ? 4 : 5)))));
+                    return new PluralRule(6, number => (number == 0) ? 0 : ((number == 1) ? 1 : ((number == 2) ? 2 : (((number % 100 >= 3) && (number % 100 <= 10)) ? 3 : (((number % 100 >= 11) && (number % 100 <= 99)) ? 4 : 5)))));
 
                 case "asa":
                 case "af":
@@ -97,7 +97,6 @@ namespace GetText.Plural
                 case "ha":
                 case "haw":
                 case "he":
-                case "is":
                 case "it":
                 case "jmc":
                 case "kaj":
@@ -174,6 +173,9 @@ namespace GetText.Plural
                 case "wa":
                     return new PluralRule(2, number => ((number == 0) || (number == 1)) ? 0 : 1);
 
+                case "is":
+                    return new PluralRule(2, number => ((number % 10 == 1) && (number % 100 != 11)) ? 0 : 1);
+
                 case "lv":
                     return new PluralRule(3, number => (number == 0) ? 0 : (((number % 10 == 1) && (number % 100 != 11)) ? 1 : 2));
 
@@ -231,7 +233,7 @@ namespace GetText.Plural
                     return new PluralRule(3, number => (number == 0) ? 0 : ((number == 1) ? 1 : 2));
 
                 case "shi":
-                    return new PluralRule(3, number => ((number == 0) && (number == 1)) ? 0 : (((number >= 2) && (number <= 10)) ? 1 : 2));
+                    return new PluralRule(3, number => ((number == 0) || (number == 1)) ? 0 : (((number >= 2) && (number <= 10)) ? 1 : 2));
 
                 case "tzm":
                     return new PluralRule(2, number => ((number == 0) || (number == 1) || (((number >= 11) && (number <= 99)))) ? 0 : 1);
