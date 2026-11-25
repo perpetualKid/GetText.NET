@@ -10,6 +10,8 @@ GetText.NET has simplified usage over NGetText and original GNU Gettext tools, i
 This fully managed library targets **Microsoft .NET Standard 2.0** to support a wide range of .NET implementations including **.NET Framework** >=4.6.1, **.NET Core** >=2.0, **Mono** and [more](https://github.com/dotnet/standard/blob/master/docs/versions/netstandard2.0.md).
 It is fully **COM** and **CLS** compatible.
 
+The **11.x** development line keeps the core library on .NET Standard 2.0. The extractor tool requires .NET 10; Windows Forms and WPF integration target .NET Framework 4.6.1 and .NET 10 for Windows. See the [release notes](ReleaseNotes.md) for upcoming changes and version-specific history.
+
 Translations are loaded directly from gettext *.mo files. Multiple translation domains and multiple locales can be loaded in one application instance. There is no need to compile satellite assemblies. GetText.NET supports both little-endian and big-endian MO files, automatic (header-based) encoding detection and (optional) plural form rules parsing.
 
 Cloning the Repository
@@ -29,6 +31,10 @@ git submodule update --init --recursive
 Documentation and Samples
 ---------------
 For details on each product, examples and FAQ please check the [Wiki](https://github.com/perpetualKid/GetText.NET/wiki) pages.
+
+* [WPF localization and language switching](https://github.com/perpetualKid/GetText.NET/wiki/Wpf-Intro), including text ownership, bindings and access keys.
+* [Extractor installation](https://github.com/perpetualKid/GetText.NET/wiki/Extractor-Installation) and [command-line options](https://github.com/perpetualKid/GetText.NET/wiki/Extractor-Command-Line).
+* Runnable samples: `samples\Wpf\Samples.Hello.Wpf` and `samples\WinForms\Samples.Hello.WinForms`, with catalogs in `samples\Shared\Locales`.
 
 Version History
 ---------------

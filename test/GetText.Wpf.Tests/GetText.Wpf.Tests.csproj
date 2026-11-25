@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+	<TargetFrameworks>net48;net10.0-windows</TargetFrameworks>
+	<UseWPF>true</UseWPF>
+	<IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+  <ItemGroup>
+	<PackageReference Include="xunit" Version="2.9.3" />
+	<PackageReference Include="xunit.runner.visualstudio" Version="4.0.1">
+	  <PrivateAssets>all</PrivateAssets>
+	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	</PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+	<ProjectReference Include="..\..\src\GetText.Wpf\GetText.Wpf.csproj" />
+  </ItemGroup>
+</Project>

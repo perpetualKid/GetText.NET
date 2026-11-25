@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
 
@@ -97,6 +98,10 @@ namespace GetText.Wpf
 
             foreach (string propertyName in StringProperties)
             {
+                // A TextBlock's aggregate Text must not replace its authored inline document.
+                if (propertyName == "Text" && element is TextBlock && HasInlineChildren(element))
+                    continue;
+
                 if (revert)
                     RevertProperty(element, propertyName);
                 else
@@ -117,24 +122,44 @@ namespace GetText.Wpf
             if (element == null || !visited.Add(element))
                 return;
 
+            // AccessText owns its accelerator Runs; bound TextBlock text owns its generated Runs.
+            if (element is AccessText || element is TextBlock && IsManagedProperty(element, "Text"))
+            {
+                HandleElement(element, revert);
+                return;
+            }
+
+            List<DependencyObject> children = new List<DependencyObject>();
             foreach (object child in LogicalTreeHelper.GetChildren(element))
             {
                 if (child is DependencyObject dependencyObject)
-                    IterateElements(dependencyObject, revert, visited);
+                    children.Add(dependencyObject);
             }
-
             int childrenCount = element is Visual || element is Visual3D ? VisualTreeHelper.GetChildrenCount(element) : 0;
             for (int index = 0; index < childrenCount; index++)
             {
-                IterateElements(VisualTreeHelper.GetChild(element, index), revert, visited);
+                children.Add(VisualTreeHelper.GetChild(element, index));
             }
+
+            foreach (DependencyObject child in children)
+                IterateElements(child, revert, visited);
 
             HandleElement(element, revert);
         }
 
+        private static bool HasInlineChildren(DependencyObject element)
+        {
+            foreach (object child in LogicalTreeHelper.GetChildren(element))
+            {
+                if (child is Inline)
+                    return true;
+            }
+            return false;
+        }
+
         private void LocalizeProperty(object source, string propertyName)
         {
-            if (IsDataBound(source, propertyName))
+            if (IsManagedProperty(source, propertyName))
                 return;
 
             PropertyInfo pi = source.GetType().GetProperty(propertyName);
@@ -151,7 +176,7 @@ namespace GetText.Wpf
 
         private void RevertProperty(object source, string propertyName)
         {
-            if (OriginalTextStore == null || IsDataBound(source, propertyName))
+            if (OriginalTextStore == null || IsManagedProperty(source, propertyName))
                 return;
 
             object originalValue = OriginalTextStore.GetState(source, propertyName);
@@ -169,13 +194,20 @@ namespace GetText.Wpf
                 OriginalTextStore.SetState(source, propertyName, value);
         }
 
-        private static bool IsDataBound(object source, string propertyName)
+        private static bool IsManagedProperty(object source, string propertyName)
         {
             if (!(source is DependencyObject dependencyObject))
                 return false;
 
             DependencyProperty dependencyProperty = GetDependencyProperty(source.GetType(), propertyName);
-            return dependencyProperty != null && BindingOperations.GetBindingBase(dependencyObject, dependencyProperty) != null;
+            if (dependencyProperty == null)
+                return false;
+
+            ValueSource valueSource = DependencyPropertyHelper.GetValueSource(dependencyObject, dependencyProperty);
+            // Optimized TemplateBindings report ParentTemplate rather than IsExpression.
+            return BindingOperations.GetBindingBase(dependencyObject, dependencyProperty) != null ||
+                valueSource.IsExpression || valueSource.BaseValueSource == BaseValueSource.ParentTemplate ||
+                valueSource.BaseValueSource == BaseValueSource.ParentTemplateTrigger;
         }
 
         private static DependencyProperty GetDependencyProperty(Type type, string propertyName)

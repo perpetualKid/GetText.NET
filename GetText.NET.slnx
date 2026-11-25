@@ -58,4 +58,5 @@
   <Folder Name="/test/Sample/">
     <Project Path="test/Sample/ExtractorTestSample/ExtractorTestSample.csproj" />
   </Folder>
+  <Project Path="test/GetText.Wpf.Tests/GetText.Wpf.Tests.csproj" />
 </Solution>
