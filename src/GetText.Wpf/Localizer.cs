@@ -196,6 +196,11 @@ namespace GetText.Wpf
 
         private static bool IsManagedProperty(object source, string propertyName)
         {
+            // ComboBox.Text synchronizes selection or user input, even when Text itself is unbound.
+            if (propertyName == "Text" && (source is ComboBox ||
+                source is TextBox textBox && textBox.TemplatedParent is ComboBox && textBox.Name == "PART_EditableTextBox"))
+                return true;
+
             if (!(source is DependencyObject dependencyObject))
                 return false;
 

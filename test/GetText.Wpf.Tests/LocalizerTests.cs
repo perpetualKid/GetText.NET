@@ -237,6 +237,205 @@ namespace GetText.Wpf.Tests
             });
         }
 
+        [Theory]
+        [InlineData(false, BindingMode.OneWay, false)]
+        [InlineData(false, BindingMode.TwoWay, false)]
+        [InlineData(false, BindingMode.OneWay, true)]
+        [InlineData(false, BindingMode.TwoWay, true)]
+        [InlineData(true, BindingMode.OneWay, false)]
+        [InlineData(true, BindingMode.TwoWay, true)]
+        public void ComboBoxSelectionSurvivesLocalizationAndReversion(bool editable, BindingMode mode, bool bindValue)
+        {
+            OnStaThread(() =>
+            {
+                LanguageOption first = new LanguageOption("", "System default");
+                LanguageOption second = new LanguageOption("qps-ploc", "Pseudo language");
+                LanguageOption[] options = new[] { first, second };
+                TextBlock source = new TextBlock { Tag = bindValue ? (object)first.Code : first };
+                ComboBox picker = new ComboBox
+                {
+                    IsEditable = editable,
+                    DisplayMemberPath = "DisplayName",
+                    SelectedValuePath = "Code",
+                    ToolTip = "Select language"
+                };
+                Binding itemsBinding = new Binding { Source = options };
+                Binding selectionBinding = new Binding("Tag") { Source = source, Mode = mode };
+                DependencyProperty selectionProperty = bindValue ? ComboBox.SelectedValueProperty : ComboBox.SelectedItemProperty;
+                picker.SetBinding(ItemsControl.ItemsSourceProperty, itemsBinding);
+                picker.SetBinding(selectionProperty, selectionBinding);
+                TextBlock label = new TextBlock { Text = "Language" };
+                StackPanel panel = new StackPanel();
+                panel.Children.Add(label);
+                panel.Children.Add(picker);
+                WithWindow(panel, window =>
+                {
+                    ObjectPropertiesStore store = new ObjectPropertiesStore();
+                    Localizer.Localize(window, new Catalog(), store);
+                    // Old package versions may already have captured selection-derived text.
+                    store.SetState(picker, "Text", first.DisplayName);
+                    List<string> requests = new List<string>();
+                    picker.SelectionChanged += (sender, args) =>
+                    {
+                        foreach (LanguageOption added in args.AddedItems)
+                            requests.Add(added.Code);
+                    };
+                    source.Tag = bindValue ? (object)second.Code : second;
+                    FlushLayout(window);
+                    Assert.Equal(new[] { second.Code }, requests);
+                    RecordingCatalog catalog = new RecordingCatalog();
+                    catalog.Translations.Add("Language", new[] { "[Language]" });
+                    catalog.Translations.Add("Select language", new[] { "[Select language]" });
+                    catalog.Translations.Add(first.DisplayName, new[] { "[System default]" });
+                    catalog.Translations.Add(second.DisplayName, new[] { "[Pseudo language]" });
+
+                    for (int cycle = 0; cycle < 3; cycle++)
+                    {
+                        Localizer.Revert(window, store);
+                        FlushLayout(window);
+                        Assert.Same(second, picker.SelectedItem);
+                        Assert.Equal(second.Code, picker.SelectedValue);
+                        Assert.Equal(second.DisplayName, picker.Text);
+                        Assert.Equal("Language", label.Text);
+                        Assert.Equal("Select language", picker.ToolTip);
+                        Localizer.Localize(window, catalog, store);
+                        FlushLayout(window);
+                        Assert.Same(second, picker.SelectedItem);
+                        Assert.Equal(second.Code, picker.SelectedValue);
+                        Assert.Equal(second.DisplayName, picker.Text);
+                        Assert.Equal("[Language]", label.Text);
+                        Assert.Equal("[Select language]", picker.ToolTip);
+                        Assert.Same(selectionBinding, BindingOperations.GetBinding(picker, selectionProperty));
+                        Assert.Same(itemsBinding, BindingOperations.GetBinding(picker, ItemsControl.ItemsSourceProperty));
+                        Assert.Equal(bindValue ? (object)second.Code : second, source.Tag);
+                        Assert.Equal(new[] { second.Code }, requests);
+                        Assert.DoesNotContain(first.DisplayName, catalog.Inputs);
+                        Assert.DoesNotContain(second.DisplayName, catalog.Inputs);
+                        if (editable)
+                            Assert.Equal(second.DisplayName, FindVisual<TextBox>(picker).Text);
+                        else
+                            Assert.Contains(Visuals<TextBlock>(picker), text => text.Text == second.DisplayName);
+                    }
+                });
+            });
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void LocalizingComboBoxDoesNotTranslateSelectedText(bool editable)
+        {
+            OnStaThread(() =>
+            {
+                ComboBox picker = new ComboBox { IsEditable = editable };
+                picker.Items.Add("System default");
+                picker.Items.Add("Pseudo language");
+                picker.SelectedIndex = 1;
+                WithWindow(picker, window =>
+                {
+                    int changes = 0;
+                    picker.SelectionChanged += (sender, args) => changes++;
+                    RecordingCatalog catalog = new RecordingCatalog();
+                    catalog.Translations.Add("Pseudo language", new[] { "System default" });
+                    ObjectPropertiesStore store = new ObjectPropertiesStore();
+                    Localizer.Localize(window, catalog, store);
+                    FlushLayout(window);
+                    Assert.Equal(1, picker.SelectedIndex);
+                    Assert.Equal("Pseudo language", picker.SelectedItem);
+                    Assert.Equal("Pseudo language", picker.Text);
+                    Assert.Equal(0, changes);
+                    Assert.Empty(catalog.Inputs);
+                    Assert.Null(store.GetState(picker, "Text"));
+                });
+            });
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void EditableComboBoxPreservesFreeText(bool textBound)
+        {
+            OnStaThread(() =>
+            {
+                ComboBox picker = new ComboBox { IsEditable = true, ToolTip = "Select language" };
+                picker.Items.Add("System default");
+                picker.Items.Add("Pseudo language");
+                TextBlock source = new TextBlock { Text = "Original input" };
+                Binding binding = new Binding("Text") { Source = source, Mode = BindingMode.TwoWay };
+                if (textBound)
+                    picker.SetBinding(ComboBox.TextProperty, binding);
+                else
+                    picker.Text = source.Text;
+                WithWindow(picker, window =>
+                {
+                    ObjectPropertiesStore store = new ObjectPropertiesStore();
+                    Localizer.Localize(window, new Catalog(), store);
+                    store.SetState(picker, "Text", "Original input");
+                    TextBox editor = FindVisual<TextBox>(picker);
+                    editor.Text = "User input";
+                    FlushLayout(window);
+                    Assert.Equal("User input", picker.Text);
+                    Assert.Null(picker.SelectedItem);
+                    int changes = 0;
+                    picker.SelectionChanged += (sender, args) => changes++;
+                    RecordingCatalog catalog = new RecordingCatalog();
+                    catalog.Translations.Add("User input", new[] { "Translated input" });
+                    catalog.Translations.Add("Select language", new[] { "[Select language]" });
+                    for (int cycle = 0; cycle < 3; cycle++)
+                    {
+                        Localizer.Revert(window, store);
+                        Assert.Equal("User input", picker.Text);
+                        Localizer.Localize(window, catalog, store);
+                        FlushLayout(window);
+                        Assert.Equal("User input", picker.Text);
+                        Assert.Equal("User input", editor.Text);
+                        Assert.Null(picker.SelectedItem);
+                        Assert.Equal(-1, picker.SelectedIndex);
+                        Assert.Equal(0, changes);
+                        Assert.DoesNotContain("User input", catalog.Inputs);
+                        Assert.Equal("[Select language]", picker.ToolTip);
+                        if (textBound)
+                        {
+                            Assert.Same(binding, BindingOperations.GetBinding(picker, ComboBox.TextProperty));
+                            Assert.Equal("User input", source.Text);
+                        }
+                    }
+                });
+            });
+        }
+
+        [Fact]
+        public void EditableComboBoxProtectionDoesNotExcludeOrdinaryTextBoxes()
+        {
+            OnStaThread(() =>
+            {
+                TextBox text = new TextBox { Name = "PART_EditableTextBox", Text = "Static caption" };
+                WithWindow(text, window =>
+                {
+                    Catalog catalog = new Catalog();
+                    catalog.Translations.Add("Static caption", new[] { "Translated caption" });
+                    ObjectPropertiesStore store = new ObjectPropertiesStore();
+                    Localizer.Localize(window, catalog, store);
+                    Assert.Equal("Translated caption", text.Text);
+                    Assert.Equal("Static caption", store.GetState(text, "Text"));
+                    Localizer.Revert(window, store);
+                    Assert.Equal("Static caption", text.Text);
+                });
+            });
+        }
+
+        private sealed class LanguageOption
+        {
+            public string Code { get; }
+            public string DisplayName { get; }
+
+            public LanguageOption(string code, string displayName)
+            {
+                Code = code;
+                DisplayName = displayName;
+            }
+        }
+
         private static void OnStaThread(Action action)
         {
             ExceptionDispatchInfo failure = null;
