@@ -1,0 +1,61 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/samples/">
+    <File Path="samples/Directory.Build.props" />
+  </Folder>
+  <Folder Name="/samples/Shared/">
+    <Project Path="samples/Shared/Samples.Shared/Samples.Shared.csproj" />
+  </Folder>
+  <Folder Name="/samples/Shared/Locales/">
+    <File Path="samples/Shared/Locales/Samples.Hello.pot" />
+    <File Path="samples/Shared/Locales/Samples.Shared.pot" />
+  </Folder>
+  <Folder Name="/samples/Shared/Locales/fr/">
+    <File Path="samples/Shared/Locales/fr/Samples.Hello.mo" />
+    <File Path="samples/Shared/Locales/fr/Samples.Hello.po" />
+    <File Path="samples/Shared/Locales/fr/Samples.Shared.mo" />
+    <File Path="samples/Shared/Locales/fr/Samples.Shared.po" />
+  </Folder>
+  <Folder Name="/samples/Shared/Locales/ru-RU/">
+    <File Path="samples/Shared/Locales/ru-RU/Samples.Hello.mo" />
+    <File Path="samples/Shared/Locales/ru-RU/Samples.Hello.po" />
+    <File Path="samples/Shared/Locales/ru-RU/Samples.Shared.mo" />
+    <File Path="samples/Shared/Locales/ru-RU/Samples.Shared.po" />
+  </Folder>
+  <Folder Name="/samples/WinForms/">
+    <Project Path="samples/WinForms/Samples.Hello.WinForms/Samples.Hello.WinForms.csproj" />
+  </Folder>
+  <Folder Name="/samples/Wpf/">
+    <Project Path="samples/Wpf/Samples.Hello.Wpf/Samples.Hello.Wpf.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="gettext.snk" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+    <File Path="ReleaseNotes.md" />
+    <File Path="version.json" />
+  </Folder>
+  <Folder Name="/src/">
+    <File Path=".editorconfig" />
+    <File Path="src/Directory.Build.props" />
+    <Project Path="src/GetText.Extractor/GetText.Extractor.csproj" />
+    <Project Path="src/GetText.PluralCompile/GetText.PluralCompile.csproj" />
+    <Project Path="src/GetText.WindowsForms/GetText.WindowsForms.csproj" />
+    <Project Path="src/GetText.Wpf/GetText.Wpf.csproj" />
+    <Project Path="src/GetText/GetText.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <File Path="test/Directory.Build.props" />
+    <Project Path="test/GetText.Extractor.Tests/GetText.Extractor.Tests.csproj" />
+    <Project Path="test/GetText.PluralCompile.Tests/GetText.PluralCompile.Tests.csproj" />
+    <Project Path="test/GetText.Tests/GetText.Tests.csproj" />
+  </Folder>
+  <Folder Name="/test/Sample/">
+    <Project Path="test/Sample/ExtractorTestSample/ExtractorTestSample.csproj" />
+  </Folder>
+</Solution>
