@@ -210,6 +210,15 @@ namespace GetText.Tests
 			Assert.Equal("Foo 1.23", catalogEn.GetParticularString("context", $"Foo {1.23}"));
 			Assert.Equal("Foo 1,23", catalogRu.GetParticularString("context", $"Foo {1.23}"));
 		}
+
+		[Fact]
+		public void TestGetParticularStringFormatProvider()
+		{
+			var t = new Catalog(new CultureInfo("en-US")) { FormatProvider = new CultureInfo("ru-RU") };
+
+			Assert.Equal("Foo 1,23", t.GetString("Foo {0}", 1.23));
+			Assert.Equal("Foo 1,23", t.GetParticularString("context", "Foo {0}", 1.23));
+		}
 		#endregion
 
 		#region GetParticularPluralString
@@ -284,6 +293,18 @@ namespace GetText.Tests
 
 			Assert.Equal("Bar 1.23", catalogEn.GetParticularPluralString("context", $"Bar {1.23}", $"Foo {1.23}", 1));
 			Assert.Equal("Foo 1,23", catalogRu.GetParticularPluralString("context", $"Bar {1.23}", $"Foo {1.23}", 2));
+		}
+
+		[Fact]
+		public void TestGetParticularPluralStringFormatsCount()
+		{
+			var t = new Catalog(new CultureInfo("en-US"));
+			t.Translations.Add("context" + Catalog.CONTEXTGLUE + "{0} apple", new[] { "{0} red apple", "{0} red apples" });
+
+			Assert.Equal("2 apples", t.GetPluralString("{0} apple", "{0} apples", 2));
+			Assert.Equal("1 red apple", t.GetParticularPluralString("context", "{0} apple", "{0} apples", 1));
+			Assert.Equal("2 red apples", t.GetParticularPluralString("context", "{0} apple", "{0} apples", 2));
+			Assert.Equal("2 apples", t.GetParticularPluralString("other", "{0} apple", "{0} apples", 2));
 		}
 
 		#endregion
