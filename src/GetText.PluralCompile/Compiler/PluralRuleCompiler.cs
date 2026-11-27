@@ -161,15 +161,11 @@ namespace GetText.PluralCompile.Compiler
                     break;
 
                 case TokenType.And:
-                    CompileNode(il, node.Children[0]);
-                    CompileNode(il, node.Children[1]);
-                    il.Emit(OpCodes.And);
+                    EmitLogicalOperation(il, OpCodes.Brfalse, node.Children[0], node.Children[1], 0);
                     break;
 
                 case TokenType.Or:
-                    CompileNode(il, node.Children[0]);
-                    CompileNode(il, node.Children[1]);
-                    il.Emit(OpCodes.Or);
+                    EmitLogicalOperation(il, OpCodes.Brtrue, node.Children[0], node.Children[1], 1);
                     break;
 
                 case TokenType.Not:
@@ -205,6 +201,32 @@ namespace GetText.PluralCompile.Compiler
 
             il.MarkLabel(trueLabel);
             CompileNode(il, trueNode);
+
+            il.MarkLabel(endLabel);
+        }
+
+        /// <summary>
+        /// Emits instructions for a short-circuit logical operation (&amp;&amp; or ||) that leaves 1 or 0 on the stack.
+        /// </summary>
+        /// <param name="il">IL generator instance.</param>
+        /// <param name="shortCircuitOpCode">OpCode that branches when an operand alone decides the result.</param>
+        /// <param name="leftNode">AST node of the left operand.</param>
+        /// <param name="rightNode">AST node of the right operand.</param>
+        /// <param name="shortCircuitValue">Result of the operation when an operand alone decides it.</param>
+        private void EmitLogicalOperation(ILGenerator il, OpCode shortCircuitOpCode, Token leftNode, Token rightNode, long shortCircuitValue)
+        {
+            Label shortCircuitLabel = il.DefineLabel();
+            Label endLabel = il.DefineLabel();
+
+            CompileNode(il, leftNode);
+            il.Emit(shortCircuitOpCode, shortCircuitLabel);
+            CompileNode(il, rightNode);
+            il.Emit(shortCircuitOpCode, shortCircuitLabel);
+            il.Emit(OpCodes.Ldc_I8, 1 - shortCircuitValue);
+            il.Emit(OpCodes.Br, endLabel);
+
+            il.MarkLabel(shortCircuitLabel);
+            il.Emit(OpCodes.Ldc_I8, shortCircuitValue);
 
             il.MarkLabel(endLabel);
         }

@@ -43,6 +43,10 @@ namespace GetText.PluralCompile.Tests.Compiler
             yield return new object[] { "boolean-and-false" , "1 && 0", 0 };
             yield return new object[] { "boolean-or-true"   , "1 || 0", 1 };
             yield return new object[] { "boolean-or-false"  , "0 || 0", 0 };
+            yield return new object[] { "boolean-and-nonzero-operands" , "2 && 4", 1 };
+            yield return new object[] { "boolean-or-nonzero-operands"  , "2 || 4", 1 };
+            yield return new object[] { "boolean-and-short-circuit"    , "0 && 1 / 0", 0 };
+            yield return new object[] { "boolean-or-short-circuit"     , "1 || 1 / 0", 1 };
             // Variable injection
             yield return new object[] { "variable-injection" , "n", 0 };
 		}
