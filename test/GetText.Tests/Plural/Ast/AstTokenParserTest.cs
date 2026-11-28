@@ -37,6 +37,9 @@ namespace GetText.Tests.Plural.Ast
             yield return new object[] { "greater-than-false"     , "5 < 5", 0 };
             yield return new object[] { "greater-or-equal-true"  , "5 <= 5", 1 };
             yield return new object[] { "greater-or-equal-false" , "5 <= 4", 0 };
+            // Comparison binds tighter than equality (as in GNU gettext and C)
+            yield return new object[] { "precedence-not-equal-less-than" , "3 != 2 < 1", 1 };
+            yield return new object[] { "precedence-equal-greater-than"  , "0 == 1 > 2", 1 };
             // Boolean operators
             yield return new object[] { "boolean-and-true"  , "1 && 1", 1 };
             yield return new object[] { "boolean-and-false" , "1 && 0", 0 };
