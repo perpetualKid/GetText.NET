@@ -45,10 +45,10 @@ namespace GetText.Plural.Ast
             RegisterLeftInfixTokenDefinition(TokenType.NotEquals, 50);
 
             // Compare operators
-            RegisterLeftInfixTokenDefinition(TokenType.GreaterThan, 50);
-            RegisterLeftInfixTokenDefinition(TokenType.LessThan, 50);
-            RegisterLeftInfixTokenDefinition(TokenType.GreaterOrEquals, 50);
-            RegisterLeftInfixTokenDefinition(TokenType.LessOrEquals, 50);
+            RegisterLeftInfixTokenDefinition(TokenType.GreaterThan, 55);
+            RegisterLeftInfixTokenDefinition(TokenType.LessThan, 55);
+            RegisterLeftInfixTokenDefinition(TokenType.GreaterOrEquals, 55);
+            RegisterLeftInfixTokenDefinition(TokenType.LessOrEquals, 55);
 
             // Add operators
             RegisterLeftInfixTokenDefinition(TokenType.Minus, 60);
